@@ -3,374 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#2E7D32">
-    <title>Система 5 Крепостей</title>
+    <title>План Хифза: Месяц 1</title>
     <style>
         :root {
-            --primary: #2E7D32; /* Зеленый */
-            --bg: #f4f4f9;
-            --text: #333;
-            --border: #ccc;
+            --primary: #10b981; /* Изумрудный зеленый */
+            --primary-dark: #059669;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --accent-bg: #d1fae5;
+        }
+
+        /* Темная тема (автоматически) */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #111827;
+                --card-bg: #1f2937;
+                --text: #f9fafb;
+                --text-light: #9ca3af;
+                --border: #374151;
+                --accent-bg: #064e3b;
+            }
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 80px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
         }
 
-        /* --- ЭКРАН ВХОДА --- */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; z-index: 2000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px; /* Место для футера */
         }
-        .login-box {
-            width: 300px; text-align: center; padding: 20px;
-            background: #fff; border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .login-btn {
-            display: block; width: 100%; padding: 15px; margin-bottom: 10px;
-            background: white; border: 2px solid var(--primary); color: var(--primary);
-            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
-            transition: 0.2s;
-        }
-        .login-btn:hover { background: var(--primary); color: white; }
-
-        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 10px; }
 
         header {
-            background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex; justify-content: space-between; align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
         }
-        h1 { margin: 0; font-size: 20px; color: var(--primary); }
-        .user-panel { font-size: 14px; text-align: right; }
-        .btn-link { background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; margin-left:10px; }
 
-        /* ИНСТРУКЦИЯ (Твой текст) */
-        .instruction-box {
-            background: #e8f5e9; border-left: 5px solid var(--primary);
-            padding: 15px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; line-height: 1.4;
+        .bismillah {
+            font-family: "Traditional Arabic", serif;
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
         }
-        .instruction-box h3 { margin-top: 0; color: var(--primary); margin-bottom: 10px; }
-        .f-tag { font-weight: bold; display: inline-block; padding: 2px 5px; border-radius: 4px; color: white; margin-right: 5px; }
+
+        h1 {
+            font-size: 22px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* Прогресс бар */
+        .progress-container {
+            background-color: var(--border);
+            border-radius: 99px;
+            height: 10px;
+            width: 100%;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Карточка дня */
+        .day-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            transition: transform 0.2s, opacity 0.3s;
+        }
+
+        .day-card.completed {
+            opacity: 0.6;
+            border-color: var(--primary);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .day-status {
+            font-size: 20px;
+        }
+
+        /* Список задач внутри дня */
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .task-item:active {
+            background-color: var(--border);
+        }
+
+        /* Кастомный чекбокс */
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-light);
+            border-radius: 6px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .task-item.checked .checkbox {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .task-item.checked .task-text {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .task-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 2px;
+            display: block;
+        }
         
-        .f5 { background: #7b1fa2; } /* Фиолетовый */
-        .f1 { background: #2e7d32; } /* Зеленый */
-        .f2 { background: #0277bd; } /* Синий */
-        .f3 { background: #ef6c00; } /* Оранжевый */
+        .task-item.checked .task-label {
+            color: var(--primary-dark);
+        }
 
-        /* ТАБЛИЦА */
-        .table-wrap { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        table {
-            width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px;
+        .task-desc {
+            font-size: 16px;
+            font-weight: 500;
         }
-        th {
-            background: var(--primary); color: white; padding: 12px 8px; text-align: left; vertical-align: top;
-        }
-        td {
-            border-bottom: 1px solid var(--border); padding: 10px 8px; vertical-align: top;
-        }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        
-        /* Колонки */
-        .col-f3 { border-right: 1px solid #eee; color: #ef6c00; }
-        .col-f2 { border-right: 1px solid #eee; color: #0277bd; font-weight: 500; }
-        .col-f1 { border-right: 1px solid #eee; color: #2e7d32; font-weight: 700; background: #f1f8e9; }
-        .col-f5 { border-right: 1px solid #eee; color: #7b1fa2; font-style: italic; }
 
-        /* Чекбокс */
-        input[type="checkbox"] { transform: scale(1.5); accent-color: var(--primary); cursor: pointer; }
-        .done-row { text-decoration: line-through; color: #aaa !important; background: #eee !important; }
-        .done-row td { color: #aaa !important; }
+        /* Метки типов задач */
+        .tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+            font-weight: bold;
+        }
+        .tag-manzil { background: #fee2e2; color: #991b1b; } /* Красный оттенок */
+        .tag-sabki { background: #fef3c7; color: #92400e; } /* Желтый оттенок */
+        .tag-sabak { background: #d1fae5; color: #065f46; } /* Зеленый оттенок */
 
-        /* МОДАЛКА */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 3000;
+        /* Темная тема для тегов */
+        @media (prefers-color-scheme: dark) {
+            .tag-manzil { background: #7f1d1d; color: #fecaca; }
+            .tag-sabki { background: #78350f; color: #fde68a; }
+            .tag-sabak { background: #064e3b; color: #a7f3d0; }
         }
-        .modal-content {
-            background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px;
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 30px;
         }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; }
-        .btn-action {
-            width: 100%; padding: 12px; margin-top: 20px; background: var(--primary);
-            color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 5px;
+
+        .btn-reset {
+            display: block;
+            margin: 20px auto;
+            background: none;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
     </style>
 </head>
 <body>
 
-<!-- 1. ВХОД -->
-<div id="loginOverlay">
-    <div class="login-box">
-        <h2 style="color:var(--primary); margin:0 0 20px 0;">5 Крепостей</h2>
-        <button class="login-btn" onclick="attemptLogin('Ayub')">Ayub 🔒</button>
-        <button class="login-btn" onclick="attemptLogin('Abdulla')">Abdulla</button>
-        <button class="login-btn" onclick="attemptLogin('Daud')">Daud</button>
-    </div>
-</div>
-
-<!-- 2. ИНТЕРФЕЙС -->
-<div class="container" id="appContainer" style="display:none;">
+<div class="container">
     <header>
-        <div>
-            <h1>План Заучивания</h1>
+        <span class="bismillah">بِسْمِ اللّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+        <h1>Мой План Хифза</h1>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div class="user-panel">
-            Чтец: <strong id="userNameDisp">...</strong>
-            <button class="btn-link" onclick="openSettings()">Настройки</button>
-            <button class="btn-link" style="color:red" onclick="logout()">Выход</button>
+        <div class="stats">
+            <span id="progressText">0%</span>
+            <span>Дней: <span id="completedDays">0</span>/30</span>
         </div>
     </header>
 
-    <div class="instruction-box">
-        <h3>📋 Описание Методики:</h3>
-        <p><span class="f-tag f5">Крепость 5 (Подготовка):</span> Прослушать и прочитать с листа то, что будете учить <b>завтра</b>. (5-10 мин).</p>
-        <p><span class="f-tag f1">Крепость 1 (Новое / Сабак):</span> Заучивание сегодняшних 5-7 строк. (30-40 мин). Цель: прочитать по памяти без ошибок 40 раз.</p>
-        <p><span class="f-tag f2">Крепость 2 (Связка / Сабки):</span> Повторение того, что выучили за <b>последние 7 дней</b>. Это самая важная часть.</p>
-        <p><span class="f-tag f3">Крепость 3 (Близкое прошлое):</span> Повторение всего выученного до "Связки". (Архив).</p>
-        <p><span class="f-tag" style="background:#666">Крепость 4:</span> (Далекое прошлое - пока не активно).</p>
+    <div id="daysContainer">
+        <!-- Карточки дней генерируются здесь через JS -->
     </div>
 
-    <div class="table-wrap" id="tableWrapper">
-        <!-- Таблица -->
-    </div>
-</div>
-
-<!-- 3. НАСТРОЙКИ -->
-<div class="modal" id="settingsModal">
-    <div class="modal-content">
-        <h2 style="margin-top:0">Параметры плана</h2>
-        
-        <label>С какой страницы начать?</label>
-        <input type="number" id="inpStartPage" value="1" min="1" max="604">
-
-        <label>С какой строки начать? (1-15)</label>
-        <input type="number" id="inpStartLine" value="1" min="1" max="15">
-
-        <label>Количество строк в день:</label>
-        <select id="inpPace">
-            <option value="3">3 строки</option>
-            <option value="5">5 строк</option>
-            <option value="7">7 строк (Полстраницы)</option>
-            <option value="15">15 строк (Страница)</option>
-        </select>
-
-        <label>Длительность плана (дней):</label>
-        <select id="inpDuration">
-            <option value="14">14 дней</option>
-            <option value="30">30 дней</option>
-            <option value="60">60 дней</option>
-        </select>
-
-        <button class="btn-action" onclick="generatePlan()">Сгенерировать</button>
-        <button class="btn-action" style="background:transparent; color:#333; border:1px solid #ccc; margin-top:10px;" onclick="closeSettings()">Отмена</button>
+    <div class="footer-note">
+        <p>Пусть Аллах облегчит вам путь к знаниям.</p>
+        <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
     </div>
 </div>
 
 <script>
-    let currentUser = null;
-    let data = {};
+    // --- ДАННЫЕ ПРОГРАММЫ ---
+    // Формат: day (день), manzil (архив), sabki (связка), sabak (новое)
+    const schedule = [
+        { d: 1, m: "Стр 3–8", s: "Стр 14–18", n: "Стр 19 (Верх)" },
+        { d: 2, m: "Стр 9–13", s: "Стр 14–18 + 19в", n: "Стр 19 (Низ)" },
+        { d: 3, m: "Стр 3–8", s: "Стр 15–19", n: "Стр 20 (Верх)" },
+        { d: 4, m: "Стр 9–13", s: "Стр 15–19 + 20в", n: "Стр 20 (Низ)" },
+        { d: 5, m: "Стр 3–8", s: "Стр 16–20", n: "Стр 21 (Верх)" },
+        { d: 6, m: "Стр 9–13", s: "Стр 16–20 + 21в", n: "Стр 21 (Низ)" },
+        { d: 7, m: "ОТДЫХ ОТ НОВОГО", s: "Прочитать весь 1-й Джуз (Стр 1–21)", n: "Нет урока" },
+        
+        { d: 8, m: "Стр 3–10", s: "Стр 19–21 + [17,18]", n: "Стр 22 (Верх)" },
+        { d: 9, m: "Стр 11–18", s: "Стр 18–22 (слитно)", n: "Стр 22 (Низ)" },
+        { d: 10, m: "Стр 3–10", s: "Стр 19–22", n: "Стр 23 (Верх)" },
+        { d: 11, m: "Стр 11–18", s: "Стр 19–22 + 23в", n: "Стр 23 (Низ)" },
+        { d: 12, m: "Стр 3–10", s: "Стр 20–23", n: "Стр 24 (Верх)" },
+        { d: 13, m: "Стр 11–18", s: "Стр 20–23 + 24в", n: "Стр 24 (Низ)" },
+        { d: 14, m: "ПОВТОРЕНИЕ", s: "Стр 22–24 + Связка", n: "Нет урока" },
+        
+        { d: 15, m: "Стр 3–12", s: "Стр 21–24", n: "Стр 25 (Верх)" },
+        { d: 16, m: "Стр 13–21", s: "Стр 21–24 + 25в", n: "Стр 25 (Низ)" },
+        { d: 17, m: "Стр 3–12", s: "Стр 22–25", n: "Стр 26 (Верх)" },
+        { d: 18, m: "Стр 13–21", s: "Стр 22–25 + 26в", n: "Стр 26 (Низ)" },
+        { d: 19, m: "Стр 3–12", s: "Стр 23–26", n: "Стр 27 (Верх)" },
+        { d: 20, m: "Стр 13–21", s: "Стр 23–26 + 27в", n: "Стр 27 (Низ)" },
+        { d: 21, m: "ПОВТОРЕНИЕ", s: "Повторить неделю", n: "Нет урока" },
+        
+        { d: 22, m: "Стр 3–14", s: "Стр 24–27", n: "Стр 28 (Верх)" },
+        { d: 23, m: "Стр 15–24", s: "Стр 24–27 + 28в", n: "Стр 28 (Низ)" },
+        { d: 24, m: "Стр 3–14", s: "Стр 25–28", n: "Стр 29 (Верх)" },
+        { d: 25, m: "Стр 15–24", s: "Стр 25–28 + 29в", n: "Стр 29 (Низ)" },
+        { d: 26, m: "Стр 3–14", s: "Стр 26–29", n: "Стр 30 (Верх)" },
+        { d: 27, m: "Стр 15–24", s: "Стр 26–29 + 30в", n: "Стр 30 (Низ)" },
+        
+        { d: 28, m: "Стр 3–21 (Весь 1 Дж)", s: "Связка", n: "Стр 31 (Верх)" },
+        { d: 29, m: "Стр 22–29", s: "Связка", n: "Стр 31 (Низ)" },
+        { d: 30, m: "ЭКЗАМЕН", s: "Прочитать стр 19–31", n: "Финиш" }
+    ];
 
-    // --- ВХОД ---
-    function attemptLogin(user) {
-        if (user === 'Ayub') {
-            const pass = prompt("Введите пароль для Ayub:");
-            if (pass !== '1337') { alert("Неверный пароль"); return; }
-        }
-        currentUser = user;
-        localStorage.setItem('f5_user', user);
-        document.getElementById('userNameDisp').innerText = user;
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('appContainer').style.display = 'block';
-        loadData();
-    }
+    const STORAGE_KEY = 'hifz_tracker_v1';
+    let progress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
-    function logout() {
-        currentUser = null;
-        localStorage.removeItem('f5_user');
-        document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('loginOverlay').style.display = 'flex';
-    }
+    // --- ЛОГИКА ПРИЛОЖЕНИЯ ---
 
-    // --- ДАННЫЕ ---
-    function loadData() {
-        const json = localStorage.getItem(`f5_data_${currentUser}`);
-        if (json) {
-            data = JSON.parse(json);
-            if (!data.schedule || data.schedule.length === 0) openSettings();
-            else renderTable();
-        } else {
-            data = { settings: { startPage:1, startLine:1, pace:7, duration:30 }, schedule: [], progress: {} };
-            openSettings();
-        }
-    }
+    function init() {
+        const container = document.getElementById('daysContainer');
+        container.innerHTML = '';
+        let firstUnfinished = null;
 
-    function saveData() {
-        localStorage.setItem(`f5_data_${currentUser}`, JSON.stringify(data));
-    }
+        schedule.forEach((day, index) => {
+            // Создаем ID для каждого чекбокса: day_1_manzil, day_1_sabki...
+            const mKey = `d${day.d}_m`;
+            const sKey = `d${day.d}_s`;
+            const nKey = `d${day.d}_n`;
 
-    // --- ГЕНЕРАТОР (МАТЕМАТИКА 5 КРЕПОСТЕЙ) ---
-    function generatePlan() {
-        const sPage = parseInt(document.getElementById('inpStartPage').value);
-        const sLine = parseInt(document.getElementById('inpStartLine').value);
-        const pace = parseInt(document.getElementById('inpPace').value);
-        const duration = parseInt(document.getElementById('inpDuration').value);
+            const isMDone = progress[mKey];
+            const isSDone = progress[sKey];
+            const isNDone = progress[nKey];
+            const isDayDone = isMDone && isSDone && isNDone;
 
-        data.settings = { sPage, sLine, pace, duration };
-        data.progress = {};
-        data.schedule = [];
-
-        // 1. Предварительный расчет "Уроков" на каждый день
-        // Нам нужно знать уроки наперед (для Кр.5) и назад (для Кр.2)
-        let lessons = []; 
-        let currP = sPage;
-        let currL = sLine;
-
-        // Генерируем с запасом (+1 день для Кр.5 завтрашнего дня)
-        for(let i=0; i <= duration + 1; i++) {
-            let startTxt = `Стр ${currP} (аят ${currL})`; // Упрощенно называем строкой
-            
-            // Рассчитываем конец урока
-            let endL = currL + pace - 1;
-            let endP = currP;
-            let lessonTxt = "";
-
-            if (endL > 15) {
-                // Переход на след страницу
-                let rem = endL - 15;
-                lessonTxt = `Стр ${currP} (${currL}-15) + Стр ${currP+1} (1-${rem})`;
-                // Следующий старт
-                currP++;
-                currL = rem + 1;
-            } else {
-                // В пределах страницы
-                if (pace === 15) lessonTxt = `Стр ${currP} (Полная)`;
-                else lessonTxt = `Стр ${currP} (стрк ${currL}-${endL})`;
-                // Следующий старт
-                currL = endL + 1;
-            }
-            
-            if (currL > 15) { currL = 1; currP++; }
-
-            lessons.push({
-                id: i,
-                text: lessonTxt,
-                pageVal: endP // Для отслеживания прогресса страниц
-            });
-        }
-
-        // 2. Сборка таблицы по дням
-        for (let d = 0; d < duration; d++) {
-            let dayNum = d + 1;
-            
-            // Крепость 1 (Сегодня)
-            let f1_txt = lessons[d].text;
-
-            // Крепость 5 (Завтра)
-            let f5_txt = lessons[d+1] ? lessons[d+1].text : "Финиш";
-
-            // Крепость 2 (Связка - последние 7 дней)
-            let f2_txt = "---";
-            if (d > 0) {
-                let startIdx = Math.max(0, d - 7);
-                let endIdx = d - 1;
-                // Берем текст урока 7-дневной давности и вчерашнего
-                // Упрощенно: "Уроки дней X - Y" или диапазон страниц
-                // Но лучше вывести диапазон:
-                let startLesson = lessons[startIdx].text.split(' ')[1]; // Номер страницы
-                let endLesson = lessons[endIdx].text.split(' ')[1];
-                f2_txt = `Уроки дней ${startIdx+1}-${endIdx+1}`;
+            if (!firstUnfinished && !isDayDone) {
+                firstUnfinished = `day-${day.d}`;
             }
 
-            // Крепость 3 (Архив - всё до Связки)
-            let f3_txt = "---";
-            if (d > 7) {
-                // Архив это уроки от 0 до (d - 8)
-                let archiveEndIdx = d - 8;
-                if (archiveEndIdx >= 0) {
-                     f3_txt = `Уроки дней 1-${archiveEndIdx+1}`;
-                     // Если много, можно написать: "Стр ${sPage} - ..."
-                }
-            }
-
-            data.schedule.push({
-                d: dayNum,
-                f3: f3_txt,
-                f2: f2_txt,
-                f1: f1_txt,
-                f5: f5_txt
-            });
-        }
-
-        saveData();
-        closeSettings();
-        renderTable();
-    }
-
-    // --- ОТРИСОВКА ---
-    function renderTable() {
-        const wrapper = document.getElementById('tableWrapper');
-        let html = `
-            <table>
-                <thead>
-                    <tr>
-                        <th width="5%">Д</th>
-                        <th width="20%">Крепость 3<br><small>(Архив)</small></th>
-                        <th width="20%">Крепость 2<br><small>(Связка)</small></th>
-                        <th width="25%">Крепость 1<br><small>(Новое)</small></th>
-                        <th width="25%">Крепость 5<br><small>(На завтра)</small></th>
-                        <th width="5%">Ок</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-
-        data.schedule.forEach(row => {
-            const key = `d${row.d}`;
-            const isDone = data.progress[key];
-            const cls = isDone ? 'done-row' : '';
-
-            html += `
-                <tr class="${cls}">
-                    <td><strong>${row.d}</strong></td>
-                    <td class="col-f3">${row.f3}</td>
-                    <td class="col-f2">${row.f2}</td>
-                    <td class="col-f1">${row.f1}</td>
-                    <td class="col-f5">${row.f5}</td>
-                    <td style="text-align:center">
-                        <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggle('${key}')">
-                    </td>
-                </tr>
+            // HTML Шаблон карточки
+            const card = document.createElement('div');
+            card.className = `day-card ${isDayDone ? 'completed' : ''}`;
+            card.id = `day-${day.d}`;
+            card.innerHTML = `
+                <div class="day-header">
+                    <span class="day-title">День ${day.d}</span>
+                    <span class="day-status">${isDayDone ? '✅' : ''}</span>
+                </div>
+                <ul class="task-list">
+                    <li class="task-item ${isMDone ? 'checked' : ''}" onclick="toggle('${mKey}')">
+                        <div class="checkbox">${isMDone ? '✓' : ''}</div>
+                        <div class="task-info">
+                            <span class="task-label">Манзиль (Старое)</span>
+                            <span class="task-desc">${day.m}</span>
+                        </div>
+                        <span class="tag tag-manzil">Архив</span>
+                    </li>
+                    <li class="task-item ${isSDone ? 'checked' : ''}" onclick="toggle('${sKey}')">
+                        <div class="checkbox">${isSDone ? '✓' : ''}</div>
+                        <div class="task-info">
+                            <span class="task-label">Сабки (Связка)</span>
+                            <span class="task-desc">${day.s}</span>
+                        </div>
+                        <span class="tag tag-sabki">Важно</span>
+                    </li>
+                    <li class="task-item ${isNDone ? 'checked' : ''}" onclick="toggle('${nKey}')">
+                        <div class="checkbox">${isNDone ? '✓' : ''}</div>
+                        <div class="task-info">
+                            <span class="task-label">Сабак (Новое)</span>
+                            <span class="task-desc">${day.n}</span>
+                        </div>
+                        <span class="tag tag-sabak">Урок</span>
+                    </li>
+                </ul>
             `;
+            container.appendChild(card);
         });
-        html += `</tbody></table>`;
-        wrapper.innerHTML = html;
+
+        updateStats();
+        
+        // Скролл к текущему дню (плавный)
+        if (firstUnfinished) {
+            setTimeout(() => {
+                document.getElementById(firstUnfinished).scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        }
     }
 
     function toggle(key) {
-        data.progress[key] = !data.progress[key];
-        saveData();
-        renderTable();
+        if (progress[key]) {
+            delete progress[key];
+        } else {
+            progress[key] = true;
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        init(); // Перерисовка
     }
 
-    function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
-    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+    function updateStats() {
+        // Подсчет выполненных дней
+        let completedDays = 0;
+        let totalTasks = schedule.length * 3;
+        let completedTasks = 0;
 
-    // Init
-    const lastUser = localStorage.getItem('f5_user');
-    if(lastUser) {
-        // Оставляем экран входа, чтобы спросить пароль у Ayub, если надо, 
-        // или авто-логин для других. Для простоты - всегда экран входа.
+        schedule.forEach(day => {
+            const m = progress[`d${day.d}_m`];
+            const s = progress[`d${day.d}_s`];
+            const n = progress[`d${day.d}_n`];
+            if (m && s && n) completedDays++;
+            if (m) completedTasks++;
+            if (s) completedTasks++;
+            if (n) completedTasks++;
+        });
+
+        const percent = Math.round((completedTasks / totalTasks) * 100);
+        
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('progressText').innerText = `${percent}%`;
+        document.getElementById('completedDays').innerText = completedDays;
     }
+
+    function resetProgress() {
+        if(confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            progress = {};
+            init();
+        }
+    }
+
+    // Запуск при загрузке
+    init();
+
 </script>
 </body>
-</html>
+</html> 
