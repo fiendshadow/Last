@@ -2,413 +2,447 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>План Хифза: Месяц 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>План Заучивания Корана (Стр 20-30)</title>
     <style>
         :root {
-            --primary: #10b981; /* Изумрудный зеленый */
-            --primary-dark: #059669;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
-            --accent-bg: #d1fae5;
-        }
-
-        /* Темная тема (автоматически) */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #111827;
-                --card-bg: #1f2937;
-                --text: #f9fafb;
-                --text-light: #9ca3af;
-                --border: #374151;
-                --accent-bg: #064e3b;
-            }
+            --primary-color: #2E7D32; /* Исламский зеленый */
+            --secondary-color: #E8F5E9; /* Светло-зеленый фон */
+            --text-color: #333;
+            --border-color: #ddd;
+            --accent-color: #C8E6C9;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f4f4f9;
             margin: 0;
-            padding: 0;
-            line-height: 1.5;
+            padding: 20px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 0 auto;
+            background: white;
             padding: 20px;
-            padding-bottom: 80px; /* Место для футера */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
 
-        .bismillah {
+        .basmala {
             font-family: "Traditional Arabic", serif;
-            font-size: 24px;
-            color: var(--primary);
+            font-size: 28px;
+            color: var(--primary-color);
             margin-bottom: 10px;
             display: block;
         }
 
         h1 {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 24px;
+            margin: 10px 0;
         }
 
-        /* Прогресс бар */
-        .progress-container {
-            background-color: var(--border);
-            border-radius: 99px;
-            height: 10px;
-            width: 100%;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            background-color: var(--primary);
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: var(--text-light);
-            margin-top: 5px;
-        }
-
-        /* Карточка дня */
-        .day-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border);
-            transition: transform 0.2s, opacity 0.3s;
-        }
-
-        .day-card.completed {
-            opacity: 0.6;
-            border-color: var(--primary);
-        }
-
-        .day-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .day-title {
-            font-weight: 700;
+        h2 {
             font-size: 18px;
-            color: var(--primary);
+            color: #555;
+            margin-top: 0;
         }
 
-        .day-status {
-            font-size: 20px;
+        .rules-box {
+            background-color: var(--secondary-color);
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
         }
 
-        /* Список задач внутри дня */
-        .task-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .rules-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
         }
 
-        .task-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            cursor: pointer;
+        .rules-list dt {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        tr:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .section-title {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            font-weight: bold;
             padding: 8px;
-            border-radius: 8px;
-            transition: background 0.2s;
+            margin-top: 20px;
+            border-radius: 4px;
         }
 
-        .task-item:active {
-            background-color: var(--border);
-        }
-
-        /* Кастомный чекбокс */
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--text-light);
-            border-radius: 6px;
-            margin-right: 15px;
+        /* Checkbox styling */
+        .checkbox-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s;
         }
 
-        .task-item.checked .checkbox {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .task-item.checked .task-text {
-            text-decoration: line-through;
-            color: var(--text-light);
-        }
-
-        .task-label {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 2px;
-            display: block;
-        }
-        
-        .task-item.checked .task-label {
-            color: var(--primary-dark);
-        }
-
-        .task-desc {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        /* Метки типов задач */
-        .tag {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: auto;
-            font-weight: bold;
-        }
-        .tag-manzil { background: #fee2e2; color: #991b1b; } /* Красный оттенок */
-        .tag-sabki { background: #fef3c7; color: #92400e; } /* Желтый оттенок */
-        .tag-sabak { background: #d1fae5; color: #065f46; } /* Зеленый оттенок */
-
-        /* Темная тема для тегов */
-        @media (prefers-color-scheme: dark) {
-            .tag-manzil { background: #7f1d1d; color: #fecaca; }
-            .tag-sabki { background: #78350f; color: #fde68a; }
-            .tag-sabak { background: #064e3b; color: #a7f3d0; }
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 30px;
-        }
-
-        .btn-reset {
-            display: block;
-            margin: 20px auto;
-            background: none;
-            border: 1px solid var(--text-light);
-            color: var(--text-light);
-            padding: 8px 16px;
-            border-radius: 8px;
+        input[type="checkbox"] {
+            transform: scale(1.5);
             cursor: pointer;
+            accent-color: var(--primary-color);
         }
 
+        .done-row {
+            text-decoration: line-through;
+            color: #999;
+            background-color: #f0f0f0 !important;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            .basmala { font-size: 22px; }
+            h1 { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <span class="bismillah">بِسْمِ اللّهِ الرَّحْمَنِ الرَّحِيمِ</span>
-        <h1>Мой План Хифза</h1>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="stats">
-            <span id="progressText">0%</span>
-            <span>Дней: <span id="completedDays">0</span>/30</span>
-        </div>
+        <span class="basmala">بِسْمِ اللّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+        <h1>План заучивания Корана</h1>
+        <h2>Страницы 20 – 30 (Джуз 2)</h2>
     </header>
 
-    <div id="daysContainer">
-        <!-- Карточки дней генерируются здесь через JS -->
+    <div class="rules-box">
+        <h3>📋 Инструкция</h3>
+        <p>Ваш темп: <strong>5-7 строк в день</strong> (половина страницы).</p>
+        <dl class="rules-list">
+            <dt>1. Манзиль (Архив)</dt>
+            <dd>Читаем наизусть <strong>в первую очередь</strong>. Если запинаетесь — подглядывайте, но отмечайте ошибку.</dd>
+            
+            <dt>2. Сабки (Связка)</dt>
+            <dd>Это последние 5 выученных страниц. Читаем слитно, наизусть, без ошибок.</dd>
+            
+            <dt>3. Сабак (Новое)</dt>
+            <dd>Учим только после того, как сдали старое. Читаем с книги много раз, затем рассказываем.</dd>
+        </dl>
     </div>
 
-    <div class="footer-note">
-        <p>Пусть Аллах облегчит вам путь к знаниям.</p>
-        <button class="btn-reset" onclick="resetProgress()">Сбросить прогресс</button>
+    <!-- WEEK 1 -->
+    <div class="section-title">НЕДЕЛЯ 1: Переход ко 2-му Джузу (Стр 20–22)</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%">День</th>
+                <th style="width: 25%">Манзиль (Старое)</th>
+                <th style="width: 25%">Сабки (Связка)</th>
+                <th style="width: 30%">Сабак (Новое)</th>
+                <th style="width: 10%">Ок</th>
+            </tr>
+        </thead>
+        <tbody id="week1">
+            <!-- JavaScript will handle row IDs for saving state -->
+            <tr data-id="d1">
+                <td>День 1</td>
+                <td>Стр 1–10</td>
+                <td>Стр 15–19</td>
+                <td><strong>Стр 20 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d2">
+                <td>День 2</td>
+                <td>Стр 11–19</td>
+                <td>Стр 15–19 + 20в</td>
+                <td><strong>Стр 20 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d3">
+                <td>День 3</td>
+                <td>Стр 1–10</td>
+                <td>Стр 16–20</td>
+                <td><strong>Стр 21 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d4">
+                <td>День 4</td>
+                <td>Стр 11–19</td>
+                <td>Стр 16–20 + 21в</td>
+                <td><strong>Стр 21 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d5">
+                <td>День 5</td>
+                <td>Стр 1–10</td>
+                <td>Стр 17–21</td>
+                <td><strong>Стр 22 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d6">
+                <td>День 6</td>
+                <td>Стр 11–19</td>
+                <td>Стр 17–21 + 22в</td>
+                <td><strong>Стр 22 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d7" style="background-color: #fff3e0;">
+                <td>День 7</td>
+                <td colspan="3" style="text-align: center; color: #E65100;"><strong>ВЫХОДНОЙ ОТ НОВОГО</strong><br>Повторить стр 15–22 слитно</td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- WEEK 2 -->
+    <div class="section-title">НЕДЕЛЯ 2: Набор высоты (Стр 23–25)</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%">День</th>
+                <th style="width: 25%">Манзиль</th>
+                <th style="width: 25%">Сабки</th>
+                <th style="width: 30%">Сабак</th>
+                <th style="width: 10%">Ок</th>
+            </tr>
+        </thead>
+        <tbody id="week2">
+            <tr data-id="d8">
+                <td>День 8</td>
+                <td>Стр 1–10</td>
+                <td>Стр 18–22</td>
+                <td><strong>Стр 23 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d9">
+                <td>День 9</td>
+                <td>Стр 11–20</td>
+                <td>Стр 18–22 + 23в</td>
+                <td><strong>Стр 23 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d10">
+                <td>День 10</td>
+                <td>Стр 1–10</td>
+                <td>Стр 19–23</td>
+                <td><strong>Стр 24 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d11">
+                <td>День 11</td>
+                <td>Стр 11–20</td>
+                <td>Стр 19–23 + 24в</td>
+                <td><strong>Стр 24 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d12">
+                <td>День 12</td>
+                <td>Стр 1–10</td>
+                <td>Стр 20–24</td>
+                <td><strong>Стр 25 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d13">
+                <td>День 13</td>
+                <td>Стр 11–20</td>
+                <td>Стр 20–24 + 25в</td>
+                <td><strong>Стр 25 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d14" style="background-color: #fff3e0;">
+                <td>День 14</td>
+                <td colspan="3" style="text-align: center; color: #E65100;"><strong>ВЫХОДНОЙ</strong><br>Повторить стр 20–25</td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- WEEK 3 -->
+    <div class="section-title">НЕДЕЛЯ 3: Приближение к цели (Стр 26–28)</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%">День</th>
+                <th style="width: 25%">Манзиль</th>
+                <th style="width: 25%">Сабки</th>
+                <th style="width: 30%">Сабак</th>
+                <th style="width: 10%">Ок</th>
+            </tr>
+        </thead>
+        <tbody id="week3">
+            <tr data-id="d15">
+                <td>День 15</td>
+                <td>Стр 1–12</td>
+                <td>Стр 21–25</td>
+                <td><strong>Стр 26 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d16">
+                <td>День 16</td>
+                <td>Стр 13–22</td>
+                <td>Стр 21–25 + 26в</td>
+                <td><strong>Стр 26 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d17">
+                <td>День 17</td>
+                <td>Стр 1–12</td>
+                <td>Стр 22–26</td>
+                <td><strong>Стр 27 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d18">
+                <td>День 18</td>
+                <td>Стр 13–22</td>
+                <td>Стр 22–26 + 27в</td>
+                <td><strong>Стр 27 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d19">
+                <td>День 19</td>
+                <td>Стр 1–12</td>
+                <td>Стр 23–27</td>
+                <td><strong>Стр 28 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d20">
+                <td>День 20</td>
+                <td>Стр 13–22</td>
+                <td>Стр 23–27 + 28в</td>
+                <td><strong>Стр 28 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d21" style="background-color: #fff3e0;">
+                <td>День 21</td>
+                <td colspan="3" style="text-align: center; color: #E65100;"><strong>ВЫХОДНОЙ</strong><br>Повторить неделю</td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- WEEK 4 -->
+    <div class="section-title">НЕДЕЛЯ 4: Финиш (Стр 29–30)</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%">День</th>
+                <th style="width: 25%">Манзиль</th>
+                <th style="width: 25%">Сабки</th>
+                <th style="width: 30%">Сабак</th>
+                <th style="width: 10%">Ок</th>
+            </tr>
+        </thead>
+        <tbody id="week4">
+            <tr data-id="d22">
+                <td>День 22</td>
+                <td>Стр 1–14</td>
+                <td>Стр 24–28</td>
+                <td><strong>Стр 29 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d23">
+                <td>День 23</td>
+                <td>Стр 15–25</td>
+                <td>Стр 24–28 + 29в</td>
+                <td><strong>Стр 29 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d24">
+                <td>День 24</td>
+                <td>Стр 1–14</td>
+                <td>Стр 25–29</td>
+                <td><strong>Стр 30 (Верх)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+            <tr data-id="d25">
+                <td>День 25</td>
+                <td>Стр 15–25</td>
+                <td>Стр 25–29 + 30в</td>
+                <td><strong>Стр 30 (Низ)</strong></td>
+                <td class="checkbox-wrapper"><input type="checkbox"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Пусть Аллах облегчит вам путь и сделает вас хранителем Его Книги.</p>
+        <p>Ваши галочки сохраняются автоматически.</p>
     </div>
 </div>
 
 <script>
-    // --- ДАННЫЕ ПРОГРАММЫ ---
-    // Формат: day (день), manzil (архив), sabki (связка), sabak (новое)
-    const schedule = [
-        { d: 1, m: "Стр 3–8", s: "Стр 14–18", n: "Стр 19 (Верх)" },
-        { d: 2, m: "Стр 9–13", s: "Стр 14–18 + 19в", n: "Стр 19 (Низ)" },
-        { d: 3, m: "Стр 3–8", s: "Стр 15–19", n: "Стр 20 (Верх)" },
-        { d: 4, m: "Стр 9–13", s: "Стр 15–19 + 20в", n: "Стр 20 (Низ)" },
-        { d: 5, m: "Стр 3–8", s: "Стр 16–20", n: "Стр 21 (Верх)" },
-        { d: 6, m: "Стр 9–13", s: "Стр 16–20 + 21в", n: "Стр 21 (Низ)" },
-        { d: 7, m: "ОТДЫХ ОТ НОВОГО", s: "Прочитать весь 1-й Джуз (Стр 1–21)", n: "Нет урока" },
+    // Скрипт для сохранения прогресса (Local Storage)
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         
-        { d: 8, m: "Стр 3–10", s: "Стр 19–21 + [17,18]", n: "Стр 22 (Верх)" },
-        { d: 9, m: "Стр 11–18", s: "Стр 18–22 (слитно)", n: "Стр 22 (Низ)" },
-        { d: 10, m: "Стр 3–10", s: "Стр 19–22", n: "Стр 23 (Верх)" },
-        { d: 11, m: "Стр 11–18", s: "Стр 19–22 + 23в", n: "Стр 23 (Низ)" },
-        { d: 12, m: "Стр 3–10", s: "Стр 20–23", n: "Стр 24 (Верх)" },
-        { d: 13, m: "Стр 11–18", s: "Стр 20–23 + 24в", n: "Стр 24 (Низ)" },
-        { d: 14, m: "ПОВТОРЕНИЕ", s: "Стр 22–24 + Связка", n: "Нет урока" },
-        
-        { d: 15, m: "Стр 3–12", s: "Стр 21–24", n: "Стр 25 (Верх)" },
-        { d: 16, m: "Стр 13–21", s: "Стр 21–24 + 25в", n: "Стр 25 (Низ)" },
-        { d: 17, m: "Стр 3–12", s: "Стр 22–25", n: "Стр 26 (Верх)" },
-        { d: 18, m: "Стр 13–21", s: "Стр 22–25 + 26в", n: "Стр 26 (Низ)" },
-        { d: 19, m: "Стр 3–12", s: "Стр 23–26", n: "Стр 27 (Верх)" },
-        { d: 20, m: "Стр 13–21", s: "Стр 23–26 + 27в", n: "Стр 27 (Низ)" },
-        { d: 21, m: "ПОВТОРЕНИЕ", s: "Повторить неделю", n: "Нет урока" },
-        
-        { d: 22, m: "Стр 3–14", s: "Стр 24–27", n: "Стр 28 (Верх)" },
-        { d: 23, m: "Стр 15–24", s: "Стр 24–27 + 28в", n: "Стр 28 (Низ)" },
-        { d: 24, m: "Стр 3–14", s: "Стр 25–28", n: "Стр 29 (Верх)" },
-        { d: 25, m: "Стр 15–24", s: "Стр 25–28 + 29в", n: "Стр 29 (Низ)" },
-        { d: 26, m: "Стр 3–14", s: "Стр 26–29", n: "Стр 30 (Верх)" },
-        { d: 27, m: "Стр 15–24", s: "Стр 26–29 + 30в", n: "Стр 30 (Низ)" },
-        
-        { d: 28, m: "Стр 3–21 (Весь 1 Дж)", s: "Связка", n: "Стр 31 (Верх)" },
-        { d: 29, m: "Стр 22–29", s: "Связка", n: "Стр 31 (Низ)" },
-        { d: 30, m: "ЭКЗАМЕН", s: "Прочитать стр 19–31", n: "Финиш" }
-    ];
-
-    const STORAGE_KEY = 'hifz_tracker_v1';
-    let progress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-
-    // --- ЛОГИКА ПРИЛОЖЕНИЯ ---
-
-    function init() {
-        const container = document.getElementById('daysContainer');
-        container.innerHTML = '';
-        let firstUnfinished = null;
-
-        schedule.forEach((day, index) => {
-            // Создаем ID для каждого чекбокса: day_1_manzil, day_1_sabki...
-            const mKey = `d${day.d}_m`;
-            const sKey = `d${day.d}_s`;
-            const nKey = `d${day.d}_n`;
-
-            const isMDone = progress[mKey];
-            const isSDone = progress[sKey];
-            const isNDone = progress[nKey];
-            const isDayDone = isMDone && isSDone && isNDone;
-
-            if (!firstUnfinished && !isDayDone) {
-                firstUnfinished = `day-${day.d}`;
+        // Загрузка сохраненных данных
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const id = row.getAttribute('data-id');
+            const savedState = localStorage.getItem('quran_plan_' + id);
+            
+            if (savedState === 'true') {
+                checkbox.checked = true;
+                row.classList.add('done-row');
             }
 
-            // HTML Шаблон карточки
-            const card = document.createElement('div');
-            card.className = `day-card ${isDayDone ? 'completed' : ''}`;
-            card.id = `day-${day.d}`;
-            card.innerHTML = `
-                <div class="day-header">
-                    <span class="day-title">День ${day.d}</span>
-                    <span class="day-status">${isDayDone ? '✅' : ''}</span>
-                </div>
-                <ul class="task-list">
-                    <li class="task-item ${isMDone ? 'checked' : ''}" onclick="toggle('${mKey}')">
-                        <div class="checkbox">${isMDone ? '✓' : ''}</div>
-                        <div class="task-info">
-                            <span class="task-label">Манзиль (Старое)</span>
-                            <span class="task-desc">${day.m}</span>
-                        </div>
-                        <span class="tag tag-manzil">Архив</span>
-                    </li>
-                    <li class="task-item ${isSDone ? 'checked' : ''}" onclick="toggle('${sKey}')">
-                        <div class="checkbox">${isSDone ? '✓' : ''}</div>
-                        <div class="task-info">
-                            <span class="task-label">Сабки (Связка)</span>
-                            <span class="task-desc">${day.s}</span>
-                        </div>
-                        <span class="tag tag-sabki">Важно</span>
-                    </li>
-                    <li class="task-item ${isNDone ? 'checked' : ''}" onclick="toggle('${nKey}')">
-                        <div class="checkbox">${isNDone ? '✓' : ''}</div>
-                        <div class="task-info">
-                            <span class="task-label">Сабак (Новое)</span>
-                            <span class="task-desc">${day.n}</span>
-                        </div>
-                        <span class="tag tag-sabak">Урок</span>
-                    </li>
-                </ul>
-            `;
-            container.appendChild(card);
+            // Обработчик клика
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    localStorage.setItem('quran_plan_' + id, 'true');
+                    row.classList.add('done-row');
+                } else {
+                    localStorage.removeItem('quran_plan_' + id);
+                    row.classList.remove('done-row');
+                }
+            });
         });
-
-        updateStats();
-        
-        // Скролл к текущему дню (плавный)
-        if (firstUnfinished) {
-            setTimeout(() => {
-                document.getElementById(firstUnfinished).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 500);
-        }
-    }
-
-    function toggle(key) {
-        if (progress[key]) {
-            delete progress[key];
-        } else {
-            progress[key] = true;
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-        init(); // Перерисовка
-    }
-
-    function updateStats() {
-        // Подсчет выполненных дней
-        let completedDays = 0;
-        let totalTasks = schedule.length * 3;
-        let completedTasks = 0;
-
-        schedule.forEach(day => {
-            const m = progress[`d${day.d}_m`];
-            const s = progress[`d${day.d}_s`];
-            const n = progress[`d${day.d}_n`];
-            if (m && s && n) completedDays++;
-            if (m) completedTasks++;
-            if (s) completedTasks++;
-            if (n) completedTasks++;
-        });
-
-        const percent = Math.round((completedTasks / totalTasks) * 100);
-        
-        document.getElementById('progressBar').style.width = `${percent}%`;
-        document.getElementById('progressText').innerText = `${percent}%`;
-        document.getElementById('completedDays').innerText = completedDays;
-    }
-
-    function resetProgress() {
-        if(confirm('Вы уверены, что хотите сбросить весь прогресс?')) {
-            localStorage.removeItem(STORAGE_KEY);
-            progress = {};
-            init();
-        }
-    }
-
-    // Запуск при загрузке
-    init();
-
+    });
 </script>
+
 </body>
-</html> 
+</html>
