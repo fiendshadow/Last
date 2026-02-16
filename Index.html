@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#2E7D32">
-    <title>План Хафиза (Таблица)</title>
+    <meta name="theme-color" content="#1b5e20">
+    <title>Система 5 Крепостей (Pro)</title>
     <style>
         :root {
-            --primary: #2E7D32; /* Классический зеленый */
-            --bg: #f9f9f9;
+            --primary: #1b5e20; /* Темно-зеленый */
+            --bg: #f5f5f5;
             --text: #333;
-            --border: #ccc;
+            --border: #ddd;
+            --white: #fff;
         }
 
         body {
@@ -18,288 +19,354 @@
             margin: 0; padding: 0;
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
         /* --- ЭКРАН ВХОДА --- */
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; z-index: 2000;
+            background: #fff; z-index: 2000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .login-box {
-            width: 300px; text-align: center;
+            width: 300px; text-align: center; padding: 20px;
+            border: 1px solid #eee; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         .login-btn {
             display: block; width: 100%; padding: 15px; margin-bottom: 10px;
             background: white; border: 2px solid var(--primary); color: var(--primary);
             font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
+            transition: 0.2s;
         }
         .login-btn:hover { background: var(--primary); color: white; }
 
-        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
-        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 15px; }
 
         header {
+            background: var(--white); padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
         }
-        h1 { margin: 0; font-size: 24px; color: var(--primary); }
-        .user-info { font-size: 14px; color: #666; text-align: right; }
+        h1 { margin: 0; font-size: 22px; color: var(--primary); }
+        .user-panel { font-size: 14px; text-align: right; }
+        .action-link { color: #d32f2f; text-decoration: underline; cursor: pointer; margin-left: 10px; }
+        .settings-link { color: #1565c0; text-decoration: underline; cursor: pointer; }
 
-        /* ИНСТРУКЦИЯ */
-        .instruction-box {
-            background: #e8f5e9; border: 1px solid #c8e6c9;
-            padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;
+        /* ИНСТРУКЦИЯ (5 КРЕПОСТЕЙ) */
+        .rules-box {
+            background: #e8f5e9; padding: 15px; border-radius: 8px;
+            border: 1px solid #c8e6c9; margin-bottom: 20px; font-size: 14px; line-height: 1.5;
         }
-        .instruction-box h3 { margin-top: 0; color: var(--primary); }
-        .term { font-weight: bold; color: #1b5e20; }
+        .rules-box h3 { margin-top: 0; color: var(--primary); margin-bottom: 10px; }
+        .fortress { font-weight: bold; color: #2e7d32; background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #a5d6a7; }
 
         /* ТАБЛИЦА */
+        .table-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         table {
-            width: 100%; border-collapse: collapse; background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 14px;
+            width: 100%; border-collapse: collapse; background: white; font-size: 14px; min-width: 600px;
         }
         th {
-            background: var(--primary); color: white; padding: 12px 8px; text-align: left;
+            background: var(--primary); color: white; padding: 12px; text-align: left; white-space: nowrap;
         }
         td {
-            border-bottom: 1px solid var(--border); padding: 10px 8px; vertical-align: top;
+            border-bottom: 1px solid var(--border); padding: 12px; vertical-align: top;
         }
-        tr:nth-child(even) { background-color: #f1f1f1; }
-        
-        /* Галочка */
-        input[type="checkbox"] {
-            transform: scale(1.5); cursor: pointer; accent-color: var(--primary);
-        }
-        .done-row { text-decoration: line-through; color: #999; background: #eee !important; }
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: #f1f8e9; }
 
-        /* НАСТРОЙКИ (МОДАЛКА) */
-        .modal {
+        /* Стили колонок */
+        .col-manzil { color: #e65100; font-weight: 500; } /* Оранжевый */
+        .col-sabki { color: #0277bd; font-weight: 500; }  /* Синий */
+        .col-sabak { color: #2e7d32; font-weight: 700; }  /* Зеленый */
+
+        /* Чекбокс */
+        input[type="checkbox"] {
+            width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer;
+        }
+        .done-row { background-color: #eeeeee !important; color: #999; text-decoration: line-through; }
+        .done-row td span { opacity: 0.5; }
+
+        /* МОДАЛКА НАСТРОЕК */
+        .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
+            background: rgba(0,0,0,0.5); z-index: 3000; display: none;
+            justify-content: center; align-items: center;
         }
-        .modal-content {
-            background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px;
+        .modal-box {
+            background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px;
         }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        select, input { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; }
-        .btn-action {
-            width: 100%; padding: 12px; margin-top: 15px; background: var(--primary);
-            color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 5px;
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
+        input, select {
+            width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px;
         }
-        .btn-outline { background: transparent; border: 1px solid #999; color: #333; margin-top: 10px; }
+        .btn-save {
+            width: 100%; padding: 12px; margin-top: 20px; background: var(--primary);
+            color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold;
+        }
+        .btn-cancel {
+            width: 100%; padding: 10px; margin-top: 10px; background: transparent;
+            border: 1px solid #999; border-radius: 6px; cursor: pointer;
+        }
 
     </style>
 </head>
 <body>
 
-<!-- 1. ВХОД -->
+<!-- ВХОД -->
 <div id="loginOverlay">
     <div class="login-box">
-        <h2 style="color:var(--primary)">Ас-саляму алейкум</h2>
-        <p>Выберите профиль:</p>
-        <button class="login-btn" onclick="attemptLogin('Ayub')">Ayub 🔒</button>
-        <button class="login-btn" onclick="attemptLogin('Abdulla')">Abdulla</button>
-        <button class="login-btn" onclick="attemptLogin('Daud')">Daud</button>
+        <h2 style="color:var(--primary); margin-top:0;">Система 5 Крепостей</h2>
+        <p style="color:#666; margin-bottom:20px;">Авторизация</p>
+        <button class="login-btn" onclick="tryLogin('Ayub')">Ayub 🔒</button>
+        <button class="login-btn" onclick="tryLogin('Abdulla')">Abdulla</button>
+        <button class="login-btn" onclick="tryLogin('Daud')">Daud</button>
     </div>
 </div>
 
-<!-- 2. ОСНОВНОЙ ЭКРАН -->
+<!-- ИНТЕРФЕЙС -->
 <div class="container" id="appContainer" style="display:none;">
     <header>
         <div>
-            <h1>План Хифза</h1>
-            <span style="font-size:12px; color:#666;">Метод 5 крепостей</span>
+            <h1>Мой План Хифза</h1>
+            <span style="font-size:12px; color:#666;">По методу доктора Яхья аль-Гаусани</span>
         </div>
-        <div class="user-info">
-            Чтец: <strong id="userNameDisplay">...</strong><br>
-            <button onclick="openSettings()" style="background:none; border:none; color:blue; cursor:pointer; text-decoration:underline;">Настройки</button> | 
-            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; text-decoration:underline;">Выход</button>
+        <div class="user-panel">
+            Чтец: <strong id="userNameDisp">...</strong><br>
+            <span class="settings-link" onclick="openSettings()">Настройки</span> | 
+            <span class="action-link" onclick="logout()">Выход</span>
         </div>
     </header>
 
-    <div class="instruction-box">
-        <h3>📋 Инструкция</h3>
-        <p><span class="term">1. Манзиль (Архив):</span> Старые выученные страницы. Читать в первую очередь (с листа или наизусть).</p>
-        <p><span class="term">2. Сабки (Связка):</span> Последние 5 страниц. Читать строго наизусть, без ошибок.</p>
-        <p><span class="term">3. Сабак (Новое):</span> Новый урок. Учить после повторения.</p>
+    <div class="rules-box">
+        <h3>📋 Как работать (Метод 5 Крепостей):</h3>
+        <p><span class="fortress">1. Манзиль (Архив)</span> — Это ваш старый багаж. Читаем в первую очередь. Если архива много, он делится на части.</p>
+        <p><span class="fortress">2. Сабки (Связка)</span> — Это последние 5 выученных страниц. Самая важная часть. Читать строго наизусть перед новым уроком.</p>
+        <p><span class="fortress">3. Сабак (Новое)</span> — Новый урок. Учить качественно, не переходя дальше, пока не будет идеально.</p>
     </div>
 
-    <div id="tableWrapper">
-        <!-- Таблица генерируется здесь -->
+    <div class="table-wrap" id="tableWrapper">
+        <!-- Таблица -->
     </div>
 </div>
 
-<!-- 3. НАСТРОЙКИ -->
-<div class="modal" id="settingsModal">
-    <div class="modal-content">
-        <h2>Настройки плана</h2>
+<!-- НАСТРОЙКИ -->
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal-box">
+        <h2 style="margin-top:0">Настройка программы</h2>
         
         <label>С какой страницы начать?</label>
-        <input type="number" id="inpStart" value="1">
+        <input type="number" id="inpStartPage" value="1" min="1" max="604">
 
-        <label>Объем в день</label>
+        <label>С какой строки начать? (Обычно 1)</label>
+        <input type="number" id="inpStartLine" value="1" min="1" max="15">
+
+        <label>Объем урока (Сабак):</label>
         <select id="inpPace">
-            <option value="3">3 строки</option>
-            <option value="5">5 строк</option>
-            <option value="7">7 строк</option>
-            <option value="0.5">Половина страницы</option>
-            <option value="1">Целая страница</option>
+            <option value="3">3 строки (Минимум)</option>
+            <option value="5">5 строк (Умеренно)</option>
+            <option value="7">7 строк (Половина страницы)</option>
+            <option value="15">15 строк (Целая страница)</option>
         </select>
 
-        <label>На сколько дней составить?</label>
+        <label>Длительность плана:</label>
         <select id="inpDuration">
-            <option value="7">1 неделя</option>
             <option value="14">2 недели</option>
             <option value="30">1 месяц</option>
             <option value="60">2 месяца</option>
         </select>
 
-        <button class="btn-action" onclick="generatePlan()">Создать новый план</button>
-        <button class="btn-action btn-outline" onclick="closeSettings()">Закрыть</button>
+        <button class="btn-save" onclick="generateFiveFortressesPlan()">Создать новый план</button>
+        <button class="btn-cancel" onclick="closeSettings()">Отмена</button>
+        <p style="font-size:11px; color:red; text-align:center; margin-top:10px;">⚠️ Создание плана удалит старые галочки</p>
     </div>
 </div>
 
 <script>
     let currentUser = null;
-    let data = {};
+    let appData = {};
 
-    // --- ЛОГИКА ВХОДА ---
-    function init() {
-        const last = localStorage.getItem('qp_final_user');
-        if (last) {
-            // Если сохранен Ayub, все равно спросим пароль для безопасности при перезагрузке,
-            // или можно сделать авто-вход. Сделаем авто-вход для удобства, кроме Ayub?
-            // Нет, по условию задачи просто авторизация. Сделаем чисто.
-            // Для удобства оставим экран входа всегда при открытии.
-        }
-    }
-
-    function attemptLogin(user) {
+    // --- АВТОРИЗАЦИЯ ---
+    function tryLogin(user) {
         if (user === 'Ayub') {
-            const pass = prompt("Введите пароль для Ayub:");
-            if (pass !== '1337') {
-                alert("Неверный пароль!");
-                return;
-            }
+            const p = prompt("Введите пароль:");
+            if (p !== '1337') { alert("Неверный пароль"); return; }
         }
-        
         currentUser = user;
-        localStorage.setItem('qp_final_user', user);
-        document.getElementById('userNameDisplay').innerText = user;
+        localStorage.setItem('hifz_last_user', user);
+        document.getElementById('userNameDisp').innerText = user;
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
-        
         loadData();
     }
 
     function logout() {
         currentUser = null;
-        localStorage.removeItem('qp_final_user');
+        localStorage.removeItem('hifz_last_user');
         document.getElementById('appContainer').style.display = 'none';
         document.getElementById('loginOverlay').style.display = 'flex';
     }
 
     // --- ДАННЫЕ ---
     function loadData() {
-        const json = localStorage.getItem(`qp_data_${currentUser}`);
+        const json = localStorage.getItem(`hifz_db_${currentUser}`);
         if (json) {
-            data = JSON.parse(json);
-            if (!data.schedule || data.schedule.length === 0) openSettings();
+            appData = JSON.parse(json);
+            if (!appData.schedule || appData.schedule.length === 0) openSettings();
             else renderTable();
         } else {
-            data = { settings: {start:1, pace:0.5, duration:30}, schedule: [], progress: {} };
+            appData = { settings: {startPage:1, startLine:1, pace:5, duration:30}, schedule: [], progress: {} };
             openSettings();
         }
     }
 
     function saveData() {
-        localStorage.setItem(`qp_data_${currentUser}`, JSON.stringify(data));
+        localStorage.setItem(`hifz_db_${currentUser}`, JSON.stringify(appData));
     }
 
-    // --- ГЕНЕРАЦИЯ ПЛАНА ---
-    function generatePlan() {
-        const start = parseInt(document.getElementById('inpStart').value);
-        const pace = parseFloat(document.getElementById('inpPace').value);
+    // --- ГЛАВНЫЙ АЛГОРИТМ 5 КРЕПОСТЕЙ ---
+    function generateFiveFortressesPlan() {
+        // Получаем входные данные
+        const startPage = parseInt(document.getElementById('inpStartPage').value);
+        const startLine = parseInt(document.getElementById('inpStartLine').value); // 1-15
+        const pace = parseInt(document.getElementById('inpPace').value); // кол-во строк (3, 5, 7, 15)
         const duration = parseInt(document.getElementById('inpDuration').value);
 
-        data.settings = { start, pace, duration };
-        data.progress = {};
-        data.schedule = [];
+        appData.settings = { startPage, startLine, pace, duration };
+        appData.progress = {};
+        appData.schedule = [];
 
-        let currPage = start;
-        let currLine = 0;
+        // Переменные для отслеживания ТЕКУЩЕЙ позиции (где мы учим новое)
+        let currP = startPage;
+        let currL = startLine;
 
-        for (let d = 1; d <= duration; d++) {
-            let mTxt = "---", sTxt = "", nTxt = "";
-            let isRest = (d % 7 === 0);
+        for (let day = 1; day <= duration; day++) {
+            let manzilText = "---";
+            let sabkiText = "---";
+            let sabakText = "";
+            let isRest = (day % 7 === 0); // Каждый 7-й день - выходной
 
-            // Манзиль
-            if(currPage > 1) {
-                let end = Math.floor(currPage) - 5;
-                if(end >= 1) mTxt = `Стр 1 - ${end}`;
-            }
-
-            // Сабки
-            let sEnd = Math.floor(currPage);
-            let sStart = Math.max(1, sEnd - 4);
-            sTxt = `Стр ${sStart} - ${sEnd}`;
-
-            // Сабак
+            // 1. РАСЧЕТ САБАКА (НОВОЕ)
+            // Мы должны рассчитать, какие строки учим сегодня
             if (isRest) {
-                nTxt = "Выходной (Повторение)";
+                sabakText = "ПОВТОРЕНИЕ (Без нового)";
+                // В выходной позиция не меняется
             } else {
-                if(pace >= 1) {
-                    nTxt = `Стр ${currPage} (Вся)`;
-                    currPage++;
-                } else if (pace === 0.5) {
-                    let part = (currLine === 0) ? "Верх" : "Низ";
-                    nTxt = `Стр ${currPage} (${part})`;
-                    if(currLine===0) currLine=1; else { currLine=0; currPage++; }
+                let endL = currL + pace - 1; // Конечная строка
+                let endP = currP;
+
+                // Если вышли за пределы страницы (15 строк)
+                if (endL > 15) {
+                    let linesOnFirstPage = 15 - currL + 1; // сколько строк взяли с текущей стр
+                    let linesOnNextPage = pace - linesOnFirstPage; // сколько осталось на следующую
+                    
+                    sabakText = `Стр ${currP} (стрк ${currL}-15) + Стр ${currP+1} (стрк 1-${linesOnNextPage})`;
+                    
+                    // Обновляем позицию на ЗАВТРА
+                    currP++; 
+                    currL = linesOnNextPage + 1;
                 } else {
-                    nTxt = `Стр ${currPage} (${pace} строк)`;
-                    currPage += 0.2; // приблизительно
+                    // Если уместились на одной странице
+                    if (pace === 15) {
+                         sabakText = `Стр ${currP} (Полная)`;
+                    } else {
+                         sabakText = `Стр ${currP} (стрк ${currL}-${endL})`;
+                    }
+                    
+                    // Обновляем позицию на ЗАВТРА
+                    currL = endL + 1;
+                }
+
+                // Коррекция переполнения строки на завтра
+                if (currL > 15) {
+                    currL = 1;
+                    currP++;
                 }
             }
-            data.schedule.push({ d, m: mTxt, s: sTxt, n: nTxt });
+
+            // 2. РАСЧЕТ САБКИ (СВЯЗКА)
+            // Это строго последние 5 ПОЛНЫХ страниц ДО текущего Сабака.
+            // Текущий Сабак начинается с currP (или currP-1, если мы только перешли).
+            // Для упрощения: Сабки - это 5 страниц ДО той, на которой мы СЕЙЧАС находимся.
+            
+            // Определяем "Точку отсчета" для Сабки (текущая страница минус 1)
+            // Если мы на середине стр 10, то Сабки заканчиваются на стр 9.
+            let sabkiEnd = currP; 
+            if (currL > 1) sabkiEnd = currP; // Если мы уже начали страницу, она еще не в Сабки, она в "учебе"
+            // Но по методу: Сабки - это выученное. Если мы на стр 6, то Сабки это 1-5.
+            
+            // Сделаем так: Сабки заканчиваются на (Текущая - 1).
+            // Если мы на стр 1, Сабки нет.
+            
+            let sabkiLastPage = (currL === 1) ? currP - 1 : currP; 
+            // Если мы на начале страницы, значит предыдущая полностью закрыта.
+            // Если мы на середине, то текущая еще не закрыта.
+            // Упрощение для таблицы: берем целые страницы.
+            
+            let actualSabkiEnd = Math.floor(currP);
+            // Если мы на середине страницы, связка не включает эту страницу.
+            if (currL > 1) actualSabkiEnd = currP - 1; 
+            else actualSabkiEnd = currP - 1;
+
+            if (actualSabkiEnd >= startPage) {
+                let actualSabkiStart = Math.max(startPage, actualSabkiEnd - 4); // Берем 5 страниц
+                sabkiText = `Стр ${actualSabkiStart} - ${actualSabkiEnd}`;
+            
+                // 3. РАСЧЕТ МАНЗИЛЯ (АРХИВ)
+                // Всё, что до начала Сабки
+                let manzilEnd = actualSabkiStart - 1;
+                if (manzilEnd >= startPage) {
+                    let totalManzil = manzilEnd - startPage + 1;
+                    if (totalManzil <= 10) {
+                        manzilText = `Стр ${startPage} - ${manzilEnd}`;
+                    } else {
+                        // Делим на части, если больше 10
+                        let half = Math.floor((startPage + manzilEnd) / 2);
+                        if (day % 2 !== 0) manzilText = `ЧАСТЬ А: Стр ${startPage} - ${half}`;
+                        else manzilText = `ЧАСТЬ Б: Стр ${half+1} - ${manzilEnd}`;
+                    }
+                }
+            }
+
+            appData.schedule.push({ d: day, m: manzilText, s: sabkiText, n: sabakText });
         }
-        
+
         saveData();
         closeSettings();
         renderTable();
     }
 
-    // --- ОТРИСОВКА ТАБЛИЦЫ ---
+    // --- ОТРИСОВКА ---
     function renderTable() {
         const wrapper = document.getElementById('tableWrapper');
         let html = `
             <table>
                 <thead>
                     <tr>
-                        <th style="width:10%">День</th>
-                        <th style="width:25%">Манзиль</th>
-                        <th style="width:25%">Сабки</th>
-                        <th style="width:30%">Сабак</th>
-                        <th style="width:10%">Ок</th>
+                        <th width="8%">День</th>
+                        <th width="30%">Манзиль (Архив)</th>
+                        <th width="25%">Сабки (Связка)</th>
+                        <th width="30%">Сабак (Новое)</th>
+                        <th width="7%">Ок</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
 
-        data.schedule.forEach(day => {
-            const key = `d${day.d}`;
-            const isDone = data.progress[key];
+        appData.schedule.forEach(item => {
+            const key = `d${item.d}`;
+            const isDone = appData.progress[key];
             const rowClass = isDone ? 'done-row' : '';
 
             html += `
                 <tr class="${rowClass}">
-                    <td><strong>${day.d}</strong></td>
-                    <td>${day.m}</td>
-                    <td>${day.s}</td>
-                    <td><b>${day.n}</b></td>
-                    <td style="text-align:center;">
-                        <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleDay('${key}')">
+                    <td><strong>${item.d}</strong></td>
+                    <td class="col-manzil">${item.m}</td>
+                    <td class="col-sabki">${item.s}</td>
+                    <td class="col-sabak">${item.n}</td>
+                    <td style="text-align:center">
+                        <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleCheck('${key}')">
                     </td>
                 </tr>
             `;
@@ -309,8 +376,8 @@
         wrapper.innerHTML = html;
     }
 
-    function toggleDay(key) {
-        data.progress[key] = !data.progress[key];
+    function toggleCheck(key) {
+        appData.progress[key] = !appData.progress[key];
         saveData();
         renderTable();
     }
@@ -318,7 +385,7 @@
     function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
     function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
 
-    init();
+    // Init (Проверка логина не нужна здесь, экран входа перекрывает всё)
 </script>
 </body>
-</html>
+</html> 
