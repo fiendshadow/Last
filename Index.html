@@ -3,188 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#10b981">
-    <title>Quran Plan Classic</title>
+    <meta name="theme-color" content="#2E7D32">
+    <title>План Хафиза (Таблица)</title>
     <style>
         :root {
-            --primary: #10b981; /* Классический зеленый из v1 */
-            --primary-dark: #059669;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --text: #1f2937;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --primary: #2E7D32; /* Классический зеленый */
+            --bg: #f9f9f9;
+            --text: #333;
+            --border: #ccc;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
             background-color: var(--bg);
             color: var(--text);
-            margin: 0; padding: 0;
-            padding-bottom: 50px;
+            padding-bottom: 60px;
         }
 
-        /* --- LOGIN SCREEN --- */
+        /* --- ЭКРАН ВХОДА --- */
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 2000;
+            background: #ffffff; z-index: 2000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px;
         }
-        .login-card {
-            background: white; padding: 30px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 320px; text-align: center;
+        .login-box {
+            width: 300px; text-align: center;
         }
-        .user-btn {
-            display: block; width: 100%; padding: 15px; margin-bottom: 12px;
-            background: white; border: 2px solid var(--border); border-radius: 12px;
-            font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+        .login-btn {
+            display: block; width: 100%; padding: 15px; margin-bottom: 10px;
+            background: white; border: 2px solid var(--primary); color: var(--primary);
+            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
-        .user-btn:active { transform: scale(0.98); background: #ecfdf5; border-color: var(--primary); }
+        .login-btn:hover { background: var(--primary); color: white; }
 
-        /* --- MAIN APP --- */
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
 
-        header { text-align: center; margin-bottom: 25px; position: relative; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .app-title { font-size: 22px; font-weight: 800; color: var(--primary); margin: 0; }
-        .user-badge { font-size: 12px; background: #d1fae5; color: #064e3b; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 24px; color: var(--primary); }
+        .user-info { font-size: 14px; color: #666; text-align: right; }
+
+        /* ИНСТРУКЦИЯ */
+        .instruction-box {
+            background: #e8f5e9; border: 1px solid #c8e6c9;
+            padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;
+        }
+        .instruction-box h3 { margin-top: 0; color: var(--primary); }
+        .term { font-weight: bold; color: #1b5e20; }
+
+        /* ТАБЛИЦА */
+        table {
+            width: 100%; border-collapse: collapse; background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 14px;
+        }
+        th {
+            background: var(--primary); color: white; padding: 12px 8px; text-align: left;
+        }
+        td {
+            border-bottom: 1px solid var(--border); padding: 10px 8px; vertical-align: top;
+        }
+        tr:nth-child(even) { background-color: #f1f1f1; }
         
-        .settings-btn {
-            background: white; border: 1px solid var(--border); width: 40px; height: 40px;
-            border-radius: 10px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        /* Галочка */
+        input[type="checkbox"] {
+            transform: scale(1.5); cursor: pointer; accent-color: var(--primary);
         }
+        .done-row { text-decoration: line-through; color: #999; background: #eee !important; }
 
-        /* Quote Box */
-        .quote-box {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white; padding: 15px; border-radius: 12px;
-            font-size: 14px; line-height: 1.5; margin-bottom: 20px;
-            box-shadow: var(--shadow); text-align: left;
-        }
-        .quote-ref { font-size: 11px; opacity: 0.8; margin-top: 5px; font-style: italic; }
-
-        /* Progress Bar */
-        .progress-container { background: var(--border); border-radius: 10px; height: 10px; overflow: hidden; margin-bottom: 5px; }
-        .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: width 0.5s ease; }
-        .progress-text { font-size: 12px; color: var(--text-light); display: flex; justify-content: space-between; margin-bottom: 20px; }
-
-        /* Day Card (Classic v1 Style) */
-        .day-card {
-            background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 15px;
-            box-shadow: var(--shadow); border: 1px solid transparent;
-        }
-        .day-card.active-day { border-color: var(--primary); }
-        .day-card.completed { opacity: 0.6; }
-
-        .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f3f4f6; }
-        .day-title { font-weight: 700; font-size: 18px; color: var(--primary); }
-
-        /* Tasks with Checkboxes */
-        .task-list { list-style: none; padding: 0; margin: 0; }
-        .task-item { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; padding: 5px; border-radius: 8px; transition: background 0.1s; }
-        .task-item:active { background: #f9fafb; }
-        
-        /* Custom Checkbox */
-        .checkbox {
-            width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 6px;
-            margin-right: 15px; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: 0.2s; color: white;
-        }
-        .task-item.checked .checkbox { background: var(--primary); border-color: var(--primary); }
-        .task-item.checked .task-desc { text-decoration: line-through; color: #9ca3af; }
-
-        .task-info { flex-grow: 1; }
-        .task-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; display: block; margin-bottom: 2px; }
-        .lbl-manzil { color: #d97706; } .lbl-sabki { color: #2563eb; } .lbl-sabak { color: #059669; }
-        .task-desc { font-size: 15px; font-weight: 500; color: var(--text); }
-
-        .btn-mushaf {
-            background: none; border: 1px solid var(--border); border-radius: 6px;
-            padding: 4px 8px; font-size: 16px; cursor: pointer; margin-left: 10px;
-        }
-
-        /* --- MODALS --- */
-        .modal-overlay {
+        /* НАСТРОЙКИ (МОДАЛКА) */
+        .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1000;
-            display: none; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
         }
-        .modal-card {
-            background: white; width: 90%; max-width: 450px; padding: 25px;
-            border-radius: 20px; max-height: 90vh; overflow-y: auto; position: relative;
+        .modal-content {
+            background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px;
         }
-        .close-btn {
-            position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; color: #9ca3af; cursor: pointer;
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        select, input { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; }
+        .btn-action {
+            width: 100%; padding: 12px; margin-top: 15px; background: var(--primary);
+            color: white; border: none; font-size: 16px; cursor: pointer; border-radius: 5px;
         }
-        
-        /* Form Elements */
-        label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; color: var(--text-light); }
-        select, input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn-full { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; }
-        .btn-logout { background: #fee2e2; color: #b91c1c; margin-top: 20px; }
-
-        /* Confetti Canvas */
-        #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1500; }
+        .btn-outline { background: transparent; border: 1px solid #999; color: #333; margin-top: 10px; }
 
     </style>
 </head>
 <body>
 
-<canvas id="confetti"></canvas>
-
-<!-- 1. LOGIN SCREEN -->
+<!-- 1. ВХОД -->
 <div id="loginOverlay">
-    <div class="login-card">
-        <h2 style="color:var(--primary); margin-top:0;">Ас-саляму алейкум!</h2>
-        <p style="color:#6b7280; margin-bottom:30px;">Выберите свой профиль:</p>
-        
-        <button class="user-btn" onclick="login('Ayub')"><span>👳🏻‍♂️</span> Ayub</button>
-        <button class="user-btn" onclick="login('Abdulla')"><span>👳🏽‍♂️</span> Abdulla</button>
-        <button class="user-btn" onclick="login('Daud')"><span>👳🏼‍♂️</span> Daud</button>
+    <div class="login-box">
+        <h2 style="color:var(--primary)">Ас-саляму алейкум</h2>
+        <p>Выберите профиль:</p>
+        <button class="login-btn" onclick="attemptLogin('Ayub')">Ayub 🔒</button>
+        <button class="login-btn" onclick="attemptLogin('Abdulla')">Abdulla</button>
+        <button class="login-btn" onclick="attemptLogin('Daud')">Daud</button>
     </div>
 </div>
 
-<!-- 2. MAIN APP -->
+<!-- 2. ОСНОВНОЙ ЭКРАН -->
 <div class="container" id="appContainer" style="display:none;">
     <header>
-        <div class="header-top">
-            <div>
-                <h1 class="app-title">Quran Plan</h1>
-                <span class="user-badge" id="userBadge">Guest</span>
-            </div>
-            <button class="settings-btn" onclick="openSettings()">⚙️</button>
+        <div>
+            <h1>План Хифза</h1>
+            <span style="font-size:12px; color:#666;">Метод 5 крепостей</span>
         </div>
-
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="progress-text">
-            <span id="progressPercent">0%</span>
-            <span>Выполнено дней: <span id="daysCount">0</span></span>
-        </div>
-
-        <div class="quote-box">
-            <div id="quoteText">...</div>
-            <div class="quote-ref" id="quoteRef"></div>
+        <div class="user-info">
+            Чтец: <strong id="userNameDisplay">...</strong><br>
+            <button onclick="openSettings()" style="background:none; border:none; color:blue; cursor:pointer; text-decoration:underline;">Настройки</button> | 
+            <button onclick="logout()" style="background:none; border:none; color:red; cursor:pointer; text-decoration:underline;">Выход</button>
         </div>
     </header>
 
-    <div id="scheduleList"></div>
+    <div class="instruction-box">
+        <h3>📋 Инструкция</h3>
+        <p><span class="term">1. Манзиль (Архив):</span> Старые выученные страницы. Читать в первую очередь (с листа или наизусть).</p>
+        <p><span class="term">2. Сабки (Связка):</span> Последние 5 страниц. Читать строго наизусть, без ошибок.</p>
+        <p><span class="term">3. Сабак (Новое):</span> Новый урок. Учить после повторения.</p>
+    </div>
+
+    <div id="tableWrapper">
+        <!-- Таблица генерируется здесь -->
+    </div>
 </div>
 
-<!-- 3. SETTINGS MODAL -->
-<div class="modal-overlay" id="settingsModal">
-    <div class="modal-card">
-        <button class="close-btn" onclick="closeModal('settingsModal')">✕</button>
-        <h2 style="margin-top:0;">Настройки</h2>
+<!-- 3. НАСТРОЙКИ -->
+<div class="modal" id="settingsModal">
+    <div class="modal-content">
+        <h2>Настройки плана</h2>
         
-        <label>Стартовая страница</label>
+        <label>С какой страницы начать?</label>
         <input type="number" id="inpStart" value="1">
 
-        <label>Темп в день</label>
+        <label>Объем в день</label>
         <select id="inpPace">
             <option value="3">3 строки</option>
             <option value="5">5 строк</option>
@@ -193,7 +148,7 @@
             <option value="1">Целая страница</option>
         </select>
 
-        <label>Длительность плана</label>
+        <label>На сколько дней составить?</label>
         <select id="inpDuration">
             <option value="7">1 неделя</option>
             <option value="14">2 недели</option>
@@ -201,64 +156,38 @@
             <option value="60">2 месяца</option>
         </select>
 
-        <button class="btn-full" onclick="generatePlan()">Создать план</button>
-        
-        <button class="btn-full btn-logout" onclick="logout()">Выйти из профиля</button>
-    </div>
-</div>
-
-<!-- 4. MUSHAF MODAL -->
-<div class="modal-overlay" id="mushafModal">
-    <div class="modal-card" style="text-align:center;">
-        <button class="close-btn" onclick="closeModal('mushafModal')">✕</button>
-        <h3>Мусхаф</h3>
-        <div id="mushafContent" style="min-height:200px; display:flex; align-items:center; justify-content:center;">Загрузка...</div>
-        <p style="font-size:12px; color:#9ca3af;">Мединский шрифт</p>
+        <button class="btn-action" onclick="generatePlan()">Создать новый план</button>
+        <button class="btn-action btn-outline" onclick="closeSettings()">Закрыть</button>
     </div>
 </div>
 
 <script>
-    // --- ДАННЫЕ (Абу Адель) ---
-    const quotes = [
-        { t: "И Мы уже облегчили Коран для запоминания [поминания], но найдется ли вспоминающий?", r: "Сура 54:17 (пер. Абу Адель)" },
-        { t: "Лучший из вас тот, кто изучает Коран и обучает ему других.", r: "Хадис (Бухари)" },
-        { t: "Читай Коран размеренно [не спеша и чётко произнося буквы].", r: "Сура 73:4 (пер. Абу Адель)" },
-        { t: "Поистине, этот Коран ведет к тому, что является самым правильным.", r: "Сура 17:9 (пер. Абу Адель)" }
-    ];
-
-    // --- ПЕРЕМЕННЫЕ ---
     let currentUser = null;
-    let data = {
-        settings: { start: 1, pace: 0.5, duration: 30 },
-        schedule: [],
-        progress: {} // { "d1_m": true, "d1_s": false }
-    };
+    let data = {};
 
-    // --- АУДИО ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playClick() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-    }
-
-    // --- ЛОГИКА АВТОРИЗАЦИИ ---
+    // --- ЛОГИКА ВХОДА ---
     function init() {
-        const lastUser = localStorage.getItem('qp_last_user');
-        if(lastUser) login(lastUser);
+        const last = localStorage.getItem('qp_final_user');
+        if (last) {
+            // Если сохранен Ayub, все равно спросим пароль для безопасности при перезагрузке,
+            // или можно сделать авто-вход. Сделаем авто-вход для удобства, кроме Ayub?
+            // Нет, по условию задачи просто авторизация. Сделаем чисто.
+            // Для удобства оставим экран входа всегда при открытии.
+        }
     }
 
-    function login(name) {
-        currentUser = name;
-        localStorage.setItem('qp_last_user', name);
-        document.getElementById('userBadge').innerText = name;
+    function attemptLogin(user) {
+        if (user === 'Ayub') {
+            const pass = prompt("Введите пароль для Ayub:");
+            if (pass !== '1337') {
+                alert("Неверный пароль!");
+                return;
+            }
+        }
+        
+        currentUser = user;
+        localStorage.setItem('qp_final_user', user);
+        document.getElementById('userNameDisplay').innerText = user;
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
         
@@ -266,211 +195,19 @@
     }
 
     function logout() {
-        localStorage.removeItem('qp_last_user');
         currentUser = null;
-        closeModal('settingsModal');
+        localStorage.removeItem('qp_final_user');
         document.getElementById('appContainer').style.display = 'none';
         document.getElementById('loginOverlay').style.display = 'flex';
     }
 
+    // --- ДАННЫЕ ---
     function loadData() {
         const json = localStorage.getItem(`qp_data_${currentUser}`);
-        if(json) {
+        if (json) {
             data = JSON.parse(json);
-            // Если план пуст (первый вход)
-            if(!data.schedule || data.schedule.length === 0) {
-                openSettings();
-            } else {
-                renderApp();
-            }
+            if (!data.schedule || data.schedule.length === 0) openSettings();
+            else renderTable();
         } else {
-            // Новый пользователь
-            data = { settings: { start: 1, pace: 0.5, duration: 30 }, schedule: [], progress: {} };
-            openSettings();
-        }
-    }
-
-    function saveData() {
-        localStorage.setItem(`qp_data_${currentUser}`, JSON.stringify(data));
-    }
-
-    // --- ЛОГИКА ПЛАНА ---
-    function generatePlan() {
-        const start = parseInt(document.getElementById('inpStart').value);
-        const pace = parseFloat(document.getElementById('inpPace').value);
-        const duration = parseInt(document.getElementById('inpDuration').value);
-
-        data.settings = { start, pace, duration };
-        data.progress = {}; // Сброс при новом плане
-        data.schedule = [];
-
-        let currPage = start;
-        let currLine = 0; 
-
-        for (let d = 1; d <= duration; d++) {
-            let mTxt = "---", sTxt = "", nTxt = "";
-            let nPage = Math.floor(currPage);
-            let isRest = (d % 7 === 0);
-
-            // Манзиль
-            if(currPage > 1) {
-                let mEnd = Math.floor(currPage) - 5;
-                if(mEnd >= 1) mTxt = `Стр 1 - ${mEnd}`;
-            }
-
-            // Сабки
-            let sEnd = Math.floor(currPage);
-            let sStart = Math.max(1, sEnd - 4);
-            sTxt = `Стр ${sStart} - ${sEnd}`;
-
-            // Сабак
-            if(isRest) {
-                nTxt = "День повторения (Джума)";
-            } else {
-                if(pace >= 1) { // Страницы
-                    nTxt = `Стр ${currPage} (Полная)`;
-                    nPage = currPage;
-                    currPage++;
-                } else if (pace === 0.5) { // Половинки
-                    let part = (currLine === 0) ? "Верх" : "Низ";
-                    nTxt = `Стр ${currPage} (${part})`;
-                    nPage = currPage;
-                    if(currLine===0) currLine=1; else { currLine=0; currPage++; }
-                } else { // Строки
-                    nTxt = `Стр ${currPage} (${pace} строк)`;
-                    nPage = currPage;
-                    currPage += 0.2; // условно
-                }
-            }
-
-            data.schedule.push({ d, m: mTxt, s: sTxt, n: nTxt, p: Math.floor(nPage) });
-        }
-
-        saveData();
-        closeModal('settingsModal');
-        renderApp();
-    }
-
-    function renderApp() {
-        const list = document.getElementById('scheduleList');
-        list.innerHTML = '';
-        
-        // Цитата
-        const q = quotes[Math.floor(Math.random() * quotes.length)];
-        document.getElementById('quoteText').innerText = q.t;
-        document.getElementById('quoteRef').innerText = q.r;
-
-        let completedDays = 0;
-        let firstActive = null;
-
-        data.schedule.forEach((day, idx) => {
-            const id = idx + 1;
-            const kM = `d${id}_m`, kS = `d${id}_s`, kN = `d${id}_n`;
-            const doneM = data.progress[kM];
-            const doneS = data.progress[kS];
-            const doneN = data.progress[kN];
-            const isDayDone = doneM && doneS && doneN;
-
-            if(isDayDone) completedDays++;
-
-            const card = document.createElement('div');
-            card.className = `day-card ${isDayDone ? 'completed' : ''}`;
-            if(!isDayDone && !firstActive) {
-                firstActive = card;
-                card.classList.add('active-day');
-            }
-
-            card.innerHTML = `
-                <div class="day-header">
-                    <span class="day-title">День ${day.d}</span>
-                    <span>${isDayDone ? '✅' : ''}</span>
-                </div>
-                <ul class="task-list">
-                    ${renderTask(kM, 'Манзиль', day.m, doneM, 'lbl-manzil')}
-                    ${renderTask(kS, 'Сабки', day.s, doneS, 'lbl-sabki')}
-                    ${renderTask(kN, 'Сабак', day.n, doneN, 'lbl-sabak', day.p)}
-                </ul>
-            `;
-            list.appendChild(card);
-        });
-
-        // Прогресс бар
-        const total = data.schedule.length;
-        const pct = Math.round((completedDays / total) * 100);
-        document.getElementById('progressBar').style.width = `${pct}%`;
-        document.getElementById('progressPercent').innerText = `${pct}%`;
-        document.getElementById('daysCount').innerText = `${completedDays}/${total}`;
-
-        // Скролл к активному
-        if(firstActive) setTimeout(() => firstActive.scrollIntoView({behavior:'smooth', block:'center'}), 300);
-    }
-
-    function renderTask(key, label, val, isDone, colorClass, page) {
-        if(val === "---") return "";
-        let btn = (label === 'Сабак' && page) ? 
-            `<button class="btn-mushaf" onclick="event.stopPropagation(); showMushaf(${page})">👁️</button>` : '';
-
-        return `
-            <li class="task-item ${isDone ? 'checked' : ''}" onclick="toggle('${key}')">
-                <div class="checkbox">${isDone ? '✓' : ''}</div>
-                <div class="task-info">
-                    <span class="task-label ${colorClass}">${label}</span>
-                    <span class="task-desc">${val} ${btn}</span>
-                </div>
-            </li>
-        `;
-    }
-
-    function toggle(key) {
-        data.progress[key] = !data.progress[key];
-        playClick();
-        saveData();
-        renderApp();
-
-        // Проверка завершения дня для конфетти
-        const dayPrefix = key.split('_')[0]; // d1
-        if(data.progress[`${dayPrefix}_m`] && data.progress[`${dayPrefix}_s`] && data.progress[`${dayPrefix}_n`]) {
-            if(data.progress[key]) fireConfetti();
-        }
-    }
-
-    // --- МОДАЛКИ ---
-    function openSettings() {
-        document.getElementById('inpStart').value = data.settings.start;
-        document.getElementById('settingsModal').style.display = 'flex';
-    }
-    function showMushaf(page) {
-        document.getElementById('mushafContent').innerHTML = `<img src="https://img.globalquran.com/data/quran/page/${page}.png" style="width:100%; border-radius:8px;">`;
-        document.getElementById('mushafModal').style.display = 'flex';
-    }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    // --- CONFETTI (Simple) ---
-    function fireConfetti() {
-        const canvas = document.getElementById('confetti');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particles = [];
-        for(let i=0; i<80; i++) {
-            particles.push({
-                x: window.innerWidth/2, y: window.innerHeight/2,
-                vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10,
-                color: `hsl(${Math.random()*360}, 100%, 50%)`, life: 100
-            });
-        }
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            particles.forEach((p,i) => {
-                p.x+=p.vx; p.y+=p.vy; p.life--; p.vy+=0.1;
-                ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,5,5);
-                if(p.life<=0) particles.splice(i,1);
-            });
-            if(particles.length>0) requestAnimationFrame(draw);
-        }
-        draw();
-    }
-
-    init();
-</script>
-</body>
-</html>
+            data = { settings: {start:1, pace:0.5, duration:30}, schedule: [], progress: {} };
+            
