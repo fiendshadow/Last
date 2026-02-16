@@ -210,4 +210,115 @@
             else renderTable();
         } else {
             data = { settings: {start:1, pace:0.5, duration:30}, schedule: [], progress: {} };
-            
+            openSettings();
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem(`qp_data_${currentUser}`, JSON.stringify(data));
+    }
+
+    // --- ГЕНЕРАЦИЯ ПЛАНА ---
+    function generatePlan() {
+        const start = parseInt(document.getElementById('inpStart').value);
+        const pace = parseFloat(document.getElementById('inpPace').value);
+        const duration = parseInt(document.getElementById('inpDuration').value);
+
+        data.settings = { start, pace, duration };
+        data.progress = {};
+        data.schedule = [];
+
+        let currPage = start;
+        let currLine = 0;
+
+        for (let d = 1; d <= duration; d++) {
+            let mTxt = "---", sTxt = "", nTxt = "";
+            let isRest = (d % 7 === 0);
+
+            // Манзиль
+            if(currPage > 1) {
+                let end = Math.floor(currPage) - 5;
+                if(end >= 1) mTxt = `Стр 1 - ${end}`;
+            }
+
+            // Сабки
+            let sEnd = Math.floor(currPage);
+            let sStart = Math.max(1, sEnd - 4);
+            sTxt = `Стр ${sStart} - ${sEnd}`;
+
+            // Сабак
+            if (isRest) {
+                nTxt = "Выходной (Повторение)";
+            } else {
+                if(pace >= 1) {
+                    nTxt = `Стр ${currPage} (Вся)`;
+                    currPage++;
+                } else if (pace === 0.5) {
+                    let part = (currLine === 0) ? "Верх" : "Низ";
+                    nTxt = `Стр ${currPage} (${part})`;
+                    if(currLine===0) currLine=1; else { currLine=0; currPage++; }
+                } else {
+                    nTxt = `Стр ${currPage} (${pace} строк)`;
+                    currPage += 0.2; // приблизительно
+                }
+            }
+            data.schedule.push({ d, m: mTxt, s: sTxt, n: nTxt });
+        }
+        
+        saveData();
+        closeSettings();
+        renderTable();
+    }
+
+    // --- ОТРИСОВКА ТАБЛИЦЫ ---
+    function renderTable() {
+        const wrapper = document.getElementById('tableWrapper');
+        let html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:10%">День</th>
+                        <th style="width:25%">Манзиль</th>
+                        <th style="width:25%">Сабки</th>
+                        <th style="width:30%">Сабак</th>
+                        <th style="width:10%">Ок</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        data.schedule.forEach(day => {
+            const key = `d${day.d}`;
+            const isDone = data.progress[key];
+            const rowClass = isDone ? 'done-row' : '';
+
+            html += `
+                <tr class="${rowClass}">
+                    <td><strong>${day.d}</strong></td>
+                    <td>${day.m}</td>
+                    <td>${day.s}</td>
+                    <td><b>${day.n}</b></td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleDay('${key}')">
+                    </td>
+                </tr>
+            `;
+        });
+
+        html += `</tbody></table>`;
+        wrapper.innerHTML = html;
+    }
+
+    function toggleDay(key) {
+        data.progress[key] = !data.progress[key];
+        saveData();
+        renderTable();
+    }
+
+    function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+
+    init();
+</script>
+</body>
+</html>
