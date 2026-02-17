@@ -403,7 +403,7 @@
             <p>
                 <strong>Цель:</strong> выучить
                 <span id="lesson-desc-goal">5 строк</span>
-                на следующей по порядку странице суры «Аль‑Бакара».
+                на текущей странице.
             </p>
             <ol>
                 <li>
@@ -438,6 +438,7 @@
             </ul>
             <p id="near-review-auto">
                 <strong>Подсказка:</strong> введи текущий номер страницы в настройках выше, чтобы увидеть, какие страницы повторять для 2‑й крепости.
+                При уроке 7 строк: вчерашние 7 считаются «недавно заученными» и входят в ближнее повторение.
             </p>
         </div>
     </section>
@@ -777,7 +778,7 @@
 
     // История
     const historyPrevBtn = document.getElementById("history-prev");
-    const historyNextBtn = document.getElementById("history-next");
+       const historyNextBtn = document.getElementById("history-next");
     const historyDateInput = document.getElementById("history-date");
     const historyContentDiv = document.getElementById("history-content");
 
@@ -786,7 +787,6 @@
     const weeklyPlanPanel = document.getElementById("weekly-plan-panel");
     const weeklyPlanBody = document.getElementById("weekly-plan-body");
 
-    // State
     let settings = {};
     let weakSet = new Set();
     let reviewState = null;
@@ -1053,20 +1053,33 @@
         return { shortNom: "5 строк", shortAcc: "5 строк" };
     }
 
+    function describeNewBlock() {
+        const page = parseInt(settings.currentPage, 10) || 1;
+        const used = parseInt(settings.linesOnCurrentPage, 10) || 0;
+        const linesPerDay = getLinesPerDay();
+        if (linesPerDay <= 0) {
+            return "страница " + page;
+        }
+        if (settings.lessonSize === "page" || linesPerDay >= LINES_PER_PAGE) {
+            return "страницу " + page + " целиком";
+        }
+        const startLine = used + 1;
+        const endLine = Math.min(LINES_PER_PAGE, used + linesPerDay);
+        return linesPerDay + " строк (примерно строки " + startLine + "–" + endLine + ") на странице " + page;
+    }
+
     function updateLessonTexts() {
         const p = getLessonPhrases();
-        const page = parseInt(settings.currentPage, 10) || 1;
-
         if (lessonDescShortSpan) lessonDescShortSpan.textContent = p.shortNom;
         if (lessonDescHeadingSpan) lessonDescHeadingSpan.textContent = p.shortNom;
         if (lessonDescGoalSpan) lessonDescGoalSpan.textContent = p.shortAcc;
         if (lessonDescStep1Span) lessonDescStep1Span.textContent = p.shortAcc;
         if (lessonDesc5thSpan) lessonDesc5thSpan.textContent = p.shortNom;
 
+        const desc = describeNewBlock();
         if (todayNewLi) {
             todayNewLi.textContent =
-                "1‑я крепость (новый урок): " + p.shortAcc +
-                " на странице " + page + ".";
+                "1‑я крепость (новый урок): " + desc + ".";
         }
     }
 
@@ -1368,7 +1381,7 @@
             }
 
             let growthText = "+" + pages + " стр.";
-            if (remLines > 0) growthText += " и +" + remLines + " строк";
+            if (remLines > 0) growthText += " и +"" + remLines + " строк";
             growthText += " к текущему уровню.";
 
             const approxTotalPages = currentPages + pages + (remLines > 0 ? 1 : 0);
@@ -1508,7 +1521,6 @@
         });
     }
 
-    // Init
     (function init() {
         settings = loadSettings();
         applySettingsToInputs();
@@ -1618,7 +1630,6 @@
             weeklyPlanToggleBtn.textContent = hidden ? "Показать план на неделю" : "Скрыть план на неделю";
         });
 
-        // изменение числовых/текстовых настроек
         function handleSettingsInputsChange(e) {
             const totalVal = parseInt(totalPagesInput.value, 10);
             const currentVal = parseInt(currentPageInput.value, 10);
