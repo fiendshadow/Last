@@ -790,4 +790,17 @@ function loadSettings() {
     try {
         const raw = localStorage.getItem("quranPlanSettingsV2");
         if (!raw) return defaults;
-        const data = 
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== "object") return defaults;
+        const out = { ...defaults };
+
+        if (typeof data.totalPages === "number") out.totalPages = data.totalPages;
+        if (typeof data.currentPage === "number") out.currentPage = data.currentPage;
+        if (typeof data.linesOnCurrentPage === "number") out.linesOnCurrentPage = data.linesOnCurrentPage;
+        if (typeof data.reviewPagesText === "string") out.reviewPagesText = data.reviewPagesText;
+        if (typeof data.cycleDays === "number") out.cycleDays = data.cycleDays;
+        if (typeof data.weakPages === "string") out.weakPages = data.weakPages;
+        if (typeof data.lessonSize === "string" && ["5","7","page"].includes(data.lessonSize)) {
+            out.lessonSize = data.lessonSize;
+        }
+        if 
