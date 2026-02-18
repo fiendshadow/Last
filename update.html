@@ -2,2380 +2,792 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>План хифза — метод 5 крепостей</title>
+    <title>План хифза — 5 крепостей</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root {
-            --primary: #1a6b4a;
-            --primary-light: #2d9d6f;
-            --primary-dark: #0f4a33;
-            --gold: #d4a934;
-            --gold-light: #f0d680;
-            --gold-dark: #b08a1a;
-            --bg: #f0f4f2;
-            --card-bg: #ffffff;
-            --text: #1a2a24;
-            --text-secondary: #5a6e64;
-            --border: #d4ddd8;
-            --success: #2d9d6f;
-            --danger: #d64545;
-            --warning: #e8a820;
-            --info: #3a8fd4;
-            --shadow: 0 2px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-            --radius: 12px;
-            --radius-sm: 8px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body.dark {
-            --primary: #3cb97a;
-            --primary-light: #4fd48f;
-            --primary-dark: #2a8a5c;
-            --gold: #f0d680;
-            --gold-light: #f5e4a0;
-            --gold-dark: #d4a934;
-            --bg: #0d1a14;
-            --card-bg: #152420;
-            --text: #e0ece6;
-            --text-secondary: #8fa89c;
-            --border: #2a3e34;
-            --shadow: 0 2px 12px rgba(0,0,0,0.3);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            transition: background var(--transition), color var(--transition);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            color: #222;
         }
-
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-
-        /* ===== HEADER ===== */
-        .app-header {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
-            color: #fff;
-            padding: 20px 20px 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        body.dark {
+            background-color: #121212;
+            color: #e0e0e0;
         }
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.05) 0%, transparent 50%);
-            pointer-events: none;
+        body.compact .container {
+            max-width: 100%;
+            padding: 10px 10px 20px;
         }
-        .app-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .app-header .subtitle {
-            font-size: 14px;
-            opacity: 0.85;
-        }
-        .header-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 6px;
-        }
-        .header-actions button {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.25);
-            color: #fff;
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background var(--transition);
-            backdrop-filter: blur(4px);
-        }
-        .header-actions button:hover {
-            background: rgba(255,255,255,0.25);
-        }
-
-        /* ===== STREAK BAR ===== */
-        .streak-bar {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            padding: 12px 20px;
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-        .streak-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .streak-item .icon {
+        body.compact h1 {
             font-size: 20px;
         }
-        .streak-item .number {
-            color: var(--primary);
+        body.compact h2 {
+            margin-top: 20px;
             font-size: 18px;
         }
-        .streak-fire { color: #ff6b35; }
-
-        /* ===== CONTAINER ===== */
+        body.compact .note {
+            display: none;
+        }
+        body.compact .card {
+            padding: 10px 10px;
+        }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 16px 16px 80px;
+            padding: 20px 15px 40px;
+            background-color: #ffffff;
         }
-
-        /* ===== QUOTE CARD ===== */
-        .quote-card {
-            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
-            color: #1a1a0a;
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin-bottom: 16px;
+        body.dark .container {
+            background-color: #1e1e1e;
+        }
+        h1, h2, h3 {
+            color: #16324f;
+        }
+        body.dark h1, body.dark h2, body.dark h3 {
+            color: #cfd8ff;
+        }
+        h1 {
             text-align: center;
-            font-style: italic;
-            font-size: 14px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: transform var(--transition);
-            position: relative;
+            margin-bottom: 10px;
         }
-        .quote-card:hover { transform: scale(1.01); }
-        .quote-card .quote-source {
-            font-style: normal;
-            font-size: 12px;
-            margin-top: 6px;
-            opacity: 0.7;
+        h2 {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+            margin-top: 28px;
         }
-        .quote-card .refresh-quote {
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            opacity: 0.5;
+        body.dark h2 {
+            border-color: #444;
         }
-        .quote-card .refresh-quote:hover { opacity: 1; }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow);
-            transition: all var(--transition);
-        }
-        .card:hover { box-shadow: var(--shadow-lg); }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            cursor: pointer;
-        }
-        .card-header h2 {
-            font-size: 17px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-header .toggle-icon {
-            font-size: 14px;
-            color: var(--text-secondary);
-            transition: transform var(--transition);
-        }
-        .card-header .toggle-icon.collapsed { transform: rotate(-90deg); }
-        .card-body { transition: all var(--transition); }
-        .card-body.collapsed {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            padding: 0;
-            margin: 0;
-        }
-        .card-body:not(.collapsed) {
-            max-height: 5000px;
-            opacity: 1;
-        }
-
-        .section-title {
+        p, li {
             font-size: 15px;
-            font-weight: 600;
-            color: var(--primary);
-            margin: 16px 0 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
-
-        /* ===== TODAY PLAN ===== */
-        .today-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .plan-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid #ffb300;
             padding: 10px 12px;
-            margin: 6px 0;
-            border-radius: var(--radius-sm);
-            background: color-mix(in srgb, var(--primary) 5%, var(--card-bg));
-            border-left: 3px solid var(--primary);
+            margin: 15px 0;
             font-size: 14px;
-            transition: all var(--transition);
         }
-        .plan-item:hover {
-            background: color-mix(in srgb, var(--primary) 10%, var(--card-bg));
+        body.dark .note {
+            background: #333018;
+            color: #fcefb8;
         }
-        .plan-item .fortress-num {
-            background: var(--primary);
-            color: #fff;
-            min-width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        .plan-item.weak-item {
-            border-left-color: var(--warning);
-            background: color-mix(in srgb, var(--warning) 5%, var(--card-bg));
-        }
-        .plan-item.weak-item .fortress-num {
-            background: var(--warning);
-        }
-
-        /* ===== CHECKLIST ===== */
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
             padding: 12px 14px;
-            margin: 6px 0;
-            border-radius: var(--radius-sm);
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all var(--transition);
-            user-select: none;
-        }
-        .checklist-item:hover {
-            border-color: var(--primary);
-            transform: translateX(4px);
-        }
-        .checklist-item.checked {
-            background: color-mix(in srgb, var(--success) 8%, var(--card-bg));
-            border-color: var(--success);
-        }
-        .checklist-item.checked .check-text {
-            text-decoration: line-through;
-            opacity: 0.7;
-        }
-        .custom-checkbox {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all var(--transition);
-            font-size: 12px;
-        }
-        .checklist-item.checked .custom-checkbox {
-            background: var(--success);
-            border-color: var(--success);
-            color: #fff;
-        }
-        .check-text { font-size: 14px; flex: 1; }
-        .checklist-item input[type="checkbox"] { display: none; }
-
-        /* ===== PROGRESS ===== */
-        .progress-container {
-            margin: 16px 0 8px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: var(--border);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-            border-radius: 5px;
-            transition: width 0.5s ease;
-        }
-        .progress-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            text-align: center;
-        }
-
-        /* ===== TIMER ===== */
-        .timer-card {
-            text-align: center;
-        }
-        .timer-display {
-            font-size: 48px;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            color: var(--primary);
-            letter-spacing: 2px;
             margin: 12px 0;
+            background-color: #fafafa;
         }
-        .timer-controls {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
+        body.dark .card {
+            border-color: #444;
+            background-color: #242424;
         }
-        .timer-preset {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .timer-preset button {
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            cursor: pointer;
-            font-size: 12px;
-            transition: all var(--transition);
-        }
-        .timer-preset button:hover, .timer-preset button.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all var(--transition);
-        }
-        .btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-1px);
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        .btn-primary:hover {
-            background: var(--primary-light);
-            color: #fff;
-            border-color: var(--primary-light);
-        }
-        .btn-danger {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-        .btn-danger:hover {
-            background: var(--danger);
-            color: #fff;
-        }
-        .btn-sm {
-            padding: 4px 10px;
-            font-size: 12px;
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
-            color: #1a1a0a;
-            border-color: var(--gold-dark);
-        }
-
-        /* ===== SETTINGS ===== */
         .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-        }
-        .setting-item {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            font-size: 14px;
+            margin-top: 6px;
+        }
+        .settings-grid label {
+            display: flex;
+            align-items: center;
             gap: 4px;
         }
-        .setting-item label {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        .setting-item input, .setting-item select {
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
+        .settings-grid input[type="number"],
+        .settings-grid input[type="text"],
+        .settings-grid select {
+            padding: 2px 4px;
             font-size: 14px;
-            transition: border-color var(--transition);
         }
-        .setting-item input:focus, .setting-item select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+        .settings-grid input[type="number"] {
+            width: 80px;
         }
-
-        .toggle-setting {
+        .settings-grid input[type="text"] {
+            min-width: 220px;
+            max-width: 100%;
+        }
+        .settings-grid select {
+            min-width: 160px;
+        }
+        .settings-toggle {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 14px;
-        }
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            inset: 0;
-            background: var(--border);
-            border-radius: 24px;
-            transition: background var(--transition);
-        }
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform var(--transition);
-        }
-        .toggle-switch input:checked + .toggle-slider {
-            background: var(--primary);
-        }
-        .toggle-switch input:checked + .toggle-slider::before {
-            transform: translateX(20px);
-        }
-
-        /* ===== FORTRESS DETAILS ===== */
-        .fortress-card {
-            border-left: 4px solid var(--primary);
-        }
-        .fortress-card[data-f="1"] { border-left-color: #4caf50; }
-        .fortress-card[data-f="2"] { border-left-color: #2196f3; }
-        .fortress-card[data-f="3"] { border-left-color: #9c27b0; }
-        .fortress-card[data-f="4"] { border-left-color: #ff9800; }
-        .fortress-card[data-f="5"] { border-left-color: #f44336; }
-
-        .fortress-steps {
-            list-style: none;
-            counter-reset: step;
-        }
-        .fortress-steps li {
-            counter-increment: step;
-            padding: 6px 0 6px 32px;
-            position: relative;
-            font-size: 14px;
-        }
-        .fortress-steps li::before {
-            content: counter(step);
-            position: absolute;
-            left: 0;
-            top: 6px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: color-mix(in srgb, var(--primary) 15%, var(--card-bg));
-            color: var(--primary);
-            display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
+            gap: 8px;
         }
-
-        /* ===== TABLE ===== */
-        .table-wrap { overflow-x: auto; }
+        .settings-toggle button {
+            font-size: 13px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .today-badge {
+            display: inline-block;
+            background: #16324f;
+            color: #fff;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+        .btn, .reset-btn {
+            margin-top: 6px;
+            font-size: 13px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #888;
+            background: #f5f5f5;
+            color: #222;
+            cursor: pointer;
+        }
+        body.dark .btn, body.dark .reset-btn {
+            background: #303030;
+            color: #eee;
+            border-color: #777;
+        }
+        .reset-btn.danger {
+            border-color: #d32f2f;
+            background: #fff5f5;
+            color: #b71c1c;
+        }
+        body.dark .reset-btn.danger {
+            background: #3a2323;
+            color: #ffb3b3;
+            border-color: #ff5252;
+        }
+        .checklist label {
+            display: block;
+            margin: 4px 0;
+            cursor: pointer;
+        }
+        .checklist input[type="checkbox"] {
+            margin-right: 6px;
+        }
+        small {
+            color: #666;
+        }
+        body.dark small {
+            color: #aaa;
+        }
+        /* Прогресс-бар */
+        #daily-progress {
+            margin-top: 8px;
+        }
+        #progress-bar-outer {
+            width: 100%;
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        #progress-bar-inner {
+            width: 0%;
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.2s ease;
+        }
+        body.dark #progress-bar-outer {
+            background: #444;
+        }
+        body.dark #progress-bar-inner {
+            background: #81c784;
+        }
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            font-family: inherit;
+            font-size: 14px;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        body.dark textarea {
+            background: #1e1e1e;
+            color: #eee;
+            border-color: #555;
+        }
+        /* Таблицы */
+        .table-wrapper {
+            overflow-x: auto;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
             font-size: 13px;
+            margin-top: 6px;
         }
         th, td {
-            border: 1px solid var(--border);
-            padding: 8px 10px;
+            border: 1px solid #ddd;
+            padding: 4px 6px;
             text-align: left;
         }
         th {
-            background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
-            font-weight: 600;
-            color: var(--primary);
+            background-color: #f0f0f0;
         }
-        tr:hover td {
-            background: color-mix(in srgb, var(--primary) 3%, var(--card-bg));
+        body.dark th {
+            background-color: #333;
         }
-
-        /* ===== TEXTAREA ===== */
-        textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            transition: border-color var(--transition);
+        body.dark td, body.dark th {
+            border-color: #555;
         }
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+        @media (max-width: 768px) {
+            body { font-size: 15px; }
+            .container { padding: 15px 10px 30px; }
         }
-
-        /* ===== HISTORY CALENDAR ===== */
-        .mini-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            margin: 12px 0;
-        }
-        .mini-calendar .cal-header {
-            font-size: 11px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-secondary);
-            padding: 4px 0;
-        }
-        .cal-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all var(--transition);
-            border: 1px solid transparent;
-        }
-        .cal-day:hover { border-color: var(--primary); }
-        .cal-day.empty { cursor: default; }
-        .cal-day.today { border: 2px solid var(--primary); font-weight: 700; }
-        .cal-day.completed { background: var(--success); color: #fff; }
-        .cal-day.partial { background: color-mix(in srgb, var(--warning) 30%, var(--card-bg)); }
-        .cal-day.selected { box-shadow: 0 0 0 2px var(--gold); }
-
-        /* ===== CELEBRATION ===== */
-        .celebration-overlay {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            pointer-events: none;
-        }
-        .celebration-overlay.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-        .celebration-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gold);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            animation: celebPulse 1.5s ease infinite;
-        }
-        @keyframes celebPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; } to { opacity: 1; }
-        }
-
-        .confetti-piece {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            z-index: 999;
-            pointer-events: none;
-        }
-
-        /* ===== STATS ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 14px 10px;
-            border-radius: var(--radius-sm);
-            background: color-mix(in srgb, var(--primary) 5%, var(--card-bg));
-            border: 1px solid var(--border);
-        }
-        .stat-box .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .stat-box .stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .heatmap-row {
-            display: flex;
-            gap: 2px;
-            margin: 2px 0;
-        }
-        .heat-cell {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
-            background: var(--border);
-            transition: all var(--transition);
-        }
-        .heat-cell.h1 { background: color-mix(in srgb, var(--success) 25%, var(--card-bg)); }
-        .heat-cell.h2 { background: color-mix(in srgb, var(--success) 50%, var(--card-bg)); }
-        .heat-cell.h3 { background: color-mix(in srgb, var(--success) 75%, var(--card-bg)); }
-        .heat-cell.h4 { background: var(--success); }
-        .heat-cell.h5 { background: var(--primary-dark); }
-
-        /* ===== EXPORT/IMPORT ===== */
-        .export-area {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-
-        /* ===== TABS ===== */
-        .tab-bar {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 12px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-        .tab-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all var(--transition);
-        }
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        .tab-btn:hover:not(.active) {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-
-        /* ===== EDITABLE PLAN ===== */
-        .editable-field {
-            border: 1px dashed transparent;
-            padding: 2px 4px;
-            border-radius: 4px;
-            cursor: text;
-            transition: all var(--transition);
-        }
-        .editable-field:hover {
-            border-color: var(--primary);
-            background: color-mix(in srgb, var(--primary) 5%, var(--card-bg));
-        }
-        .editable-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            border-style: solid;
-            background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
-        }
-
-        .day-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            font-size: 12px;
-            cursor: pointer;
-            transition: all var(--transition);
-            user-select: none;
-        }
-        .day-chip.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        .day-chip.rest {
-            background: color-mix(in srgb, var(--warning) 15%, var(--card-bg));
-            border-color: var(--warning);
-            color: var(--gold-dark);
-        }
-
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 640px) {
-            .app-header h1 { font-size: 20px; }
-            .streak-bar { gap: 10px; padding: 10px; }
-            .settings-grid { grid-template-columns: 1fr; }
-            .container { padding: 10px 10px 60px; }
-            .timer-display { font-size: 36px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            body { font-size: 14px; }
+            h1 { font-size: 20px; }
+            h2 { font-size: 18px; }
         }
-
         @media print {
-            .app-header, .streak-bar, .timer-card, .btn, .tab-bar,
-            .celebration-overlay, .quote-card { display: none !important; }
-            .card { box-shadow: none; break-inside: avoid; }
-            .tab-content { display: block !important; }
-        }
-
-        /* ===== ANIMATIONS ===== */
-        .slide-in {
-            animation: slideIn 0.4s ease;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hidden { display: none !important; }
-
-        /* ===== NOTIFICATION DOT ===== */
-        .notif-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--danger);
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .note,
+            #print-btn,
+            #toggle-settings,
+            .reset-btn,
+            .btn {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Celebration Overlay -->
-<div class="celebration-overlay" id="celebration">
-    <div class="celebration-text" id="celebration-text">🎉 Машаллах! Все крепости выполнены! 🎉</div>
-</div>
-
-<!-- Header -->
-<header class="app-header">
-    <h1>🏰 План хифза — 5 крепостей</h1>
-    <p class="subtitle">Систематическое заучивание Корана</p>
-    <div class="header-actions">
-        <button id="btn-dark" title="Тёмная тема">🌙</button>
-        <button id="btn-print" title="Печать">🖨️</button>
-    </div>
-</header>
-
-<!-- Streak Bar -->
-<div class="streak-bar" id="streak-bar">
-    <div class="streak-item">
-        <span class="icon streak-fire">🔥</span>
-        <span>Серия:</span>
-        <span class="number" id="streak-count">0</span>
-        <span>дн.</span>
-    </div>
-    <div class="streak-item">
-        <span class="icon">📖</span>
-        <span>Выучено:</span>
-        <span class="number" id="total-memorized-display">19</span>
-        <span>стр.</span>
-    </div>
-    <div class="streak-item">
-        <span class="icon">📊</span>
-        <span>Сегодня:</span>
-        <span class="number" id="today-percent">0%</span>
-    </div>
-</div>
-
 <div class="container">
-
-    <!-- Motivational Quote -->
-    <div class="quote-card" id="quote-card">
-        <button class="refresh-quote" id="refresh-quote" title="Другая цитата">🔄</button>
-        <div id="quote-text">«Лучший из вас тот, кто изучает Коран и обучает ему других»</div>
-        <div class="quote-source" id="quote-source">— Хадис, Сахих аль-Бухари</div>
-    </div>
-
-    <!-- Tab Bar -->
-    <div class="tab-bar">
-        <button class="tab-btn active" data-tab="today">📋 Сегодня</button>
-        <button class="tab-btn" data-tab="fortresses">🏰 Крепости</button>
-        <button class="tab-btn" data-tab="plan">✏️ Редактор плана</button>
-        <button class="tab-btn" data-tab="stats">📊 Статистика</button>
-        <button class="tab-btn" data-tab="settings">⚙️ Настройки</button>
-    </div>
-
-    <!-- ==================== TAB: TODAY ==================== -->
-    <div class="tab-content active" id="tab-today">
-
-        <!-- Today Plan -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>📅 План на сегодня <span class="today-badge" id="today-badge"></span></h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <div id="today-plan-items"></div>
-            </div>
-        </div>
-
-        <!-- Checklist -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>✅ Чек-лист крепостей</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <div id="checklist-items"></div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
-                    </div>
-                    <p class="progress-label" id="progress-label">0 / 5 крепостей выполнено</p>
-                </div>
-                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="btn btn-sm btn-danger" id="reset-checklist">🗑️ Сбросить</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Timer -->
-        <div class="card slide-in timer-card">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>⏱️ Таймер заучивания</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <div class="timer-preset">
-                    <button onclick="setTimer(5)">5 мин</button>
-                    <button onclick="setTimer(10)">10 мин</button>
-                    <button onclick="setTimer(15)" class="active">15 мин</button>
-                    <button onclick="setTimer(20)">20 мин</button>
-                    <button onclick="setTimer(30)">30 мин</button>
-                    <button onclick="setTimer(45)">45 мин</button>
-                </div>
-                <div class="timer-display" id="timer-display">15:00</div>
-                <div class="timer-controls">
-                    <button class="btn btn-primary" id="timer-start">▶ Старт</button>
-                    <button class="btn" id="timer-pause">⏸ Пауза</button>
-                    <button class="btn btn-danger" id="timer-reset">↺ Сброс</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Notes -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>📝 Заметка на сегодня</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <textarea id="daily-note" rows="3" placeholder="Какие аяты сегодня сложнее всего, что спросить у учителя, мысли..."></textarea>
-                <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">Заметка привязана к сегодняшней дате и сохраняется в браузере.</p>
-            </div>
-        </div>
-
-        <!-- Tomorrow -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🔮 План на завтра</h2>
-                <span class="toggle-icon collapsed">▼</span>
-            </div>
-            <div class="card-body collapsed">
-                <div id="tomorrow-plan-items"></div>
-                <p style="font-size:12px; color:var(--text-secondary); margin-top:8px;">
-                    Ориентировочный план, если продолжаешь текущий круг.
-                </p>
-            </div>
+    <div class="settings-toggle">
+        <h1>План хифза — метод «5 крепостей»</h1>
+        <div>
+            <button class="btn" id="print-btn" type="button">Печать плана</button>
         </div>
     </div>
 
-    <!-- ==================== TAB: FORTRESSES ==================== -->
-    <div class="tab-content" id="tab-fortresses">
+    <p class="note">
+        Настройки сохраняются в браузере (localStorage).  
+        3‑я крепость (дальнее повторение) использует только те страницы, которые ты укажешь в настройках
+        (поле «Страницы для дальнего повторения»). В четверг — общий проход по всему выученному.
+    </p>
 
-        <!-- Fortress 1 -->
-        <div class="card fortress-card slide-in" data-f="1" id="fort-1">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🟢 1-я крепость: Новый урок</h2>
-                <span class="toggle-icon">▼</span>
+    <!-- Настройки -->
+    <h2>Мои настройки</h2>
+    <div class="card">
+        <div class="settings-toggle">
+            <p><small>Измени под себя — остальное сайт посчитает сам.</small></p>
+            <button class="btn" id="toggle-settings" type="button">Скрыть настройки</button>
+        </div>
+        <div id="settings-panel">
+            <div class="settings-grid">
+                <label>
+                    Всего выучено страниц:
+                    <input type="number" id="total-pages" min="1" value="19">
+                </label>
+                <label>
+                    Текущая страница (учу новый текст):
+                    <input type="number" id="current-page" min="1" value="19">
+                </label>
+                <label>
+                    Прогресс на текущей странице (строк):
+                    <input type="number" id="lines-on-page" min="0" max="15" value="0">
+                </label>
+                <label>
+                    Страницы для дальнего повторения:<br>
+                    <small>(например: 3-13, 18-19; пусто = все 1–N)</small>
+                    <input type="text" id="review-pages" value="">
+                </label>
+                <label>
+                    Дней на один круг дальнего повторения:
+                    <input type="number" id="cycle-days" min="1" value="6">
+                </label>
+                <label>
+                    Объём нового урока:
+                    <select id="lesson-size">
+                        <option value="5">5 строк</option>
+                        <option value="7">7 строк (≈ ½ страницы)</option>
+                        <option value="page">целая страница</option>
+                    </select>
+                </label>
+                <label>
+                    Слабые страницы (например: 8-13, 20, 25-26):
+                    <input type="text" id="weak-pages" value="8-13">
+                </label>
             </div>
-            <div class="card-body">
-                <p><strong>Цель:</strong> выучить <span id="f1-goal">5 строк</span> на текущей странице.</p>
-                <ol class="fortress-steps">
-                    <li>Прочитать новый фрагмент с мусхафа 3–5 раз медленно, с таджвидом.</li>
-                    <li>Разбить на части (по аяту или смысловым кускам).</li>
-                    <li>Каждый кусок: несколько раз с мусхафа → затем 10–15 раз по памяти.</li>
-                    <li>Соединить весь урок и прочитать по памяти 5–10 раз подряд.</li>
-                    <li>Финальное чтение по памяти — как в намазе: ровно, без остановок.</li>
-                </ol>
+            <hr>
+            <h3>Какие крепости я использую</h3>
+            <div class="settings-grid">
+                <label><input type="checkbox" id="use-f1" checked> 1‑я крепость (новый урок)</label>
+                <label><input type="checkbox" id="use-f2" checked> 2‑я крепость (ближнее повторение)</label>
+                <label><input type="checkbox" id="use-f3" checked> 3‑я крепость (дальнее повторение)</label>
+                <label><input type="checkbox" id="use-f4" checked> 4‑я крепость (намаз)</label>
+                <label><input type="checkbox" id="use-f5" checked> 5‑я крепость (проверка/слушание)</label>
+            </div>
+            <hr>
+            <h3>Режимы и дополнительные настройки</h3>
+            <div class="settings-grid">
+                <label>
+                    <input type="checkbox" id="revision-mode-toggle">
+                    Режим только повторения (без нового урока)
+                </label>
+                <label>
+                    <input type="checkbox" id="dark-mode-toggle">
+                    Тёмная тема
+                </label>
+                <label>
+                    <input type="checkbox" id="compact-mode-toggle">
+                    Компактный режим интерфейса
+                </label>
+                <label>
+                    <input type="checkbox" id="use-weak-pages" checked>
+                    Учитывать слабые страницы в плане
+                </label>
+                <label>
+                    <input type="checkbox" id="auto-cycle-days-toggle" checked>
+                    Авто-настройка дней на круг по объёму урока
+                </label>
+            </div>
+            <h3>Режим отображения</h3>
+            <div class="settings-grid">
+                <label>
+                    <input type="radio" name="display-mode" id="display-mode-minimal" value="minimal">
+                    Минимальный (только план, прогноз, история и чек‑лист)
+                </label>
+                <label>
+                    <input type="radio" name="display-mode" id="display-mode-full" value="full">
+                    Расширенный (все блоки)
+                </label>
             </div>
         </div>
+    </div>
 
-        <!-- Fortress 2 -->
-        <div class="card fortress-card slide-in" data-f="2" id="fort-2">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🔵 2-я крепость: Ближнее повторение</h2>
-                <span class="toggle-icon">▼</span>
+    <!-- План на сегодня -->
+    <h2>План на сегодня</h2>
+    <div class="card" id="today-plan">
+        <p>
+            Сегодня:
+            <strong><span id="today-name"></span>, <span id="today-date"></span></strong>
+            <span class="today-badge">сегодня</span>
+        </p>
+        <ul>
+            <li data-fortress="1" id="today-new">
+                1‑я крепость (новый урок): …
+            </li>
+            <li data-fortress="2" id="today-near"></li>
+            <li data-fortress="3" id="today-far"></li>
+            <li id="today-weak-summary"></li>
+        </ul>
+        <p><small>Подробности по каждой крепости — ниже.</small></p>
+    </div>
+
+    <!-- 1. Крепость -->
+    <section class="fortress-block" data-fortress="1">
+        <h2>
+            1-я крепость: новый урок
+            (<span id="lesson-desc-heading">5 строк</span> в день)
+        </h2>
+        <div class="card">
+            <p>
+                <strong>Цель:</strong> выучить
+                <span id="lesson-desc-goal">5 строк</span>
+                на текущей странице.
+            </p>
+            <ol>
+                <li>
+                    Прочитать новый урок
+                    (<span id="lesson-desc-step1">5 строк</span>)
+                    с мусхафа 3–5 раз медленно, с таджвидом.
+                </li>
+                <li>Разбить на маленькие части (по аяту или смысловым кускам).</li>
+                <li>Каждый кусок:
+                    <ul>
+                        <li>несколько раз прочитать с мусхафа;</li>
+                        <li>затем 10–15 раз повторить по памяти.</li>
+                    </ul>
+                </li>
+                <li>Соединить весь объём урока и прочитать по памяти 5–10 раз подряд.</li>
+                <li>В конце один раз прочитать по памяти так, как будто стоишь в намазе (ровно, без частых остановок).</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- 2. Крепость -->
+    <section class="fortress-block" data-fortress="2">
+        <h2>2-я крепость: ближнее повторение и связка</h2>
+        <div class="card">
+            <p><strong>Ежедневно по памяти:</strong></p>
+            <ul>
+                <li>Текущая страница (выученная часть этой страницы).</li>
+                <li>
+                    <strong>+ <span id="near-back-label">2 предыдущие страницы</span></strong>
+                    полностью по памяти (если они есть).
+                </li>
+            </ul>
+            <p id="near-review-auto">
+                <strong>Подсказка:</strong> введи текущий номер страницы в настройках выше, чтобы увидеть, какие страницы повторять для 2‑й крепости.
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. Крепость -->
+    <section class="fortress-block" data-fortress="3">
+        <h2>3-я крепость: дальнее повторение</h2>
+        <div class="card">
+            <p>
+                Страницы дальнего повторения берутся из поля
+                <strong>«Страницы для дальнего повторения»</strong>.
+                Если оно пустое — используется весь выученный объём (1…N).
+            </p>
+            <p>
+                Всего страниц в круге:
+                <strong><span id="total-pages-info">0</span></strong>.  
+                Дней на круг:
+                <strong><span id="cycle-days-info">6</span></strong>.  
+                Примерный объём:
+                <strong><span id="daily-volume-info">0</span> стр./день</strong>.
+            </p>
+            <p id="third-today-main"></p>
+            <p id="third-today-weak"></p>
+            <button class="reset-btn danger" id="reset-review" type="button">Начать новый круг повторения с начала списка</button>
+            <p><small>
+                В четверг — «выходной» от нового урока: по 3‑й крепости повторяй все выученные страницы (1…N).
+                В остальные дни используется следующий кусок из твоего списка страниц.
+            </small></p>
+        </div>
+    </section>
+
+    <!-- План на завтра -->
+    <h2>План на завтра (предварительный)</h2>
+    <div class="card" id="tomorrow-plan">
+        <p id="tomorrow-far"></p>
+        <p id="tomorrow-weak"></p>
+        <p><small>Это ориентировочный план, если ты не меняешь настройки и продолжаешь текущий круг повторения.</small></p>
+    </div>
+
+    <!-- Прогноз роста хифза -->
+    <h2>Прогноз роста хифза</h2>
+    <div class="card">
+        <div class="settings-toggle">
+            <p><small>Если каждый день делать новый урок в выбранном объёме.</small></p>
+            <button class="btn" id="toggle-forecast" type="button">Скрыть прогноз</button>
+        </div>
+        <div id="forecast-panel">
+            <p id="forecast-intro"></p>
+            <div class="table-wrapper">
+                <table id="forecast-table">
+                    <thead>
+                    <tr>
+                        <th>Период</th>
+                        <th>Новый хифз</th>
+                        <th>Прирост к текущему уровню</th>
+                        <th>Примерный итог</th>
+                    </tr>
+                    </thead>
+                    <tbody id="forecast-tbody"></tbody>
+                </table>
             </div>
-            <div class="card-body">
-                <p><strong>Ежедневно по памяти:</strong></p>
-                <ul style="font-size:14px; padding-left:20px;">
-                    <li>Текущая страница (выученная часть).</li>
-                    <li id="f2-back"><strong>+ 2 предыдущие страницы</strong> полностью по памяти.</li>
+            <p id="forecast-note"><small></small></p>
+        </div>
+    </div>
+
+    <!-- История дней -->
+    <h2>История дней</h2>
+    <div class="card" id="history-card">
+        <p><small>Смотри, что было сделано и какие заметки ты оставлял в прошлые дни.</small></p>
+        <div class="settings-grid">
+            <button class="btn" id="history-prev" type="button">← Предыдущий день</button>
+            <label>
+                Дата:
+                <input type="date" id="history-date">
+            </label>
+            <button class="btn" id="history-next" type="button">Следующий день →</button>
+        </div>
+        <div id="history-content">
+            <p>Нет данных за выбранную дату.</p>
+        </div>
+    </div>
+
+    <!-- Особый блок: слабые страницы -->
+    <h3>Особое укрепление слабых страниц</h3>
+    <div class="card" id="weak-section">
+        <p>
+            Ты отметил слабые страницы:
+            <strong><span id="weak-list-info">не выбраны</span></strong>.
+        </p>
+        <ul>
+            <li>В дни, когда в блок 3‑й крепости попадают слабые страницы:
+                <ul>
+                    <li>читай их медленнее обычного;</li>
+                    <li>после чтения по памяти сверяйся с мусхафом;</li>
+                    <li>сложные аяты разбирай на части и повторяй каждую часть по 20+ раз.</li>
                 </ul>
-                <p id="f2-hint" style="font-size:13px; color:var(--text-secondary); margin-top:8px;"></p>
+            </li>
+            <li>Отдельно можно выделять время только на слабые страницы как мини‑урок.</li>
+        </ul>
+    </div>
+
+    <!-- 4. Крепость -->
+    <section class="fortress-block" data-fortress="4">
+        <h2>4-я крепость: чтение по памяти в намазе и в течение дня</h2>
+        <div class="card">
+            <p><strong>Принцип:</strong> то, что учишь и повторяешь, должно звучать в намазе.</p>
+            <ul>
+                <li>В обязательных намазах:
+                    <ul>
+                        <li>в одном из ракаатов каждого намаза читай по памяти из последних 3–4 страниц,
+                            которые сейчас активно закрепляешь.</li>
+                    </ul>
+                </li>
+                <li>В суннах и дополнительном намазе:
+                    <ul>
+                        <li>читать по памяти более длинные отрывки (½–1 страница за ракаат, по возможности);</li>
+                        <li>чаще использовать слабые страницы для их укрепления.</li>
+                    </ul>
+                </li>
+                <li>В течение дня:
+                    <ul>
+                        <li>по дороге, в ожидании и т.п. проговаривать по памяти отдельные аяты или куски по 5–10 строк.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 5. Крепость -->
+    <section class="fortress-block" data-fortress="5">
+        <h2>5-я крепость: проверка и слушание</h2>
+        <div class="card">
+            <h3>Еженедельная проверка</h3>
+            <ul>
+                <li>1 раз в неделю:
+                    <ul>
+                        <li>прочитать по памяти <strong>5–10 страниц подряд</strong> вслух:
+                            <ul>
+                                <li>учителю / напарнику, или</li>
+                                <li>записать себя на диктофон и внимательно прослушать.</li>
+                            </ul>
+                        </li>
+                        <li>регулярно сдавать слабые страницы до полной уверенности.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Ежедневное слушание</h3>
+            <ul>
+                <li>Каждый день слушать:
+                    <ul>
+                        <li>участок, который сегодня учишь как новый
+                            (<span id="lesson-desc-5th">5 строк</span>), и/или</li>
+                        <li>страницы, которые сегодня стоят в плане дальнего повторения.</li>
+                    </ul>
+                </li>
+                <li>С мусхафом в руках, иногда повторяя за чтецом или после него.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Заметка на сегодня -->
+    <h2>Заметка на сегодня</h2>
+    <div class="card">
+        <textarea id="daily-note" rows="4" placeholder="Запиши сюда, какие аяты сегодня сложнее всего, что спросить у учителя, свои ощущения и т.п."></textarea>
+        <p><small>Заметка сохраняется только в этом браузере и привязана к сегодняшней дате.</small></p>
+    </div>
+
+    <!-- Итоговый дневной чек-лист -->
+    <h2>Итоговый дневной чек‑лист</h2>
+    <div class="card checklist" id="daily-checklist">
+        <p><strong>Отметь, что сделал сегодня:</strong></p>
+        <label data-fortress="1">
+            <input type="checkbox" data-task-id="fortress1">
+            1-я крепость: выучил(а) новый урок.
+        </label>
+        <label data-fortress="2">
+            <input type="checkbox" data-task-id="fortress2">
+            2-я крепость: повторил(а) текущую и предыдущие страницы (по плану).
+        </label>
+        <label data-fortress="3">
+            <input type="checkbox" data-task-id="fortress3">
+            3-я крепость: сделал(а) дальнее повторение страниц по плану дня.
+        </label>
+        <label data-fortress="4">
+            <input type="checkbox" data-task-id="fortress4">
+            4-я крепость: читал(а) по памяти в намазе и хотя бы один раз вне намаза.
+        </label>
+        <label data-fortress="5">
+            <input type="checkbox" data-task-id="fortress5">
+            5-я крепость: слушал(а) Коран и/или сдал(а) часть выученного.
+        </label>
+
+        <div id="daily-progress">
+            <div id="progress-bar-outer">
+                <div id="progress-bar-inner"></div>
             </div>
+            <p id="progress-text"><small>Прогресс за сегодня: 0 / 0.</small></p>
         </div>
 
-        <!-- Fortress 3 -->
-        <div class="card fortress-card slide-in" data-f="3" id="fort-3">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🟣 3-я крепость: Дальнее повторение</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <p>За <strong><span id="f3-days">6</span></strong> дней проходишь все
-                    <strong><span id="f3-total">19</span></strong> страниц в круге повторения.</p>
-                <p>Объём: <strong>≈ <span id="f3-vol">3</span> стр./день</strong>
-                    <small>(диапазон: <span id="f3-range">стр. 1–19</span>)</small></p>
-                <div id="f3-today" style="margin-top:8px;"></div>
-                <div id="f3-weak" style="margin-top:4px; font-size:13px; color:var(--text-secondary);"></div>
-                <div style="margin-top:12px;">
-                    <button class="btn btn-sm btn-danger" id="reset-review">↺ Начать новый круг</button>
-                </div>
-            </div>
-        </div>
+        <button class="reset-btn" id="reset-checklist" type="button">Сбросить чек‑лист за сегодня</button>
+        <p><small>Галочки сохраняются в этом браузере и автоматически обнуляются каждый новый день.</small></p>
+    </div>
 
-        <!-- Fortress 4 -->
-        <div class="card fortress-card slide-in" data-f="4" id="fort-4">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🟠 4-я крепость: Чтение в намазе</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <ul style="font-size:14px; padding-left:20px;">
-                    <li><strong>Обязательные намазы:</strong> в одном ракаате читай из последних 3–4 страниц.</li>
-                    <li><strong>Сунны и дополнительные:</strong> длинные отрывки (½–1 стр. за ракаат), чаще слабые страницы.</li>
-                    <li><strong>В течение дня:</strong> по дороге, в ожидании — проговаривай по памяти.</li>
-                </ul>
-            </div>
+    <!-- Недельный план -->
+    <h2>Недельный план заучивания и повторения</h2>
+    <div class="card">
+        <div class="settings-toggle">
+            <p><small>Ориентировочный план по дням недели (четверг — выходной от нового урока).</small></p>
+            <button class="btn" id="toggle-weekly-plan" type="button">Скрыть план на неделю</button>
         </div>
-
-        <!-- Fortress 5 -->
-        <div class="card fortress-card slide-in" data-f="5" id="fort-5">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🔴 5-я крепость: Проверка и слушание</h2>
-                <span class="toggle-icon">▼</span>
+        <div id="weekly-plan-panel">
+            <div class="table-wrapper">
+                <table id="weekly-plan-table">
+                    <thead>
+                    <tr>
+                        <th>День</th>
+                        <th>Новый урок (1‑я крепость)</th>
+                        <th>Ближнее повторение (2‑я крепость)</th>
+                        <th>Дальнее повторение (3‑я крепость)</th>
+                    </tr>
+                    </thead>
+                    <tbody id="weekly-plan-body"></tbody>
+                </table>
             </div>
-            <div class="card-body">
-                <p class="section-title">📢 Еженедельная проверка</p>
-                <ul style="font-size:14px; padding-left:20px;">
-                    <li>1 раз в неделю: прочитай по памяти 5–10 стр. вслух учителю / напарнику / на диктофон.</li>
-                    <li>Регулярно сдавай слабые страницы до полной уверенности.</li>
-                </ul>
-                <p class="section-title">🎧 Ежедневное слушание</p>
-                <ul style="font-size:14px; padding-left:20px;">
-                    <li>Слушай сегодняшний урок и/или страницы дальнего повторения.</li>
-                    <li>С мусхафом в руках, иногда повторяя за чтецом.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Weak Pages -->
-        <div class="card slide-in" id="weak-section">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>⚠️ Слабые страницы</h2>
-                <span class="toggle-icon collapsed">▼</span>
-            </div>
-            <div class="card-body collapsed">
-                <p>Слабые: <strong><span id="weak-display">не выбраны</span></strong></p>
-                <ul style="font-size:14px; padding-left:20px;">
-                    <li>Читай медленнее обычного.</li>
-                    <li>После чтения по памяти сверяйся с мусхафом.</li>
-                    <li>Сложные аяты разбирай по частям и повторяй 20+ раз.</li>
-                </ul>
-            </div>
+            <p><small>В четверг — выходной от нового урока: только общий проход по всему выученному (если объём позволяет).</small></p>
         </div>
     </div>
 
-    <!-- ==================== TAB: PLAN EDITOR ==================== -->
-    <div class="tab-content" id="tab-plan">
-
-        <!-- Weekly Plan -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>📅 Недельный план</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <p class="section-title">Дни отдыха (без нового урока)</p>
-                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
-                    Нажми на день, чтобы сделать его днём отдыха:
-                </p>
-                <div id="rest-days-chips" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;"></div>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>День</th>
-                                <th>Новый урок</th>
-                                <th>Ближнее повт.</th>
-                                <th>Дальнее повт.</th>
-                            </tr>
-                        </thead>
-                        <tbody id="weekly-plan-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Custom Fortress Names -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🏷️ Названия крепостей</h2>
-                <span class="toggle-icon collapsed">▼</span>
-            </div>
-            <div class="card-body collapsed">
-                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">
-                    Можешь переименовать крепости под свой стиль:
-                </p>
-                <div id="fortress-names-editor"></div>
-                <button class="btn btn-sm" id="reset-fortress-names" style="margin-top:8px;">↺ Сбросить названия</button>
-            </div>
-        </div>
-
-        <!-- Custom Tasks -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>➕ Дополнительные задачи</h2>
-                <span class="toggle-icon collapsed">▼</span>
-            </div>
-            <div class="card-body collapsed">
-                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
-                    Добавь свои ежедневные задачи в чек-лист:
-                </p>
-                <div id="custom-tasks-list"></div>
-                <div style="display:flex; gap:6px; margin-top:8px;">
-                    <input type="text" id="new-task-input" placeholder="Новая задача..."
-                           style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--border);
-                                  background:var(--card-bg); color:var(--text); font-size:14px;">
-                    <button class="btn btn-primary btn-sm" id="add-task-btn">➕ Добавить</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Forecast -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>📈 Прогноз роста хифза</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <p id="forecast-intro" style="font-size:14px; margin-bottom:10px;"></p>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>Период</th><th>Новый хифз</th><th>Прирост</th><th>Итого</th></tr>
-                        </thead>
-                        <tbody id="forecast-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== TAB: STATS ==================== -->
-    <div class="tab-content" id="tab-stats">
-
-        <!-- Overview Stats -->
-        <div class="card slide-in">
-            <div class="card-header">
-                <h2>📊 Обзор</h2>
-            </div>
-            <div class="card-body">
-                <div class="stats-grid" id="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-streak">0</div>
-                        <div class="stat-label">🔥 Текущая серия</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-best-streak">0</div>
-                        <div class="stat-label">🏆 Лучшая серия</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-total-days">0</div>
-                        <div class="stat-label">📅 Всего дней</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-completion">0%</div>
-                        <div class="stat-label">✅ Средний %</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Activity Heatmap -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>🗓️ Активность (последние 12 недель)</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <div id="heatmap" style="overflow-x:auto;"></div>
-                <div style="display:flex; gap:4px; align-items:center; margin-top:8px; font-size:11px; color:var(--text-secondary);">
-                    <span>Меньше</span>
-                    <div class="heat-cell"></div>
-                    <div class="heat-cell h1"></div>
-                    <div class="heat-cell h2"></div>
-                    <div class="heat-cell h3"></div>
-                    <div class="heat-cell h4"></div>
-                    <div class="heat-cell h5"></div>
-                    <span>Больше</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- History -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>📜 История дней</h2>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="card-body">
-                <!-- Mini Calendar -->
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <button class="btn btn-sm" id="cal-prev">◀</button>
-                    <strong id="cal-month-label" style="font-size:15px;"></strong>
-                    <button class="btn btn-sm" id="cal-next">▶</button>
-                </div>
-                <div class="mini-calendar" id="mini-calendar"></div>
-                <hr style="border:none; border-top:1px solid var(--border); margin:12px 0;">
-                <div id="history-detail">
-                    <p style="font-size:13px; color:var(--text-secondary);">Выбери день в календаре для просмотра.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Export/Import -->
-        <div class="card slide-in">
-            <div class="card-header" onclick="toggleCard(this)">
-                <h2>💾 Экспорт / Импорт данных</h2>
-                <span class="toggle-icon collapsed">▼</span>
-            </div>
-            <div class="card-body collapsed">
-                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">
-                    Сохрани все данные в файл или восстанови из ранее сохранённого.
-                </p>
-                <div class="export-area">
-                    <button class="btn btn-primary btn-sm" id="export-btn">📥 Экспорт в JSON</button>
-                    <button class="btn btn-sm" id="import-btn">📤 Импорт из JSON</button>
-                    <input type="file" id="import-file" accept=".json" class="hidden">
-                    <button class="btn btn-sm btn-danger" id="clear-all-btn">🗑️ Очистить всё</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== TAB: SETTINGS ==================== -->
-    <div class="tab-content" id="tab-settings">
-
-        <div class="card slide-in">
-            <div class="card-header">
-                <h2>⚙️ Основные настройки</h2>
-            </div>
-            <div class="card-body">
-                <div class="settings-grid">
-                    <div class="setting-item">
-                        <label>Всего выучено страниц</label>
-                        <input type="number" id="total-pages" min="1" value="19">
-                    </div>
-                    <div class="setting-item">
-                        <label>Текущая страница (учу новый текст)</label>
-                        <input type="number" id="current-page" min="1" value="19">
-                    </div>
-                    <div class="setting-item">
-                        <label>Прогресс на текущей стр. (строк, 0–15)</label>
-                        <input type="number" id="lines-on-page" min="0" max="15" value="0">
-                    </div>
-                    <div class="setting-item">
-                        <label>Круг повторения с страницы</label>
-                        <input type="number" id="start-page" min="1" value="1">
-                    </div>
-                    <div class="setting-item">
-                        <label>Дней на один круг повторения</label>
-                        <input type="number" id="cycle-days" min="1" value="6">
-                    </div>
-                    <div class="setting-item">
-                        <label>Объём нового урока</label>
-                        <select id="lesson-size">
-                            <option value="5">5 строк</option>
-                            <option value="7">7 строк (≈ ½ страницы)</option>
-                            <option value="page">Целая страница</option>
-                        </select>
-                    </div>
-                    <div class="setting-item" style="grid-column: 1 / -1;">
-                        <label>Слабые страницы (например: 8-13, 20, 25-26)</label>
-                        <input type="text" id="weak-pages" value="8-13">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card slide-in">
-            <div class="card-header">
-                <h2>🏰 Активные крепости</h2>
-            </div>
-            <div class="card-body">
-                <div class="toggle-setting">
-                    <span>🟢 1-я крепость (новый урок)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-f1" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>🔵 2-я крепость (ближнее повторение)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-f2" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>🟣 3-я крепость (дальнее повторение)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-f3" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>🟠 4-я крепость (намаз)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-f4" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>🔴 5-я крепость (проверка/слушание)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-f5" checked><span class="toggle-slider"></span></label>
-                </div>
-            </div>
-        </div>
-
-        <div class="card slide-in">
-            <div class="card-header">
-                <h2>🎨 Режимы</h2>
-            </div>
-            <div class="card-body">
-                <div class="toggle-setting">
-                    <span>🔁 Режим только повторения (без нового урока)</span>
-                    <label class="toggle-switch"><input type="checkbox" id="revision-mode"><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>🌙 Тёмная тема</span>
-                    <label class="toggle-switch"><input type="checkbox" id="dark-mode"><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>📐 Авто-настройка дней на круг</span>
-                    <label class="toggle-switch"><input type="checkbox" id="auto-cycle" checked><span class="toggle-slider"></span></label>
-                </div>
-                <div class="toggle-setting">
-                    <span>⚠️ Учитывать слабые страницы</span>
-                    <label class="toggle-switch"><input type="checkbox" id="use-weak" checked><span class="toggle-slider"></span></label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div><!-- /container -->
+    <p><small>По мере увеличения количества выученных страниц просто измени числа в настройках — план пересчитается сам.</small></p>
+</div>
 
 <script>
-// ==================== CONSTANTS ====================
-const LINES_PER_PAGE = 15;
-const DAYS_RU = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
-const DAYS_SHORT = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
+const daysRu = [
+    "Воскресенье", "Понедельник", "Вторник",
+    "Среда", "Четверг", "Пятница", "Суббота"
+];
 const today = new Date();
-const todayKey = today.toISOString().slice(0,10);
-const todayDow = today.getDay();
+const todayIndex = today.getDay(); // 0..6
+const todayName = daysRu[todayIndex];
+const todayKey = today.toISOString().slice(0, 10);
+const LINES_PER_PAGE = 15;
 
-const QUOTES = [
-    {text:"«Лучший из вас тот, кто изучает Коран и обучает ему других»", src:"Сахих аль-Бухари"},
-    {text:"«Читайте Коран, ибо в Судный День он придёт как заступник за тех, кто его читал»", src:"Сахих Муслим"},
-    {text:"«Тому, кто читает Коран и знает его наизусть, будет сказано: Читай и возвышайся!»", src:"Абу Дауд, ат-Тирмизи"},
-    {text:"«Поистине, Аллах возвышает посредством этой Книги одних людей и принижает других»", src:"Сахих Муслим"},
-    {text:"«Тот, кто прочитал одну букву из Книги Аллаха, получит за это одно благое дело, а за каждое — десятикратное вознаграждение»", src:"ат-Тирмизи"},
-    {text:"«Обладатель Корана, когда он встаёт с ним ночью и днём и практикует его — тот знает его»", src:"Сахих аль-Бухари, Муслим"},
-    {text:"«Завидовать следует лишь двоим: человеку, которому Аллах даровал Коран, и он читает его ночью и днём»", src:"Сахих аль-Бухари"},
-    {text:"«Сердце, в котором нет ничего из Корана, подобно разрушенному дому»", src:"ат-Тирмизи"},
-    {text:"«Украшайте Коран своими голосами»", src:"Абу Дауд"},
-    {text:"«Повторяйте Коран, ибо, клянусь Тем, в Чьей Длани моя душа, он уходит быстрее, чем верблюды из привязи»", src:"Сахих аль-Бухари, Муслим"},
-];
+// DOM
+const totalPagesInput   = document.getElementById("total-pages");
+const currentPageInput  = document.getElementById("current-page");
+const linesOnPageInput  = document.getElementById("lines-on-page");
+const reviewPagesInput  = document.getElementById("review-pages");
+const cycleDaysInput    = document.getElementById("cycle-days");
+const weakPagesInput    = document.getElementById("weak-pages");
+const lessonSizeSelect  = document.getElementById("lesson-size");
 
-const DEFAULT_FORTRESS_NAMES = [
-    "Новый урок",
-    "Ближнее повторение",
-    "Дальнее повторение",
-    "Чтение в намазе",
-    "Проверка и слушание"
-];
+const useF1 = document.getElementById("use-f1");
+const useF2 = document.getElementById("use-f2");
+const useF3 = document.getElementById("use-f3");
+const useF4 = document.getElementById("use-f4");
+const useF5 = document.getElementById("use-f5");
+const fortressToggles = { "1": useF1, "2": useF2, "3": useF3, "4": useF4, "5": useF5 };
 
-const FORTRESS_ICONS = ["🟢","🔵","🟣","🟠","🔴"];
+const revisionToggle      = document.getElementById("revision-mode-toggle");
+const darkModeToggle      = document.getElementById("dark-mode-toggle");
+const compactModeToggle   = document.getElementById("compact-mode-toggle");
+const useWeakPagesToggle  = document.getElementById("use-weak-pages");
+const autoCycleDaysToggle = document.getElementById("auto-cycle-days-toggle");
 
-// ==================== STATE ====================
-let S = {}; // settings
-let reviewState = null;
+const displayModeMinimalRadio = document.getElementById("display-mode-minimal");
+const displayModeFullRadio    = document.getElementById("display-mode-full");
+
+const todayNameSpan      = document.getElementById("today-name");
+const todayDateSpan      = document.getElementById("today-date");
+const todayNewLi         = document.getElementById("today-new");
+const todayNearLi        = document.getElementById("today-near");
+const todayFarLi         = document.getElementById("today-far");
+const todayWeakSummaryLi = document.getElementById("today-weak-summary");
+const nearReviewP        = document.getElementById("near-review-auto");
+
+const totalPagesInfoSpan   = document.getElementById("total-pages-info");
+const cycleDaysInfoSpan    = document.getElementById("cycle-days-info");
+const dailyVolumeInfoSpan  = document.getElementById("daily-volume-info");
+const reviewRangeTextSpan  = document.getElementById("review-range-text");
+const thirdTodayMainP      = document.getElementById("third-today-main");
+const thirdTodayWeakP      = document.getElementById("third-today-weak");
+const resetReviewBtn       = document.getElementById("reset-review");
+
+const tomorrowFarP  = document.getElementById("tomorrow-far");
+const tomorrowWeakP = document.getElementById("tomorrow-weak");
+
+const weakListInfoSpan = document.getElementById("weak-list-info");
+
+const checklistElement   = document.getElementById("daily-checklist");
+const checkboxes         = checklistElement.querySelectorAll("input[type='checkbox'][data-task-id]");
+const resetChecklistBtn  = document.getElementById("reset-checklist");
+const storageKeyChecklist = "quranPlanChecklist-" + todayKey;
+
+const progressBarInner = document.getElementById("progress-bar-inner");
+const progressText     = document.getElementById("progress-text");
+
+const dailyNote = document.getElementById("daily-note");
+const noteKey   = "quranPlanNote-" + todayKey;
+
+const settingsPanel     = document.getElementById("settings-panel");
+const toggleSettingsBtn = document.getElementById("toggle-settings");
+const printBtn          = document.getElementById("print-btn");
+
+const lessonDescShortSpan   = document.getElementById("lesson-desc-short");
+const lessonDescHeadingSpan = document.getElementById("lesson-desc-heading");
+const lessonDescGoalSpan    = document.getElementById("lesson-desc-goal");
+const lessonDescStep1Span   = document.getElementById("lesson-desc-step1");
+const lessonDesc5thSpan     = document.getElementById("lesson-desc-5th");
+const nearBackLabelSpan     = document.getElementById("near-back-label");
+
+const toggleForecastBtn = document.getElementById("toggle-forecast");
+const forecastPanel     = document.getElementById("forecast-panel");
+const forecastIntroP    = document.getElementById("forecast-intro");
+const forecastTbody     = document.getElementById("forecast-tbody");
+const forecastNoteP     = document.getElementById("forecast-note");
+
+// История
+const historyPrevBtn   = document.getElementById("history-prev");
+const historyNextBtn   = document.getElementById("history-next");
+const historyDateInput = document.getElementById("history-date");
+const historyContentDiv= document.getElementById("history-content");
+
+// Недельный план
+const weeklyPlanToggleBtn = document.getElementById("toggle-weekly-plan");
+const weeklyPlanPanel     = document.getElementById("weekly-plan-panel");
+const weeklyPlanBody      = document.getElementById("weekly-plan-body");
+
+let settings = {};
 let weakSet = new Set();
-let timerInterval = null;
-let timerSeconds = 15*60;
-let timerRunning = false;
-let calViewDate = new Date(today);
+let reviewSet = [];       // массив страниц для дальнего повторения
+let reviewState = null;   // { lastDate, startIndex, todayCount, nextIndex }
 
-// ==================== DOM REFS ====================
-const $ = id => document.getElementById(id);
-
-// ==================== LOAD / SAVE ====================
+// Загрузка/сохранение настроек
 function loadSettings() {
-    const defs = {
-        totalPages:19, currentPage:19, linesOnCurrentPage:0,
-        regularStartPage:1, cycleDays:6, weakPages:"8-13",
-        lessonSize:"5", darkMode:false, revisionMode:false,
-        useWeakPages:true, autoCycleDays:true,
-        activeFortresses:{1:true,2:true,3:true,4:true,5:true},
-        restDays:[4], // Thursday by default
-        fortressNames:[...DEFAULT_FORTRESS_NAMES],
-        customTasks:[], // [{id,text}]
-        quoteIndex: Math.floor(Math.random()*QUOTES.length)
+    const isNarrow = (typeof window !== "undefined" && window.innerWidth < 700);
+    const defaults = {
+        totalPages: 19,
+        currentPage: 19,
+        linesOnCurrentPage: 0,
+        reviewPagesText: "",
+        cycleDays: 6,
+        weakPages: "8-13",
+        lessonSize: "5",
+        activeFortresses: { "1": true, "2": true, "3": true, "4": true, "5": true },
+        darkMode: false,
+        revisionMode: false,
+        settingsCollapsed: false,
+        useWeakPages: true,
+        compactMode: isNarrow,
+        autoCycleDays: true,
+        displayMode: "full"
     };
     try {
-        const raw = localStorage.getItem("hifzPlanSettings");
-        if (!raw) return defs;
-        const d = JSON.parse(raw);
-        return {...defs, ...d, activeFortresses:{...defs.activeFortresses,...(d.activeFortresses||{})}};
-    } catch { return defs; }
-}
-
-function save() { localStorage.setItem("hifzPlanSettings", JSON.stringify(S)); }
-
-function loadReview() {
-    try {
-        const r = localStorage.getItem("hifzPlanReview");
-        return r ? JSON.parse(r) : null;
-    } catch { return null; }
-}
-function saveReview() { if(reviewState) localStorage.setItem("hifzPlanReview", JSON.stringify(reviewState)); }
-
-function loadChecklist(dateKey) {
-    try {
-        const r = localStorage.getItem("hifzCL-"+dateKey);
-        return r ? JSON.parse(r) : {};
-    } catch { return {}; }
-}
-function saveChecklist(dateKey, data) { localStorage.setItem("hifzCL-"+dateKey, JSON.stringify(data)); }
-
-function loadNote(dateKey) { return localStorage.getItem("hifzNote-"+dateKey) || ""; }
-function saveNote(dateKey, text) { localStorage.setItem("hifzNote-"+dateKey, text); }
-
-// ==================== UTILITIES ====================
-function parseWeak(text, maxP) {
-    const s = new Set();
-    if(!text) return s;
-    text.split(",").forEach(p => {
-        p = p.trim(); if(!p) return;
-        const parts = p.split("-").map(x=>parseInt(x.trim(),10));
-        if(parts.length===1 && !isNaN(parts[0]) && parts[0]>=1 && parts[0]<=maxP) s.add(parts[0]);
-        else if(parts.length>=2) {
-            let [a,b] = parts; if(isNaN(a)||isNaN(b)) return;
-            if(a>b)[a,b]=[b,a]; for(let i=Math.max(1,a);i<=Math.min(maxP,b);i++) s.add(i);
-        }
-    });
-    return s;
-}
-
-function compress(nums) {
-    if(!nums||!nums.length) return "";
-    const a=[...new Set(nums)].sort((x,y)=>x-y);
-    const r=[]; let s=a[0],p=a[0];
-    for(let i=1;i<a.length;i++){
-        if(a[i]===p+1){p=a[i];}
-        else{r.push(s===p?String(s):s+"–"+p);s=p=a[i];}
-    }
-    r.push(s===p?String(s):s+"–"+p);
-    return r.join(", ");
-}
-
-function getRange() {
-    const t = Math.max(1,S.totalPages||1);
-    let s = Math.max(1,S.regularStartPage||1);
-    if(s>t) s=t;
-    return {start:s, end:t, count:t-s+1};
-}
-
-function getLinesPerDay() {
-    if(S.revisionMode || !S.activeFortresses[1]) return 0;
-    if(S.lessonSize==="page") return LINES_PER_PAGE;
-    if(S.lessonSize==="7") return 7;
-    return 5;
-}
-
-function lessonPhrase() {
-    if(S.lessonSize==="7") return "7 строк";
-    if(S.lessonSize==="page") return "целая страница";
-    return "5 строк";
-}
-
-function nearBackCount() { return S.lessonSize==="page" ? 1 : 2; }
-
-function dateFmt(d) {
-    const dd=String(d.getDate()).padStart(2,"0");
-    const mm=String(d.getMonth()+1).padStart(2,"0");
-    return dd+"."+mm+"."+d.getFullYear();
-}
-
-function dateKey(d) { return d.toISOString().slice(0,10); }
-
-function calcCycleDays(pages, lesson) {
-    let target = lesson==="5"?3.5:lesson==="7"?2.5:2;
-    let d = Math.round(pages/target);
-    return Math.max(3,Math.min(21,d));
-}
-
-// ==================== REVIEW STATE ====================
-function initReview() {
-    const range = getRange();
-    const days = Math.max(1,S.cycleDays||1);
-    const chunk = Math.max(1,Math.ceil(range.count/days));
-
-    if(!reviewState || reviewState.lastDate !== todayKey) {
-        let start = reviewState?.nextStartPage || range.start;
-        if(start<range.start||start>range.end) start=range.start;
-        let end = Math.min(range.end, start+chunk-1);
-        reviewState = {
-            lastDate:todayKey,
-            todayStart:start, todayEnd:end,
-            nextStartPage: end>=range.end ? range.start : end+1
-        };
-        saveReview();
-    }
-}
-
-function getReviewToday() {
-    if(!reviewState) return null;
-    const isRest = S.restDays.includes(todayDow);
-    if(isRest) {
-        return {start:1, end:Math.max(1,S.totalPages), isRest:true};
-    }
-    return {start:reviewState.todayStart, end:reviewState.todayEnd, isRest:false};
-}
-
-function getReviewTomorrow() {
-    const range=getRange();
-    const days=Math.max(1,S.cycleDays||1);
-    const chunk=Math.max(1,Math.ceil(range.count/days));
-    let start = reviewState?.nextStartPage||range.start;
-    if(start<range.start||start>range.end) start=range.start;
-    let end = Math.min(range.end,start+chunk-1);
-    return {start,end,count:end-start+1};
-}
-
-// ==================== STREAK ====================
-function calcStreak() {
-    let streak = 0, best = 0, totalDays = 0, totalPercent = 0;
-    const d = new Date(today);
-    // check today first
-    const todayCL = loadChecklist(todayKey);
-    const todayDone = Object.values(todayCL).filter(Boolean).length;
-    const todayActive = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length;
-    const todayComplete = todayActive>0 && todayDone>=todayActive;
-
-    // go backwards
-    let currentStreak = todayComplete ? 1 : 0;
-    let checking = true;
-    for(let i=1; i<=365; i++) {
-        const dd = new Date(today);
-        dd.setDate(dd.getDate()-i);
-        const key = dateKey(dd);
-        const cl = loadChecklist(key);
-        const done = Object.values(cl).filter(Boolean).length;
-        if(done>0) {
-            totalDays++;
-            totalPercent += Math.min(100, Math.round(done/Math.max(1,todayActive)*100));
-        }
-        if(checking && done >= todayActive && todayActive > 0) {
-            currentStreak++;
-        } else {
-            checking = false;
-        }
-    }
-    streak = currentStreak;
-
-    // find best streak
-    let tempStreak = 0;
-    for(let i=0; i<=365; i++) {
-        const dd = new Date(today);
-        dd.setDate(dd.getDate()-i);
-        const key = dateKey(dd);
-        const cl = loadChecklist(key);
-        const done = Object.values(cl).filter(Boolean).length;
-        if(done>=todayActive && todayActive>0) {
-            tempStreak++;
-            if(tempStreak>best) best=tempStreak;
-        } else {
-            tempStreak=0;
-        }
-    }
-
-    const avgPercent = totalDays>0 ? Math.round(totalPercent/totalDays) : 0;
-    return {streak, best, totalDays, avgPercent};
-}
-
-// ==================== UI UPDATES ====================
-function updateAll() {
-    weakSet = parseWeak(S.weakPages, S.totalPages);
-    initReview();
-    updateQuote();
-    updateTodayPlan();
-    updateChecklist();
-    updateFortresses();
-    updateWeeklyPlan();
-    updateForecast();
-    updateStats();
-    updateHeatmap();
-    updateCalendar();
-    updateCustomTasks();
-    updateFortressNamesEditor();
-    updateRestDaysChips();
-    applyVisibility();
-    updateStreakBar();
-
-    // Sync inputs
-    $("total-pages").value = S.totalPages;
-    $("current-page").value = S.currentPage;
-    $("lines-on-page").value = S.linesOnCurrentPage||0;
-    $("start-page").value = S.regularStartPage;
-    $("cycle-days").value = S.cycleDays;
-    $("weak-pages").value = S.weakPages||"";
-    $("lesson-size").value = S.lessonSize||"5";
-    $("use-f1").checked = !!S.activeFortresses[1];
-    $("use-f2").checked = !!S.activeFortresses[2];
-    $("use-f3").checked = !!S.activeFortresses[3];
-    $("use-f4").checked = !!S.activeFortresses[4];
-    $("use-f5").checked = !!S.activeFortresses[5];
-    $("revision-mode").checked = S.revisionMode;
-    $("dark-mode").checked = S.darkMode;
-    $("auto-cycle").checked = S.autoCycleDays;
-    $("use-weak").checked = S.useWeakPages;
-
-    if(S.revisionMode) {$("use-f1").checked=false;$("use-f1").disabled=true;S.activeFortresses[1]=false;}
-    else $("use-f1").disabled=false;
-
-    document.body.classList.toggle("dark", S.darkMode);
-    $("btn-dark").textContent = S.darkMode ? "☀️" : "🌙";
-    $("total-memorized-display").textContent = S.totalPages;
-}
-
-function updateQuote() {
-    const q = QUOTES[S.quoteIndex % QUOTES.length];
-    $("quote-text").textContent = q.text;
-    $("quote-source").textContent = "— " + q.src;
-}
-
-function updateStreakBar() {
-    const s = calcStreak();
-    $("streak-count").textContent = s.streak;
-    $("stat-streak").textContent = s.streak;
-    $("stat-best-streak").textContent = s.best;
-    $("stat-total-days").textContent = s.totalDays;
-    $("stat-completion").textContent = s.avgPercent + "%";
-}
-
-function updateTodayPlan() {
-    $("today-badge").textContent = DAYS_RU[todayDow]+", "+dateFmt(today);
-
-    const items = [];
-    const fNames = S.fortressNames || DEFAULT_FORTRESS_NAMES;
-
-    if(S.activeFortresses[1] && !S.revisionMode) {
-        const lp = getLinesPerDay();
-        const page = S.currentPage;
-        const used = S.linesOnCurrentPage||0;
-        let desc = lessonPhrase()+" на стр. "+page;
-        if(lp<LINES_PER_PAGE && lp>0) {
-            const s=used+1, e=Math.min(LINES_PER_PAGE,used+lp);
-            desc += " (строки "+s+"–"+e+")";
-        }
-        items.push({num:1,text:fNames[0]+": "+desc});
-    }
-
-    if(S.activeFortresses[2]) {
-        const back = nearBackCount();
-        let s = Math.max(1, S.currentPage-back);
-        const rangeText = s===S.currentPage ? "стр. "+S.currentPage : "стр. "+s+"–"+S.currentPage;
-        items.push({num:2,text:fNames[1]+": "+rangeText+" по памяти"});
-    }
-
-    if(S.activeFortresses[3]) {
-        const r = getReviewToday();
-        if(r) {
-            const rangeText = r.start===r.end ? "стр. "+r.start : "стр. "+r.start+"–"+r.end;
-            const note = r.isRest ? " (общий проход)" : " ("+(r.end-r.start+1)+" стр.)";
-            items.push({num:3,text:fNames[2]+": "+rangeText+note});
-        }
-    }
-
-    if(S.activeFortresses[4]) {
-        items.push({num:4,text:fNames[3]+": читать выученное в намазе и в течение дня"});
-    }
-    if(S.activeFortresses[5]) {
-        items.push({num:5,text:fNames[4]+": слушать Коран и/или сдать часть выученного"});
-    }
-
-    // Weak pages info
-    if(S.useWeakPages && weakSet.size>0) {
-        const r = getReviewToday();
-        if(r) {
-            const weakInBlock = [];
-            for(let p=r.start;p<=r.end;p++) if(weakSet.has(p)) weakInBlock.push(p);
-            if(weakInBlock.length) {
-                items.push({num:"⚠",text:"Слабые страницы в блоке: стр. "+compress(weakInBlock), weak:true});
-            }
-        }
-    }
-
-    const container = $("today-plan-items");
-    container.innerHTML = items.map(it => `
-        <div class="plan-item ${it.weak?'weak-item':''}">
-            <span class="fortress-num">${it.num}</span>
-            <span>${it.text}</span>
-        </div>
-    `).join("") || '<p style="color:var(--text-secondary); font-size:14px;">Не выбрано ни одной активной крепости.</p>';
-
-    // Tomorrow
-    const tmItems = [];
-    if(S.activeFortresses[3]) {
-        const t = getReviewTomorrow();
-        const rangeText = t.start===t.end ? "стр. "+t.start : "стр. "+t.start+"–"+t.end;
-        tmItems.push({num:3,text:"Дальнее повторение: "+rangeText+" ("+t.count+" стр.)"});
-    }
-    $("tomorrow-plan-items").innerHTML = tmItems.map(it => `
-        <div class="plan-item">
-            <span class="fortress-num">${it.num}</span>
-            <span>${it.text}</span>
-        </div>
-    `).join("") || '<p style="color:var(--text-secondary); font-size:14px;">Продолжай текущий план.</p>';
-
-    // Update today percent
-    const cl = loadChecklist(todayKey);
-    const active = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length + (S.customTasks||[]).length;
-    const done = Object.values(cl).filter(Boolean).length;
-    $("today-percent").textContent = active>0?Math.round(done/active*100)+"%":"—";
-}
-
-function updateChecklist() {
-    const cl = loadChecklist(todayKey);
-    const fNames = S.fortressNames || DEFAULT_FORTRESS_NAMES;
-    const container = $("checklist-items");
-    let html = "";
-
-    for(let i=1;i<=5;i++) {
-        if(!S.activeFortresses[i]) continue;
-        const id = "fortress"+i;
-        const checked = !!cl[id];
-        html += `
-        <div class="checklist-item ${checked?'checked':''}" data-task="${id}" onclick="toggleTask('${id}')">
-            <div class="custom-checkbox">${checked?'✓':''}</div>
-            <input type="checkbox" ${checked?'checked':''}>
-            <span class="check-text">${FORTRESS_ICONS[i-1]} ${fNames[i-1]}</span>
-        </div>`;
-    }
-
-    // Custom tasks
-    (S.customTasks||[]).forEach(t => {
-        const checked = !!cl["custom_"+t.id];
-        html += `
-        <div class="checklist-item ${checked?'checked':''}" data-task="custom_${t.id}" onclick="toggleTask('custom_${t.id}')">
-            <div class="custom-checkbox">${checked?'✓':''}</div>
-            <input type="checkbox" ${checked?'checked':''}>
-            <span class="check-text">📌 ${escHtml(t.text)}</span>
-        </div>`;
-    });
-
-    container.innerHTML = html || '<p style="color:var(--text-secondary);">Нет активных задач.</p>';
-    updateProgress();
-}
-
-function toggleTask(taskId) {
-    const cl = loadChecklist(todayKey);
-    cl[taskId] = !cl[taskId];
-    saveChecklist(todayKey, cl);
-
-    // Auto-advance lines if fortress1 completed
-    if(taskId==="fortress1" && cl[taskId]) {
-        const lines = getLinesPerDay();
-        if(lines>0) {
-            S.linesOnCurrentPage = (S.linesOnCurrentPage||0)+lines;
-            normalizePage();
-            save();
-        }
-    }
-
-    updateChecklist();
-    updateStreakBar();
-    updateTodayPlan();
-    checkCelebration();
-}
-
-function updateProgress() {
-    const cl = loadChecklist(todayKey);
-    const active = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length + (S.customTasks||[]).length;
-    const done = Object.values(cl).filter(Boolean).length;
-    const pct = active>0 ? Math.round(done/active*100) : 0;
-    $("progress-fill").style.width = pct+"%";
-    $("progress-label").textContent = done+" / "+active+" выполнено ("+pct+"%)";
-    $("today-percent").textContent = active>0?pct+"%":"—";
-}
-
-function checkCelebration() {
-    const cl = loadChecklist(todayKey);
-    const active = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length + (S.customTasks||[]).length;
-    const done = Object.values(cl).filter(Boolean).length;
-    if(active>0 && done>=active) {
-        showCelebration();
-    }
-}
-
-function showCelebration() {
-    const overlay = $("celebration");
-    overlay.classList.add("active");
-    // Confetti
-    for(let i=0;i<40;i++) {
-        const c = document.createElement("div");
-        c.className = "confetti-piece";
-        c.style.left = Math.random()*100+"vw";
-        c.style.top = "-10px";
-        c.style.background = ["#4caf50","#2196f3","#ff9800","#f44336","#9c27b0","#ffd700"][Math.floor(Math.random()*6)];
-        c.style.transform = "rotate("+Math.random()*360+"deg)";
-        document.body.appendChild(c);
-        const dur = 2+Math.random()*2;
-        c.animate([
-            {top:"-10px",opacity:1},
-            {top:"110vh",opacity:0}
-        ],{duration:dur*1000,easing:"ease-in"});
-        setTimeout(()=>c.remove(),dur*1000);
-    }
-    setTimeout(()=>overlay.classList.remove("active"),3000);
-}
-
-function normalizePage() {
-    let lines = S.linesOnCurrentPage||0;
-    let page = S.currentPage||1;
-    while(lines>=LINES_PER_PAGE){lines-=LINES_PER_PAGE;page++;}
-    if(lines<0)lines=0; if(page<1)page=1;
-    S.linesOnCurrentPage=lines; S.currentPage=page;
-    // Also bump totalPages if needed
-    if(page>S.totalPages) S.totalPages=page;
-}
-
-function updateFortresses() {
-    const fNames = S.fortressNames || DEFAULT_FORTRESS_NAMES;
-    $("f1-goal").textContent = lessonPhrase();
-
-    // F2
-    const back = nearBackCount();
-    const s = Math.max(1,S.currentPage-back);
-    const rangeText = s===S.currentPage?"стр. "+S.currentPage:"стр. "+s+"–"+S.currentPage;
-    $("f2-back").innerHTML = "<strong>+ "+(back===1?"1 предыдущая":""+back+" предыдущие")+" страницы</strong> по памяти.";
-    $("f2-hint").textContent = "Сегодня повтори: "+rangeText+".";
-
-    // F3
-    const range = getRange();
-    const days = Math.max(1,S.cycleDays||1);
-    const chunk = Math.max(1,Math.ceil(range.count/days));
-    $("f3-days").textContent = days;
-    $("f3-total").textContent = range.count;
-    $("f3-vol").textContent = chunk;
-    $("f3-range").textContent = range.start===range.end?"стр. "+range.start:"стр. "+range.start+"–"+range.end;
-
-    const rt = getReviewToday();
-    if(rt) {
-        const rtText = rt.start===rt.end?"стр. "+rt.start:"стр. "+rt.start+"–"+rt.end;
-        const note = rt.isRest?" (день отдыха — общий проход)":" ("+(rt.end-rt.start+1)+" стр.)";
-        $("f3-today").innerHTML = '<strong>Сегодня: '+rtText+note+'</strong>';
-
-        if(S.useWeakPages && weakSet.size>0) {
-            const wk = [];
-            for(let p=rt.start;p<=rt.end;p++) if(weakSet.has(p)) wk.push(p);
-            $("f3-weak").textContent = wk.length ? "Слабые в блоке: стр. "+compress(wk) : "Слабых страниц в блоке нет.";
-        } else $("f3-weak").textContent = "";
-    }
-
-    // Weak display
-    $("weak-display").textContent = S.useWeakPages && weakSet.size ? compress([...weakSet]) : "не выбраны";
-
-    // Visibility
-    for(let i=1;i<=5;i++) {
-        const el = $("fort-"+i);
-        if(el) el.style.display = S.activeFortresses[i]?"":"none";
-    }
-}
-
-function applyVisibility() {
-    for(let i=1;i<=5;i++) {
-        const el=$("fort-"+i); if(el) el.style.display=S.activeFortresses[i]?"":"none";
-    }
-    $("weak-section").style.display = S.useWeakPages && weakSet.size?"":"none";
-}
-
-function updateWeeklyPlan() {
-    const days = [1,2,3,4,5,6,0]; // Mon-Sun
-    const fNames = S.fortressNames || DEFAULT_FORTRESS_NAMES;
-    const range = getRange();
-    const workDays = days.filter(d=>!S.restDays.includes(d));
-    const pagesPerDay = workDays.length>0?Math.max(1,Math.ceil(range.count/workDays.length)):range.count;
-    const hasNew = !S.revisionMode && S.activeFortresses[1];
-    const back = nearBackCount();
-    const nearLabel = "текущая + "+(back===1?"1 пред.":back+" пред.")+" стр.";
-
-    const body = $("weekly-plan-body");
-    body.innerHTML = "";
-    let curStart = range.start;
-
-    days.forEach(dow => {
-        const isRest = S.restDays.includes(dow);
-        const name = DAYS_RU[dow];
-        const isToday = dow===todayDow;
-
-        let newCell = hasNew ? (isRest ? "выходной" : lessonPhrase()) : "—";
-        let nearCell = S.activeFortresses[2] ? nearLabel : "—";
-        let farCell;
-
-        if(isRest) {
-            farCell = "все: стр. 1–"+S.totalPages;
-        } else {
-            if(curStart>range.end) farCell="—";
-            else {
-                const e = Math.min(range.end, curStart+pagesPerDay-1);
-                farCell = curStart===e?"стр. "+curStart:"стр. "+curStart+"–"+e;
-                curStart=e+1;
-            }
-        }
-
-        const tr = document.createElement("tr");
-        if(isToday) tr.style.fontWeight="700";
-        tr.innerHTML = `<td>${name}${isToday?" 📍":""}</td><td>${newCell}</td><td>${nearCell}</td><td>${farCell}</td>`;
-        body.appendChild(tr);
-    });
-}
-
-function updateRestDaysChips() {
-    const container = $("rest-days-chips");
-    container.innerHTML = "";
-    [1,2,3,4,5,6,0].forEach(dow => {
-        const isRest = S.restDays.includes(dow);
-        const chip = document.createElement("span");
-        chip.className = "day-chip"+(isRest?" rest":" active");
-        chip.textContent = DAYS_RU[dow];
-        chip.onclick = () => {
-            if(isRest) S.restDays = S.restDays.filter(d=>d!==dow);
-            else S.restDays.push(dow);
-            save(); updateAll();
-        };
-        container.appendChild(chip);
-    });
-}
-
-function updateForecast() {
-    const linesPerDay = getLinesPerDay();
-    const horizons = [{label:"7 дней",days:7},{label:"30 дней",days:30},{label:"90 дней",days:90}];
-
-    if(linesPerDay<=0) {
-        $("forecast-intro").textContent = "Новый урок отключён — прогноз равен 0. Включи 1-ю крепость для прогноза.";
-        $("forecast-tbody").innerHTML=""; return;
-    }
-
-    $("forecast-intro").textContent = "При объёме "+lessonPhrase()+" в день:";
-    $("forecast-tbody").innerHTML = horizons.map(h => {
-        const totalLines = linesPerDay*h.days;
-        const pages = Math.floor(totalLines/LINES_PER_PAGE);
-        const rem = totalLines%LINES_PER_PAGE;
-        const newText = pages+" стр."+(rem?" и "+rem+" строк":"");
-        const total = S.totalPages+pages+(rem>0?1:0);
-        const dd = new Date(today); dd.setDate(dd.getDate()+h.days);
-        return `<tr><td>${h.label}</td><td>${newText}</td><td>+${pages} стр.</td><td>≈${total} стр. к ${dateFmt(dd)}</td></tr>`;
-    }).join("");
-}
-
-function updateStats() {
-    // Already done in updateStreakBar
-}
-
-function updateHeatmap() {
-    const container = $("heatmap");
-    const active = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length + (S.customTasks||[]).length;
-    let html = '<div style="display:flex; gap:2px;">';
-
-    // 12 weeks = 84 days, displayed as columns (weeks)
-    for(let w=11;w>=0;w--) {
-        html += '<div>';
-        for(let d=0;d<7;d++) {
-            const dd = new Date(today);
-            dd.setDate(dd.getDate() - w*7 - (6-d));
-            const key = dateKey(dd);
-            const cl = loadChecklist(key);
-            const done = Object.values(cl).filter(Boolean).length;
-            let level = "";
-            if(active>0 && done>0) {
-                const pct = done/active;
-                if(pct>=1) level="h5";
-                else if(pct>=0.8) level="h4";
-                else if(pct>=0.6) level="h3";
-                else if(pct>=0.4) level="h2";
-                else level="h1";
-            }
-            const isToday = key===todayKey;
-            html += `<div class="heat-cell ${level}" title="${dateFmt(dd)}: ${done}/${active}" style="${isToday?'border:2px solid var(--gold);':''}"></div>`;
-        }
-        html += '</div>';
-    }
-    html += '</div>';
-    container.innerHTML = html;
-}
-
-// ==================== CALENDAR ====================
-function updateCalendar() {
-    const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
-    const months = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
-    $("cal-month-label").textContent = months[m]+" "+y;
-
-    const first = new Date(y,m,1);
-    const lastDay = new Date(y,m+1,0).getDate();
-    let startDow = first.getDay(); // 0=Sun
-    // Convert to Mon start: Mon=0,Tue=1,...Sun=6
-    startDow = (startDow+6)%7;
-
-    const active = Object.keys(S.activeFortresses).filter(k=>S.activeFortresses[k]).length + (S.customTasks||[]).length;
-
-    let html = "";
-    ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"].forEach(d => {
-        html += `<div class="cal-header">${d}</div>`;
-    });
-    for(let i=0;i<startDow;i++) html+=`<div class="cal-day empty"></div>`;
-
-    for(let day=1;day<=lastDay;day++) {
-        const dd = new Date(y,m,day);
-        const key = dateKey(dd);
-        const cl = loadChecklist(key);
-        const done = Object.values(cl).filter(Boolean).length;
-        const isToday = key===todayKey;
-        let cls = "cal-day";
-        if(isToday) cls+=" today";
-        if(active>0 && done>=active) cls+=" completed";
-        else if(done>0) cls+=" partial";
-
-        html += `<div class="${cls}" onclick="showHistory('${key}')">${day}</div>`;
-    }
-
-    $("mini-calendar").innerHTML = html;
-}
-
-function showHistory(key) {
-    const dd = new Date(key);
-    const label = DAYS_RU[dd.getDay()]+", "+dateFmt(dd);
-    const cl = loadChecklist(key);
-    const note = loadNote(key);
-    const fNames = S.fortressNames||DEFAULT_FORTRESS_NAMES;
-
-    const done = Object.values(cl).filter(Boolean).length;
-
-    if(!Object.keys(cl).length && !note) {
-        $("history-detail").innerHTML = `<p><strong>${label}</strong></p><p style="color:var(--text-secondary);">Нет данных за эту дату.</p>`;
-        return;
-    }
-
-    let tasksHtml = "";
-    for(let i=1;i<=5;i++) {
-        const id="fortress"+i;
-        const ok = cl[id];
-        tasksHtml += `<div style="display:flex;gap:6px;align-items:center;margin:3px 0;">
-            <span style="color:${ok?'var(--success)':'var(--text-secondary)'}">${ok?'✅':'⬜'}</span>
-            <span>${FORTRESS_ICONS[i-1]} ${fNames[i-1]}</span>
-        </div>`;
-    }
-    (S.customTasks||[]).forEach(t => {
-        const ok = cl["custom_"+t.id];
-        tasksHtml += `<div style="display:flex;gap:6px;align-items:center;margin:3px 0;">
-            <span style="color:${ok?'var(--success)':'var(--text-secondary)'}">${ok?'✅':'⬜'}</span>
-            <span>📌 ${escHtml(t.text)}</span>
-        </div>`;
-    });
-
-    const noteHtml = note ? note.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>") : "<em>—</em>";
-
-    $("history-detail").innerHTML = `
-        <p><strong>${label}</strong> — выполнено: ${done}</p>
-        ${tasksHtml}
-        <p style="margin-top:8px;"><strong>Заметка:</strong><br>${noteHtml}</p>
-    `;
-
-    // Highlight selected day
-    document.querySelectorAll(".cal-day").forEach(el => el.classList.remove("selected"));
-    document.querySelectorAll(".cal-day").forEach(el => {
-        if(el.onclick && el.onclick.toString().includes(key)) el.classList.add("selected");
-    });
-}
-
-// ==================== CUSTOM TASKS ====================
-function updateCustomTasks() {
-    const container = $("custom-tasks-list");
-    if(!S.customTasks||!S.customTasks.length) {
-        container.innerHTML = '<p style="font-size:13px;color:var(--text-secondary);">Нет дополнительных задач.</p>';
-        return;
-    }
-    container.innerHTML = S.customTasks.map(t => `
-        <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
-            <span style="flex:1;font-size:14px;">📌 ${escHtml(t.text)}</span>
-            <button class="btn btn-sm btn-danger" onclick="removeCustomTask('${t.id}')">✕</button>
-        </div>
-    `).join("");
-}
-
-function addCustomTask(text) {
-    if(!text.trim()) return;
-    if(!S.customTasks) S.customTasks=[];
-    S.customTasks.push({id:Date.now().toString(36), text:text.trim()});
-    save(); updateAll();
-}
-
-function removeCustomTask(id) {
-    S.customTasks = (S.customTasks||[]).filter(t=>t.id!==id);
-    save(); updateAll();
-}
-
-// ==================== FORTRESS NAMES ====================
-function updateFortressNamesEditor() {
-    const fNames = S.fortressNames||[...DEFAULT_FORTRESS_NAMES];
-    const container = $("fortress-names-editor");
-    container.innerHTML = fNames.map((name,i) => `
-        <div class="setting-item" style="margin-bottom:8px;">
-            <label>${FORTRESS_ICONS[i]} Крепость ${i+1}</label>
-            <input type="text" value="${escAttr(name)}" onchange="updateFortressName(${i},this.value)">
-        </div>
-    `).join("");
-}
-
-function updateFortressName(idx, value) {
-    if(!S.fortressNames) S.fortressNames=[...DEFAULT_FORTRESS_NAMES];
-    S.fortressNames[idx] = value.trim()||DEFAULT_FORTRESS_NAMES[idx];
-    save(); updateAll();
-}
-
-function escHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function escAttr(s) { return s.replace(/"/g,"&quot;").replace(/&/g,"&amp;"); }
-
-// ==================== TIMER ====================
-function setTimer(mins) {
-    timerSeconds = mins*60;
-    if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
-    timerRunning=false;
-    renderTimer();
-    document.querySelectorAll(".timer-preset button").forEach(b => {
-        b.classList.toggle("active", b.textContent.includes(mins+" мин"));
-    });
-}
-
-function renderTimer() {
-    const m = Math.floor(timerSeconds/60);
-    const s = timerSeconds%60;
-    $("timer-display").textContent = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
-}
-
-function startTimer() {
-    if(timerRunning) return;
-    timerRunning=true;
-    timerInterval=setInterval(()=>{
-        timerSeconds--;
-        if(timerSeconds<=0){
-            clearInterval(timerInterval);
-            timerInterval=null;
-            timerRunning=false;
-            timerSeconds=0;
-            renderTimer();
-            timerAlarm();
-            return;
-        }
-        renderTimer();
-    },1000);
-}
-
-function pauseTimer() {
-    if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
-    timerRunning=false;
-}
-
-function resetTimerFn() {
-    pauseTimer();
-    const active = document.querySelector(".timer-preset button.active");
-    const mins = active ? parseInt(active.textContent) : 15;
-    timerSeconds = mins*60;
-    renderTimer();
-}
-
-function timerAlarm() {
-    // Try to play a beep
-    try {
-        const ctx = new (window.AudioContext||window.webkitAudioContext)();
-        for(let i=0;i<3;i++) {
-            const osc=ctx.createOscillator();
-            const gain=ctx.createGain();
-            osc.connect(gain); gain.connect(ctx.destination);
-            osc.frequency.value=880;
-            osc.type="sine";
-            gain.gain.value=0.3;
-            osc.start(ctx.currentTime+i*0.5);
-            osc.stop(ctx.currentTime+i*0.5+0.3);
-        }
-    } catch {}
-    alert("⏰ Время вышло! Машаллах, продолжай!");
-}
-
-// ==================== TABS ====================
-function switchTab(tabId) {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab===tabId));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.toggle("active", c.id==="tab-"+tabId));
-}
-
-// ==================== TOGGLE CARD ====================
-function toggleCard(headerEl) {
-    const body = headerEl.nextElementSibling;
-    const icon = headerEl.querySelector(".toggle-icon");
-    body.classList.toggle("collapsed");
-    if(icon) icon.classList.toggle("collapsed");
-}
-
-// ==================== EXPORT / IMPORT ====================
-function exportData() {
-    const data = {settings:S, review:reviewState};
-    // Collect all checklist and notes
-    const extras = {};
-    for(let i=0;i<localStorage.length;i++){
-        const key=localStorage.key(i);
-        if(key.startsWith("hifzCL-")||key.startsWith("hifzNote-")){
-            extras[key]=localStorage.getItem(key);
-        }
-    }
-    data.extras = extras;
-    const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href=url; a.download="hifz-plan-backup-"+todayKey+".json";
-    a.click(); URL.revokeObjectURL(url);
-}
-
-function importData(file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-        try {
-            const data = JSON.parse(e.target.result);
-            if(data.settings) { S={...S,...data.settings}; save(); }
-            if(data.review) { reviewState=data.review; saveReview(); }
-            if(data.extras) {
-                Object.entries(data.extras).forEach(([k,v])=>localStorage.setItem(k,v));
-            }
-            updateAll();
-            alert("✅ Данные успешно импортированы!");
-        } catch { alert("❌ Ошибка чтения файла."); }
-    };
-    reader.readAsText(file);
-}
-
-// ==================== INIT ====================
-(function init() {
-    S = loadSettings();
-    reviewState = loadReview();
-
-    // Apply dark mode immediately
-    document.body.classList.toggle("dark", S.darkMode);
-
-    updateAll();
-
-    // Load note
-    $("daily-note").value = loadNote(todayKey);
-    $("daily-note").addEventListener("input", () => saveNote(todayKey, $("daily-note").value));
-
-    // Timer
-    renderTimer();
-    $("timer-start").onclick = startTimer;
-    $("timer-pause").onclick = pauseTimer;
-    $("timer-reset").onclick = resetTimerFn;
-
-    // Reset checklist
-    $("reset-checklist").onclick = () => {
-        saveChecklist(todayKey, {});
-        updateChecklist(); updateStreakBar(); updateTodayPlan();
-    };
-
-    // Reset review
-    $("reset-review").onclick = () => {
-        const range=getRange();
-        const days=Math.max(1,S.cycleDays||1);
-        const chunk=Math.max(1,Math.ceil(range.count/days));
-        const start=range.start;
-        const end=Math.min(range.end,start+chunk-1);
-        reviewState={lastDate:todayKey,todayStart:start,todayEnd:end,
-            nextStartPage:end>=range.end?range.start:end+1};
-        saveReview(); updateAll();
-    };
-
-    // Tabs
-    document.querySelectorAll(".tab-btn").forEach(b => {
-        b.addEventListener("click", () => switchTab(b.dataset.tab));
-    });
-
-    // Dark mode
-    $("btn-dark").onclick = () => { S.darkMode=!S.darkMode; save(); document.body.classList.toggle("dark",S.darkMode); $("btn-dark").textContent=S.darkMode?"☀️":"🌙"; };
-    $("dark-mode").onchange = function() { S.darkMode=this.checked; save(); document.body.classList.toggle("dark",S.darkMode); $("btn-dark").textContent=S.darkMode?"☀️":"🌙"; };
-
-    // Print
-    $("btn-print").onclick = () => window.print();
-
-    // Quote
-    $("refresh-quote").onclick = (e) => { e.stopPropagation(); S.quoteIndex=(S.quoteIndex+1)%QUOTES.length; save(); updateQuote(); };
-
-    // Settings inputs
-    const settingsMap = {
-        "total-pages": v => S.totalPages=Math.max(1,parseInt(v)||1),
-        "current-page": v => S.currentPage=Math.max(1,parseInt(v)||1),
-        "lines-on-page": v => { S.linesOnCurrentPage=Math.max(0,parseInt(v)||0); normalizePage(); },
-        "start-page": v => S.regularStartPage=Math.max(1,parseInt(v)||1),
-        "cycle-days": v => { S.cycleDays=Math.max(1,parseInt(v)||1); S.autoCycleDays=false; $("auto-cycle").checked=false; },
-        "weak-pages": v => S.weakPages=v,
-        "lesson-size": v => S.lessonSize=v,
-    };
-    Object.entries(settingsMap).forEach(([id,fn]) => {
-        $(id).addEventListener("input", function() {
-            fn(this.value);
-            if(S.autoCycleDays && ["total-pages","start-page","lesson-size"].includes(id)) {
-                S.cycleDays=calcCycleDays(getRange().count,S.lessonSize);
-            }
-            save(); reviewState=loadReview(); updateAll();
-        });
-    });
-
-    // Fortress toggles
-    for(let i=1;i<=5;i++) {
-        $("use-f"+i).onchange = function() {
-            S.activeFortresses[i]=this.checked; save(); updateAll();
-        };
-    }
-
-    // Mode toggles
-    $("revision-mode").onchange = function() {
-        S.revisionMode=this.checked;
-        if(S.revisionMode){S.activeFortresses[1]=false;}
-        else{S.activeFortresses[1]=true;}
-        save(); updateAll();
-    };
-    $("auto-cycle").onchange = function() {
-        S.autoCycleDays=this.checked;
-        if(S.autoCycleDays){S.cycleDays=calcCycleDays(getRange().count,S.lessonSize);save();reviewState=loadReview();}
-        save(); updateAll();
-    };
-    $("use-weak").onchange = function() { S.useWeakPages=this.checked; save(); updateAll(); };
-
-    // Calendar nav
-    $("cal-prev").onclick = () => { calViewDate.setMonth(calViewDate.getMonth()-1); updateCalendar(); };
-    $("cal-next").onclick = () => { calViewDate.setMonth(calViewDate.getMonth()+1); updateCalendar(); };
-
-    // Custom tasks
-    $("add-task-btn").onclick = () => {
-        const input=$("new-task-input");
-        addCustomTask(input.value); input.value="";
-    };
-    $("new-task-input").addEventListener("keypress", e => {
-        if(e.key==="Enter"){$("add-task-btn").click();}
-    });
-
-    // Fortress names reset
-    $("reset-fortress-names").onclick = () => {
-        S.fortressNames=[...DEFAULT_FORTRESS_NAMES]; save(); updateAll();
-    };
-
-    // Export/Import
-    $("export-btn").onclick = exportData;
-    $("import-btn").onclick = () => $("import-file").click();
-    $("import-file").onchange = function() { if(this.files[0]) importData(this.files[0]); this.value=""; };
-    $("clear-all-btn").onclick = () => {
-        if(confirm("Удалить ВСЕ данные? Это действие необратимо!")) {
-            localStorage.clear(); location.reload();
-        }
-    };
-
-    // Check celebration on load
-    checkCelebration();
-})();
-</script>
-
-</body>
-</html>
+        const raw = localStorage.getItem("quranPlanSettingsV2");
+        if (!raw) return defaults;
+        const data = 
