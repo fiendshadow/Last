@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>План хифза — 5 крепостей</title>
+    <title>План хифза — метод 5 крепостей</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * { box-sizing: border-box; }
@@ -36,7 +36,7 @@
             padding: 10px 10px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 960px;
             margin: 0 auto;
             padding: 20px 15px 40px;
             background-color: #ffffff;
@@ -87,6 +87,54 @@
             border-color: #444;
             background-color: #242424;
         }
+        .checklist label {
+            display: block;
+            margin: 4px 0;
+            cursor: pointer;
+        }
+        .checklist input[type="checkbox"] {
+            margin-right: 6px;
+        }
+        small {
+            color: #666;
+        }
+        body.dark small {
+            color: #aaa;
+        }
+        .today-badge {
+            display: inline-block;
+            background: #16324f;
+            color: #fff;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+        .reset-btn, .btn {
+            margin-top: 6px;
+            font-size: 13px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #888;
+            background: #f5f5f5;
+            color: #222;
+            cursor: pointer;
+        }
+        body.dark .reset-btn, body.dark .btn {
+            background: #303030;
+            color: #eee;
+            border-color: #777;
+        }
+        .reset-btn.danger {
+            border-color: #d32f2f;
+            background: #fff5f5;
+            color: #b71c1c;
+        }
+        body.dark .reset-btn.danger {
+            background: #3a2323;
+            color: #ffb3b3;
+            border-color: #ff5252;
+        }
         .settings-grid {
             display: flex;
             flex-wrap: wrap;
@@ -106,14 +154,14 @@
             font-size: 14px;
         }
         .settings-grid input[type="number"] {
-            width: 80px;
+            width: 70px;
         }
         .settings-grid input[type="text"] {
             min-width: 220px;
             max-width: 100%;
         }
         .settings-grid select {
-            min-width: 160px;
+            min-width: 150px;
         }
         .settings-toggle {
             display: flex;
@@ -126,54 +174,6 @@
         }
         .hidden {
             display: none !important;
-        }
-        .today-badge {
-            display: inline-block;
-            background: #16324f;
-            color: #fff;
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 12px;
-            margin-left: 6px;
-        }
-        .btn, .reset-btn {
-            margin-top: 6px;
-            font-size: 13px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid #888;
-            background: #f5f5f5;
-            color: #222;
-            cursor: pointer;
-        }
-        body.dark .btn, body.dark .reset-btn {
-            background: #303030;
-            color: #eee;
-            border-color: #777;
-        }
-        .reset-btn.danger {
-            border-color: #d32f2f;
-            background: #fff5f5;
-            color: #b71c1c;
-        }
-        body.dark .reset-btn.danger {
-            background: #3a2323;
-            color: #ffb3b3;
-            border-color: #ff5252;
-        }
-        .checklist label {
-            display: block;
-            margin: 4px 0;
-            cursor: pointer;
-        }
-        .checklist input[type="checkbox"] {
-            margin-right: 6px;
-        }
-        small {
-            color: #666;
-        }
-        body.dark small {
-            color: #aaa;
         }
         /* Прогресс-бар */
         #daily-progress {
@@ -255,7 +255,8 @@
             #print-btn,
             #toggle-settings,
             .reset-btn,
-            .btn {
+            .btn,
+            #backup-card {
                 display: none !important;
             }
             .container {
@@ -268,17 +269,24 @@
 <body>
 <div class="container">
     <div class="settings-toggle">
-        <h1>План хифза — метод «5 крепостей»</h1>
+        <h1>План хифза по методу «5 крепостей»</h1>
         <div>
             <button class="btn" id="print-btn" type="button">Печать плана</button>
         </div>
     </div>
 
-    <p class="note">
-        Настройки сохраняются в браузере (localStorage).  
-        3‑я крепость (дальнее повторение) использует только те страницы, которые ты укажешь в настройках
-        (поле «Страницы для дальнего повторения»). В четверг — общий проход по всему выученному.
+    <p>
+        Пример: выучено
+        <strong><span id="top-total-pages">19 страниц</span></strong>
+        <span id="top-segment-title">с начала суры «Аль‑Бакара»</span>.<br>
+        Норма нового: <strong><span id="lesson-desc-short">5 строк</span> в день</strong>.
     </p>
+
+    <div class="note">
+        Настройки сохраняются в браузере (localStorage).  
+        3‑я крепость (дальнее повторение) автоматически двигается каждый новый день:
+        сайт помнит, что ты повторял вчера, и даёт следующий блок сегодня.
+    </div>
 
     <!-- Настройки -->
     <h2>Мои настройки</h2>
@@ -302,9 +310,8 @@
                     <input type="number" id="lines-on-page" min="0" max="15" value="0">
                 </label>
                 <label>
-                    Страницы для дальнего повторения:<br>
-                    <small>(например: 3-13, 18-19; пусто = все 1–N)</small>
-                    <input type="text" id="review-pages" value="">
+                    Круг дальнего повторения начинать с страницы:
+                    <input type="number" id="start-page" min="1" value="1">
                 </label>
                 <label>
                     Дней на один круг дальнего повторения:
@@ -319,8 +326,24 @@
                     </select>
                 </label>
                 <label>
+                    Описание текущего участка:
+                    <input type="text" id="segment-title" placeholder="например: с начала суры «Аль‑Бакара»">
+                </label>
+                <label>
                     Слабые страницы (например: 8-13, 20, 25-26):
                     <input type="text" id="weak-pages" value="8-13">
+                </label>
+                <label>
+                    Выходной от нового урока:
+                    <select id="off-day-select">
+                        <option value="0">Воскресенье</option>
+                        <option value="1">Понедельник</option>
+                        <option value="2">Вторник</option>
+                        <option value="3">Среда</option>
+                        <option value="4" selected>Четверг</option>
+                        <option value="5">Пятница</option>
+                        <option value="6">Суббота</option>
+                    </select>
                 </label>
             </div>
             <hr>
@@ -367,6 +390,7 @@
                     Расширенный (все блоки)
                 </label>
             </div>
+            <button class="reset-btn danger" id="reset-settings" type="button">Сбросить все настройки</button>
         </div>
     </div>
 
@@ -380,7 +404,7 @@
         </p>
         <ul>
             <li data-fortress="1" id="today-new">
-                1‑я крепость (новый урок): …
+                1‑я крепость (новый урок): 5 строк на текущей странице.
             </li>
             <li data-fortress="2" id="today-near"></li>
             <li data-fortress="3" id="today-far"></li>
@@ -389,7 +413,7 @@
         <p><small>Подробности по каждой крепости — ниже.</small></p>
     </div>
 
-    <!-- 1-я крепость -->
+    <!-- 1. Крепость -->
     <section class="fortress-block" data-fortress="1">
         <h2>
             1-я крепость: новый урок
@@ -420,7 +444,7 @@
         </div>
     </section>
 
-    <!-- 2-я крепость -->
+    <!-- 2. Крепость -->
     <section class="fortress-block" data-fortress="2">
         <h2>2-я крепость: ближнее повторение и связка</h2>
         <div class="card">
@@ -434,33 +458,38 @@
             </ul>
             <p id="near-review-auto">
                 <strong>Подсказка:</strong> введи текущий номер страницы в настройках выше, чтобы увидеть, какие страницы повторять для 2‑й крепости.
+                При уроке 7 строк: вчерашние 7 считаются «недавно заученными» и входят в ближнее повторение.
             </p>
         </div>
     </section>
 
-    <!-- 3-я крепость -->
+    <!-- 3. Крепость -->
     <section class="fortress-block" data-fortress="3">
         <h2>3-я крепость: дальнее повторение</h2>
         <div class="card">
             <p>
-                Страницы дальнего повторения берутся из поля
-                <strong>«Страницы для дальнего повторения»</strong>.
-                Если оно пустое — используется весь выученный объём (1…N).
+                Цель — за выбранное количество дней пройти по памяти все страницы,
+                входящие в регулярный круг повторения.  
+                Сайт сам делит объём на блоки и каждый новый день даёт следующий блок.
             </p>
             <p>
-                Всего страниц в круге:
-                <strong><span id="total-pages-info">0</span></strong>.  
+                Всего страниц в круге дальнего повторения:
+                <strong><span id="total-pages-info">19</span></strong>.  
                 Дней на круг:
                 <strong><span id="cycle-days-info">6</span></strong>.  
                 Примерный объём:
-                <strong><span id="daily-volume-info">0</span> стр./день</strong>.
+                <strong><span id="daily-volume-info">3</span> стр./день</strong>.<br>
+                <small>Диапазон страниц круга: <span id="review-range-text">стр. 1–19</span></small>
             </p>
             <p id="third-today-main"></p>
             <p id="third-today-weak"></p>
-            <button class="reset-btn danger" id="reset-review" type="button">Начать новый круг повторения с начала списка</button>
+            <button class="reset-btn danger" id="reset-review" type="button">Начать новый круг повторения с начальной страницы круга</button>
             <p><small>
-                В четверг — «выходной» от нового урока: по 3‑й крепости повторяй все выученные страницы (1…N).
-                В остальные дни используется следующий кусок из твоего списка страниц.
+                Каждый новый календарный день сайт автоматически переходит к следующему блоку страниц.
+                Когда доходит до последней страницы круга, на следующий день начинает снова с начальной.
+                Если сильно изменил настройки (количество страниц или дней), можно нажать кнопку
+                «Начать новый круг…», чтобы пересчитать план с начала.
+                В выбранный «выходной» от нового урока по 3‑й крепости идёт общий проход по всему выученному.
             </small></p>
         </div>
     </section>
@@ -473,7 +502,7 @@
         <p><small>Это ориентировочный план, если ты не меняешь настройки и продолжаешь текущий круг повторения.</small></p>
     </div>
 
-    <!-- Прогноз -->
+    <!-- Прогноз роста хифза -->
     <h2>Прогноз роста хифза</h2>
     <div class="card">
         <div class="settings-toggle">
@@ -516,7 +545,7 @@
         </div>
     </div>
 
-    <!-- Слабые страницы -->
+    <!-- Особый блок: слабые страницы -->
     <h3>Особое укрепление слабых страниц</h3>
     <div class="card" id="weak-section">
         <p>
@@ -535,14 +564,17 @@
         </ul>
     </div>
 
-    <!-- 4-я крепость -->
+    <!-- 4. Крепость -->
     <section class="fortress-block" data-fortress="4">
         <h2>4-я крепость: чтение по памяти в намазе и в течение дня</h2>
         <div class="card">
             <p><strong>Принцип:</strong> то, что учишь и повторяешь, должно звучать в намазе.</p>
             <ul>
                 <li>В обязательных намазах:
-                    <ul><li>в одном из ракаатов каждого намаза читай по памяти из последних 3–4 страниц.</li></ul>
+                    <ul>
+                        <li>в одном из ракаатов каждого намаза читай по памяти из последних 3–4 страниц,
+                            которые сейчас активно закрепляешь.</li>
+                    </ul>
                 </li>
                 <li>В суннах и дополнительном намазе:
                     <ul>
@@ -551,13 +583,15 @@
                     </ul>
                 </li>
                 <li>В течение дня:
-                    <ul><li>по дороге, в ожидании и т.п. проговаривать по памяти куски по 5–10 строк.</li></ul>
+                    <ul>
+                        <li>по дороге, в ожидании и т.п. проговаривать по памяти отдельные аяты или куски по 5–10 строк.</li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </section>
 
-    <!-- 5-я крепость -->
+    <!-- 5. Крепость -->
     <section class="fortress-block" data-fortress="5">
         <h2>5-я крепость: проверка и слушание</h2>
         <div class="card">
@@ -565,8 +599,13 @@
             <ul>
                 <li>1 раз в неделю:
                     <ul>
-                        <li>прочитать по памяти 5–10 страниц подряд вслух учителю / напарнику или на диктофон;</li>
-                        <li>регулярно сдавать слабые страницы до уверенности.</li>
+                        <li>прочитать по памяти <strong>5–10 страниц подряд</strong> вслух:
+                            <ul>
+                                <li>учителю / напарнику, или</li>
+                                <li>записать себя на диктофон и внимательно прослушать.</li>
+                            </ul>
+                        </li>
+                        <li>регулярно сдавать слабые страницы до полной уверенности.</li>
                     </ul>
                 </li>
             </ul>
@@ -585,14 +624,14 @@
         </div>
     </section>
 
-    <!-- Заметка -->
+    <!-- Заметка на сегодня -->
     <h2>Заметка на сегодня</h2>
     <div class="card">
         <textarea id="daily-note" rows="4" placeholder="Запиши сюда, какие аяты сегодня сложнее всего, что спросить у учителя, свои ощущения и т.п."></textarea>
         <p><small>Заметка сохраняется только в этом браузере и привязана к сегодняшней дате.</small></p>
     </div>
 
-    <!-- Чек-лист -->
+    <!-- Итоговый дневной чек-лист -->
     <h2>Итоговый дневной чек‑лист</h2>
     <div class="card checklist" id="daily-checklist">
         <p><strong>Отметь, что сделал сегодня:</strong></p>
@@ -628,11 +667,17 @@
         <p><small>Галочки сохраняются в этом браузере и автоматически обнуляются каждый новый день.</small></p>
     </div>
 
+    <!-- Статистика -->
+    <h2>Статистика и серия</h2>
+    <div class="card" id="stats-card">
+        <p id="stats-summary"><small>Пока нет сохранённых дней с отмеченными крепостями.</small></p>
+    </div>
+
     <!-- Недельный план -->
     <h2>Недельный план заучивания и повторения</h2>
     <div class="card">
         <div class="settings-toggle">
-            <p><small>Ориентировочный план по дням недели (четверг — выходной от нового урока).</small></p>
+            <p><small>Ориентировочный план по дням недели (выходной от нового урока выбирается в настройках).</small></p>
             <button class="btn" id="toggle-weekly-plan" type="button">Скрыть план на неделю</button>
         </div>
         <div id="weekly-plan-panel">
@@ -649,881 +694,250 @@
                     <tbody id="weekly-plan-body"></tbody>
                 </table>
             </div>
-            <p><small>В четверг — выходной от нового урока: только общий проход по всему выученному (если объём позволяет).</small></p>
+            <p><small id="weekly-plan-note"></small></p>
         </div>
     </div>
+
+    <!-- Резервная копия -->
+    <h2>Резервная копия и перенос данных</h2>
+    <div class="card" id="backup-card">
+        <p><small>Сделай копию своих настроек, заметок и чек‑листов, чтобы не потерять их и при желании перенести в другой браузер или на другое устройство.</small></p>
+        <div class="settings-grid">
+            <button class="btn" id="backup-generate" type="button">Создать резервную копию</button>
+            <button class="btn" id="backup-restore" type="button">Восстановить из резервной копии</button>
+        </div>
+        <textarea id="backup-text" rows="6" placeholder="Здесь появится резервная копия в формате JSON. Скопируй её и сохрани. Чтобы восстановиться — вставь сюда сохранённый текст и нажми «Восстановить»"></textarea>
+        <p><small id="backup-status"></small></p>
+    </div>
+
+    <p><small>По мере увеличения количества выученных страниц просто измени числа в настройках — план пересчитается сам.</small></p>
 </div>
 
 <script>
-const daysRu = [
-    "Воскресенье", "Понедельник", "Вторник",
-    "Среда", "Четверг", "Пятница", "Суббота"
-];
-const today = new Date();
-const todayIndex = today.getDay();
-const todayName = daysRu[todayIndex];
-const todayKey = today.toISOString().slice(0, 10);
-const LINES_PER_PAGE = 15;
-
-// DOM
-const totalPagesInput   = document.getElementById("total-pages");
-const currentPageInput  = document.getElementById("current-page");
-const linesOnPageInput  = document.getElementById("lines-on-page");
-const reviewPagesInput  = document.getElementById("review-pages");
-const cycleDaysInput    = document.getElementById("cycle-days");
-const weakPagesInput    = document.getElementById("weak-pages");
-const lessonSizeSelect  = document.getElementById("lesson-size");
-
-const useF1 = document.getElementById("use-f1");
-const useF2 = document.getElementById("use-f2");
-const useF3 = document.getElementById("use-f3");
-const useF4 = document.getElementById("use-f4");
-const useF5 = document.getElementById("use-f5");
-const fortressToggles = { "1": useF1, "2": useF2, "3": useF3, "4": useF4, "5": useF5 };
-
-const revisionToggle      = document.getElementById("revision-mode-toggle");
-const darkModeToggle      = document.getElementById("dark-mode-toggle");
-const compactModeToggle   = document.getElementById("compact-mode-toggle");
-const useWeakPagesToggle  = document.getElementById("use-weak-pages");
-const autoCycleDaysToggle = document.getElementById("auto-cycle-days-toggle");
-
-const displayModeMinimalRadio = document.getElementById("display-mode-minimal");
-const displayModeFullRadio    = document.getElementById("display-mode-full");
-
-const todayNameSpan      = document.getElementById("today-name");
-const todayDateSpan      = document.getElementById("today-date");
-const todayNewLi         = document.getElementById("today-new");
-const todayNearLi        = document.getElementById("today-near");
-const todayFarLi         = document.getElementById("today-far");
-const todayWeakSummaryLi = document.getElementById("today-weak-summary");
-const nearReviewP        = document.getElementById("near-review-auto");
-
-const totalPagesInfoSpan   = document.getElementById("total-pages-info");
-const cycleDaysInfoSpan    = document.getElementById("cycle-days-info");
-const dailyVolumeInfoSpan  = document.getElementById("daily-volume-info");
-const reviewRangeTextSpan  = document.getElementById("review-range-text");
-const thirdTodayMainP      = document.getElementById("third-today-main");
-const thirdTodayWeakP      = document.getElementById("third-today-weak");
-const resetReviewBtn       = document.getElementById("reset-review");
-
-const tomorrowFarP  = document.getElementById("tomorrow-far");
-const tomorrowWeakP = document.getElementById("tomorrow-weak");
-
-const weakListInfoSpan = document.getElementById("weak-list-info");
-
-const checklistElement   = document.getElementById("daily-checklist");
-const checkboxes         = checklistElement.querySelectorAll("input[type='checkbox'][data-task-id]");
-const resetChecklistBtn  = document.getElementById("reset-checklist");
-const storageKeyChecklist = "quranPlanChecklist-" + todayKey;
-
-const progressBarInner = document.getElementById("progress-bar-inner");
-const progressText     = document.getElementById("progress-text");
-
-const dailyNote = document.getElementById("daily-note");
-const noteKey   = "quranPlanNote-" + todayKey;
-
-const settingsPanel     = document.getElementById("settings-panel");
-const toggleSettingsBtn = document.getElementById("toggle-settings");
-const printBtn          = document.getElementById("print-btn");
-
-const lessonDescShortSpan   = document.getElementById("lesson-desc-short");
-const lessonDescHeadingSpan = document.getElementById("lesson-desc-heading");
-const lessonDescGoalSpan    = document.getElementById("lesson-desc-goal");
-const lessonDescStep1Span   = document.getElementById("lesson-desc-step1");
-const lessonDesc5thSpan     = document.getElementById("lesson-desc-5th");
-const nearBackLabelSpan     = document.getElementById("near-back-label");
-
-const toggleForecastBtn = document.getElementById("toggle-forecast");
-const forecastPanel     = document.getElementById("forecast-panel");
-const forecastIntroP    = document.getElementById("forecast-intro");
-const forecastTbody     = document.getElementById("forecast-tbody");
-const forecastNoteP     = document.getElementById("forecast-note");
-
-// История
-const historyPrevBtn   = document.getElementById("history-prev");
-const historyNextBtn   = document.getElementById("history-next");
-const historyDateInput = document.getElementById("history-date");
-const historyContentDiv= document.getElementById("history-content");
-
-// Недельный план
-const weeklyPlanToggleBtn = document.getElementById("toggle-weekly-plan");
-const weeklyPlanPanel     = document.getElementById("weekly-plan-panel");
-const weeklyPlanBody      = document.getElementById("weekly-plan-body");
-
-// Состояние
-let settings = {};
-let weakSet = new Set();
-let reviewSet = [];
-let reviewState = null;
-
-// парсер страниц
-function parsePagesPattern(text, maxPage) {
-    const set = new Set();
-    if (!text) return [];
-    const max = Math.max(1, maxPage || 1);
-    text.split(",").forEach(part => {
-        part = part.trim();
-        if (!part) return;
-        const range = part.split("-").map(s => s.trim());
-        if (range.length === 1) {
-            const n = parseInt(range[0], 10);
-            if (!isNaN(n) && n >= 1 && n <= max) set.add(n);
-        } else {
-            let a = parseInt(range[0], 10);
-            let b = parseInt(range[1], 10);
-            if (isNaN(a) || isNaN(b)) return;
-            if (a > b) [a,b] = [b,a];
-            if (b < 1) return;
-            if (a < 1) a = 1;
-            if (a > max) return;
-            if (b > max) b = max;
-            for (let i=a;i<=b;i++) set.add(i);
-        }
-    });
-    return Array.from(set).sort((a,b)=>a-b);
-}
-
-function compressRanges(nums) {
-    if (!nums || !nums.length) return "";
-    const arr = Array.from(new Set(nums)).sort((a,b)=>a-b);
-    const res = [];
-    let start = arr[0];
-    let prev  = arr[0];
-    for (let i=1;i<arr.length;i++) {
-        const n = arr[i];
-        if (n === prev+1) {
-            prev = n;
-        } else {
-            if (start === prev) res.push(String(start));
-            else res.push(start + "–" + prev);
-            start = prev = n;
-        }
-    }
-    if (start === prev) res.push(String(start));
-    else res.push(start + "–" + prev);
-    return res.join(", ");
-}
-
-// настройки
-function loadSettings() {
-    const isNarrow = (typeof window !== "undefined" && window.innerWidth < 700);
-    const defaults = {
-        totalPages: 19,
-        currentPage: 19,
-        linesOnCurrentPage: 0,
-        reviewPagesText: "",
-        cycleDays: 6,
-        weakPages: "8-13",
-        lessonSize: "5",
-        activeFortresses: { "1": true, "2": true, "3": true, "4": true, "5": true },
-        darkMode: false,
-        revisionMode: false,
-        settingsCollapsed: false,
-        useWeakPages: true,
-        compactMode: isNarrow,
-        autoCycleDays: true,
-        displayMode: "full"
-    };
-    try {
-        const raw = localStorage.getItem("quranPlanSettingsV2");
-        if (!raw) return defaults;
-        const data = JSON.parse(raw);
-        if (!data || typeof data !== "object") return defaults;
-        const out = { ...defaults };
-
-        if (typeof data.totalPages === "number") out.totalPages = data.totalPages;
-        if (typeof data.currentPage === "number") out.currentPage = data.currentPage;
-        if (typeof data.linesOnCurrentPage === "number") out.linesOnCurrentPage = data.linesOnCurrentPage;
-        if (typeof data.reviewPagesText === "string") out.reviewPagesText = data.reviewPagesText;
-        if (typeof data.cycleDays === "number") out.cycleDays = data.cycleDays;
-        if (typeof data.weakPages === "string") out.weakPages = data.weakPages;
-        if (typeof data.lessonSize === "string" && ["5","7","page"].includes(data.lessonSize)) {
-            out.lessonSize = data.lessonSize;
-        }
-        if (typeof data.darkMode === "boolean") out.darkMode = data.darkMode;
-        if (typeof data.revisionMode === "boolean") out.revisionMode = data.revisionMode;
-        if (typeof data.settingsCollapsed === "boolean") out.settingsCollapsed = data.settingsCollapsed;
-        if (typeof data.useWeakPages === "boolean") out.useWeakPages = data.useWeakPages;
-        if (typeof data.compactMode === "boolean") out.compactMode = data.compactMode;
-        if (typeof data.autoCycleDays === "boolean") out.autoCycleDays = data.autoCycleDays;
-        if (typeof data.displayMode === "string" &&
-            (data.displayMode === "minimal" || data.displayMode === "full")) {
-            out.displayMode = data.displayMode;
-        }
-
-        if (data.activeFortresses && typeof data.activeFortresses === "object") {
-            out.activeFortresses = { ...defaults.activeFortresses };
-            ["1","2","3","4","5"].forEach(k => {
-                if (typeof data.activeFortresses[k] === "boolean") {
-                    out.activeFortresses[k] = data.activeFortresses[k];
-                }
-            });
-        }
-        return out;
-    } catch {
-        return defaults;
-    }
-}
-function saveSettings() {
-    localStorage.setItem("quranPlanSettingsV2", JSON.stringify(settings));
-}
-function applySettingsToInputs() {
-    totalPagesInput.value  = settings.totalPages;
-    currentPageInput.value = settings.currentPage;
-    linesOnPageInput.value = settings.linesOnCurrentPage || 0;
-    reviewPagesInput.value = settings.reviewPagesText || "";
-    cycleDaysInput.value   = settings.cycleDays;
-    weakPagesInput.value   = settings.weakPages || "";
-    lessonSizeSelect.value = settings.lessonSize || "5";
-
-    useF1.checked = !!settings.activeFortresses["1"];
-    useF2.checked = !!settings.activeFortresses["2"];
-    useF3.checked = !!settings.activeFortresses["3"];
-    useF4.checked = !!settings.activeFortresses["4"];
-    useF5.checked = !!settings.activeFortresses["5"];
-
-    revisionToggle.checked      = settings.revisionMode;
-    darkModeToggle.checked      = settings.darkMode;
-    compactModeToggle.checked   = settings.compactMode;
-    useWeakPagesToggle.checked  = settings.useWeakPages;
-    autoCycleDaysToggle.checked = settings.autoCycleDays;
-
-    if (settings.displayMode === "minimal") displayModeMinimalRadio.checked = true;
-    else displayModeFullRadio.checked = true;
-
-    if (settings.revisionMode) {
-        useF1.checked = false;
-        useF1.disabled = true;
-        settings.activeFortresses["1"] = false;
-    } else {
-        useF1.disabled = false;
-    }
-
-    if (settings.settingsCollapsed) {
-        settingsPanel.classList.add("hidden");
-        toggleSettingsBtn.textContent = "Показать настройки";
-    } else {
-        settingsPanel.classList.remove("hidden");
-        toggleSettingsBtn.textContent = "Скрыть настройки";
-    }
-}
-function applyDarkMode() {
-    if (settings.darkMode) document.body.classList.add("dark");
-    else document.body.classList.remove("dark");
-}
-function applyCompactMode() {
-    if (settings.compactMode) document.body.classList.add("compact");
-    else document.body.classList.remove("compact");
-}
-function applyDisplayMode() {
-    const detailed = document.querySelectorAll(".fortress-block, #weak-section");
-    const minimal = settings.displayMode === "minimal";
-    detailed.forEach(el => {
-        if (minimal) el.classList.add("hidden");
-        else el.classList.remove("hidden");
-    });
-}
-
-// reviewSet
-function buildReviewSet() {
-    const total = Math.max(1, parseInt(settings.totalPages,10) || 1);
-    let arr = parsePagesPattern(settings.reviewPagesText, total);
-    if (!arr.length) {
-        for (let i=1;i<=total;i++) arr.push(i);
-    }
-    reviewSet = arr;
-}
-
-// нормализация прогресса
-function normalizeLinesAndPage() {
-    let lines = parseInt(settings.linesOnCurrentPage,10);
-    if (isNaN(lines) || lines < 0) lines = 0;
-    let page = parseInt(settings.currentPage,10);
-    if (isNaN(page) || page < 1) page = 1;
-
-    while (lines >= LINES_PER_PAGE) {
-        lines -= LINES_PER_PAGE;
-        page += 1;
-    }
-    settings.linesOnCurrentPage = lines;
-    settings.currentPage        = page;
-    currentPageInput.value      = page;
-    linesOnPageInput.value      = lines;
-    saveSettings();
-}
-
-// reviewState
-function loadReviewState() {
-    try {
-        const raw = localStorage.getItem("quranPlanReviewStateV2");
-        if (!raw) return null;
-        const data = JSON.parse(raw);
-        if (!data || typeof data !== "object") return null;
-        return data;
-    } catch {
-        return null;
-    }
-}
-function saveReviewState() {
-    if (!reviewState) return;
-    localStorage.setItem("quranPlanReviewStateV2", JSON.stringify(reviewState));
-}
-function initReviewForToday() {
-    const N = reviewSet.length;
-    if (!N) {
-        reviewState = null;
-        return;
-    }
-    const days = Math.max(1, parseInt(settings.cycleDays,10) || 1);
-    const chunkLen = Math.max(1, Math.ceil(N / days));
-
-    const st = loadReviewState();
-    if (!st || st.lastDate !== todayKey) {
-        let startIndex = st && typeof st.nextIndex === "number" ? st.nextIndex : 0;
-        if (startIndex < 0 || startIndex >= N) startIndex = 0;
-        let todayCount = chunkLen;
-        if (startIndex + todayCount > N) todayCount = N - startIndex;
-        if (todayCount < 1) todayCount = 1;
-        let nextIndex = (startIndex + todayCount) % N;
-        reviewState = {
-            lastDate: todayKey,
-            startIndex,
-            todayCount,
-            nextIndex
-        };
-        saveReviewState();
-    } else {
-        let startIndex = st.startIndex || 0;
-        let todayCount = st.todayCount || chunkLen;
-        if (startIndex < 0 || startIndex >= N) startIndex = 0;
-        if (todayCount < 1) todayCount = Math.min(chunkLen, N);
-        if (startIndex + todayCount > N) todayCount = N - startIndex;
-        if (todayCount < 1) todayCount = 1;
-        let nextIndex = (startIndex + todayCount) % N;
-        reviewState = {
-            lastDate: todayKey,
-            startIndex,
-            todayCount,
-            nextIndex
-        };
-        saveReviewState();
-    }
-}
-
-// урок
-function getLessonPhrases() {
-    const size = settings.lessonSize || "5";
-    if (size === "7")   return { shortNom: "7 строк", shortAcc: "7 строк" };
-    if (size === "page")return { shortNom: "целая страница", shortAcc: "целую страницу" };
-    return { shortNom: "5 строк", shortAcc: "5 строк" };
-}
-function getLinesPerDay() {
-    if (settings.revisionMode) return 0;
-    if (!settings.activeFortresses || !settings.activeFortresses["1"]) return 0;
-    if (settings.lessonSize === "page") return LINES_PER_PAGE;
-    if (settings.lessonSize === "7")   return 7;
-    return 5;
-}
-function describeNewBlock() {
-    const page = parseInt(settings.currentPage,10) || 1;
-    const used = parseInt(settings.linesOnCurrentPage,10) || 0;
-    const linesPerDay = getLinesPerDay();
-    if (linesPerDay <= 0) return "страницу " + page;
-    if (settings.lessonSize === "page" || linesPerDay >= LINES_PER_PAGE) {
-        return "страницу " + page + " целиком";
-    }
-    const startLine = used + 1;
-    const endLine   = Math.min(LINES_PER_PAGE, used + linesPerDay);
-    return linesPerDay + " строк (примерно строки " + startLine + "–" + endLine + ") на странице " + page;
-}
-function updateLessonTexts() {
-    const p = getLessonPhrases();
-    if (lessonDescShortSpan)   lessonDescShortSpan.textContent   = p.shortNom;
-    if (lessonDescHeadingSpan) lessonDescHeadingSpan.textContent = p.shortNom;
-    if (lessonDescGoalSpan)    lessonDescGoalSpan.textContent    = p.shortAcc;
-    if (lessonDescStep1Span)   lessonDescStep1Span.textContent   = p.shortAcc;
-    if (lessonDesc5thSpan)     lessonDesc5thSpan.textContent     = p.shortNom;
-
-    const desc = describeNewBlock();
-    if (todayNewLi) {
-        todayNewLi.textContent = "1‑я крепость (новый урок): " + desc + ".";
-    }
-    if (lessonDesc5thSpan) {
-        lessonDesc5thSpan.textContent = p.shortNom;
-    }
-}
-
-// 2-я крепость
-function getNearBackCount() {
-    const size = settings.lessonSize || "5";
-    if (size === "page") return 1;
-    return 2;
-}
-function updateNearBackLabel() {
-    const count = getNearBackCount();
-    nearBackLabelSpan.textContent = count === 1
-        ? "1 предыдущую страницу"
-        : count + " предыдущие страницы";
-}
-function buildNearReviewInfo() {
-    const total   = parseInt(settings.totalPages,10) || 0;
-    const current = parseInt(settings.currentPage,10) || 0;
-    if (!current || current < 1) return null;
-    const back = getNearBackCount();
-    let start = current - back;
-    if (start < 1) start = 1;
-    const text = (start === current) ? ("стр. " + current) : ("стр. " + start + "–" + current);
-    let extra = "";
-    if (total && current > total) {
-        extra = " (внимание: текущая страница больше общего числа выученных страниц).";
-    }
-    return { text, extra };
-}
-function updateNearReview() {
-    const info = buildNearReviewInfo();
-    if (!info) {
-        nearReviewP.innerHTML = "<strong>Подсказка:</strong> введи текущий номер страницы в настройках выше.";
-        return;
-    }
-    nearReviewP.innerHTML =
-        "<strong>Подсказка:</strong> сегодня для 2‑й крепости повтори по памяти: " +
-        info.text + "." + info.extra;
-}
-
-// 3-я крепость
-function buildThirdMainInfo() {
-    const N = reviewSet.length;
-    if (!N) return null;
-    const days = Math.max(1, parseInt(settings.cycleDays,10) || 1);
-
-    // четверг: полный проход
-    if (todayIndex === 4) {
-        const totalAll = Math.max(1, parseInt(settings.totalPages,10) || 1);
-        const pages = [];
-        for (let i=1;i<=totalAll;i++) pages.push(i);
-        return {
-            pages,
-            text: "стр. 1–" + totalAll,
-            count: totalAll,
-            isThursdayAll: true
-        };
-    }
-
-    if (!reviewState) return null;
-    const chunkLen = Math.max(1, Math.ceil(N / days));
-    let { startIndex, todayCount } = reviewState;
-    if (typeof startIndex !== "number" || startIndex < 0 || startIndex >= N) startIndex = 0;
-    if (typeof todayCount !== "number" || todayCount < 1) todayCount = chunkLen;
-    if (startIndex + todayCount > N) todayCount = N - startIndex;
-    if (todayCount < 1) todayCount = 1;
-
-    const slice = reviewSet.slice(startIndex, startIndex + todayCount);
-    const text  = "стр. " + compressRanges(slice);
-    return { pages: slice, text, count: slice.length, isThursdayAll: false };
-}
-function buildThirdTomorrowInfo() {
-    const N = reviewSet.length;
-    if (!N || !reviewState) return null;
-    const days = Math.max(1, parseInt(settings.cycleDays,10) || 1);
-    const chunkLen = Math.max(1, Math.ceil(N / days));
-    let startIndex = reviewState.nextIndex || 0;
-    if (startIndex < 0 || startIndex >= N) startIndex = 0;
-    let count = chunkLen;
-    if (startIndex + count > N) count = N - startIndex;
-    if (count < 1) count = 1;
-    const slice = reviewSet.slice(startIndex, startIndex + count);
-    const text  = "стр. " + compressRanges(slice);
-    return { pages: slice, text, count };
-}
-function buildWeakInfoForPages(pages) {
-    if (!settings.useWeakPages) {
-        return {
-            message: "Учёт слабых страниц отключён (можно включить в настройках).",
-            short: ""
-        };
-    }
-    if (!weakSet || !weakSet.size) {
-        return {
-            message: "Слабые страницы не указаны. Если хочешь выделить их, заполни поле в настройках.",
-            short: ""
-        };
-    }
-    const weakToday = pages.filter(p => weakSet.has(p));
-    if (!weakToday.length) {
-        return {
-            message: "Слабые страницы в этот блок не попали. Всё равно следи за качеством чтения.",
-            short: "Слабые страницы в этот блок не попали."
-        };
-    }
-    const list = compressRanges(weakToday);
-    return {
-        message: "В этот блок попадают слабые страницы: стр. " + list + ". Сделай на них особый упор.",
-        short: "Слабые страницы в блоке: стр. " + list + "."
-    };
-}
-function updateThirdFortressUI() {
-    const N = reviewSet.length;
-    totalPagesInfoSpan.textContent = N;
-    const days = Math.max(1, parseInt(settings.cycleDays,10) || 1);
-    const chunkLen = N ? Math.max(1, Math.ceil(N / days)) : 0;
-    cycleDaysInfoSpan.textContent   = days;
-    dailyVolumeInfoSpan.textContent = chunkLen;
-
-    if (N) {
-        reviewRangeTextSpan.textContent = "стр. " + compressRanges(reviewSet);
-    } else {
-        reviewRangeTextSpan.textContent = "нет страниц (проверь настройки)";
-    }
-
-    const mainInfo = buildThirdMainInfo();
-    if (!mainInfo) {
-        thirdTodayMainP.textContent = "Сегодняшний блок 3‑й крепости ещё не рассчитан.";
-        thirdTodayWeakP.textContent = "";
-    } else {
-        thirdTodayMainP.textContent =
-            "Сегодня по 3‑й крепости: " + mainInfo.text +
-            (todayIndex === 4 ? " (общий проход)." : " (" + mainInfo.count + " стр.).");
-        const weakInfo = buildWeakInfoForPages(mainInfo.pages);
-        thirdTodayWeakP.textContent = weakInfo.message;
-    }
-
-    if (!settings.useWeakPages) {
-        weakListInfoSpan.textContent = "учёт отключён";
-    } else if (!weakSet || !weakSet.size) {
-        weakListInfoSpan.textContent = "не выбраны";
-    } else {
-        weakListInfoSpan.textContent = compressRanges(Array.from(weakSet));
-    }
-
-    const tomorrowInfo = buildThirdTomorrowInfo();
-    if (!tomorrowInfo) {
-        tomorrowFarP.textContent = "Завтрашний блок 3‑й крепости ещё не рассчитан.";
-        tomorrowWeakP.textContent = "";
-    } else {
-        tomorrowFarP.textContent =
-            "Предварительно завтра по 3‑й крепости: " +
-            tomorrowInfo.text + " (" + tomorrowInfo.count + " стр.).";
-        const weakTomorrow = buildWeakInfoForPages(tomorrowInfo.pages);
-        tomorrowWeakP.textContent = weakTomorrow.message;
-    }
-}
-function updateTodayPlan() {
-    todayNameSpan.textContent = todayName;
-    const [y,m,d] = todayKey.split("-");
-    todayDateSpan.textContent = d + "." + m + "." + y;
-
-    const nearInfo = buildNearReviewInfo();
-    if (nearInfo) {
-        todayNearLi.textContent =
-            "2‑я крепость (ближнее повторение): " + nearInfo.text + ".";
-    } else {
-        todayNearLi.textContent =
-            "2‑я крепость (ближнее повторение): укажи текущую страницу в настройках.";
-    }
-
-    const mainInfo = buildThirdMainInfo();
-    if (mainInfo) {
-        todayFarLi.textContent =
-            "3‑я крепость (дальнее повторение): " + mainInfo.text +
-            (todayIndex === 4 ? " (общий проход)." : " (" + mainInfo.count + " стр.).");
-        const weakInfo = buildWeakInfoForPages(mainInfo.pages);
-        todayWeakSummaryLi.textContent = weakInfo.short || weakInfo.message;
-    } else {
-        todayFarLi.textContent = "3‑я крепость (дальнее повторение): блок ещё не рассчитан.";
-        todayWeakSummaryLi.textContent = "";
-    }
-}
-
-// видимость крепостей
-function applyFortressVisibility() {
-    const active = settings.activeFortresses || {};
-    document.querySelectorAll(".fortress-block").forEach(block => {
-        const num = block.getAttribute("data-fortress");
-        block.style.display = active[num] ? "" : "none";
-    });
-    document.querySelectorAll("#today-plan [data-fortress]").forEach(li => {
-        const num = li.getAttribute("data-fortress");
-        li.style.display = active[num] ? "list-item" : "none";
-    });
-    document.querySelectorAll("#daily-checklist label[data-fortress]").forEach(label => {
-        const num = label.getAttribute("data-fortress");
-        label.style.display = active[num] ? "block" : "none";
-    });
-}
-
-// прогресс
-function updateProgressAndStats() {
-    const activeList = Object.keys(settings.activeFortresses || {})
-        .filter(k => settings.activeFortresses[k]);
-    const total = activeList.length;
-    let completed = 0;
-    checkboxes.forEach(cb => {
-        const fortNum = cb.closest("label").getAttribute("data-fortress");
-        if (!fortNum) return;
-        if (activeList.includes(fortNum) && cb.checked) completed++;
-    });
-
-    if (total > 0) {
-        const percent = Math.round((completed / total) * 100);
-        progressBarInner.style.width = percent + "%";
-        let txt = "Прогресс за сегодня: " + completed + " / " + total +
-            " крепостей (" + percent + "%).";
-        if (completed === total) txt += " Все активные крепости на сегодня выполнены.";
-        progressText.innerHTML = "<small>" + txt + "</small>";
-    } else {
-        progressBarInner.style.width = "0%";
-        progressText.innerHTML = "<small>Не выбрано ни одной активной крепости (проверь настройки).</small>";
-    }
-}
-
-// прогноз (см. выше getLinesPerDay и formatDatePlusDays)
-function updateForecast() {
-    const linesPerDay = getLinesPerDay();
-    const horizons = [
-        { label: "7 дней (неделя)", days: 7 },
-        { label: "30 дней (≈ 1 месяц)", days: 30 },
-        { label: "90 дней (≈ 3 месяца)", days: 90 }
+    const daysRu = [
+        "Воскресенье", "Понедельник", "Вторник",
+        "Среда", "Четверг", "Пятница", "Суббота"
     ];
-    const p = getLessonPhrases();
-    if (linesPerDay <= 0) {
-        forecastIntroP.textContent =
-            "Сейчас новый урок отключён (1‑я крепость не используется или включён режим только повторения), " +
-            "поэтому прогноз по новому хифзу равен 0.";
-        forecastTbody.innerHTML = "";
-        forecastNoteP.innerHTML =
-            "<small>Включи 1‑ю крепость и выбери объём урока, чтобы увидеть прогноз.</small>";
-        return;
-    }
-    forecastIntroP.textContent =
-        "При текущем объёме урока (" + p.shortNom +
-        ") и ежедневном новом уроке ты добавишь к своему хифзу примерно:";
-    const currentPages = parseInt(settings.totalPages,10) || 0;
-    const rows = horizons.map(h => {
-        const totalLines = linesPerDay * h.days;
-        const pages = Math.floor(totalLines / LINES_PER_PAGE);
-        const remLines = totalLines % LINES_PER_PAGE;
-        let newHifzText = totalLines + " строк";
-        if (pages > 0) {
-            newHifzText += " ≈ " + pages + " стр.";
-            if (remLines > 0) newHifzText += " и " + remLines + " строк";
+    const today = new Date();
+    const todayIndex = today.getDay();
+    const todayName = daysRu[todayIndex];
+    const todayKey = today.toISOString().slice(0, 10);
+    const LINES_PER_PAGE = 15;
+
+    // DOM
+    const totalPagesInput = document.getElementById("total-pages");
+    const currentPageInput = document.getElementById("current-page");
+    const linesOnPageInput = document.getElementById("lines-on-page");
+    const startPageInput = document.getElementById("start-page");
+    const cycleDaysInput = document.getElementById("cycle-days");
+    const weakPagesInput = document.getElementById("weak-pages");
+    const lessonSizeSelect = document.getElementById("lesson-size");
+    const segmentTitleInput = document.getElementById("segment-title");
+    const offDaySelect = document.getElementById("off-day-select");
+
+    const useF1 = document.getElementById("use-f1");
+    const useF2 = document.getElementById("use-f2");
+    const useF3 = document.getElementById("use-f3");
+    const useF4 = document.getElementById("use-f4");
+    const useF5 = document.getElementById("use-f5");
+    const fortressToggles = { "1": useF1, "2": useF2, "3": useF3, "4": useF4, "5": useF5 };
+
+    const revisionToggle = document.getElementById("revision-mode-toggle");
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
+    const compactModeToggle = document.getElementById("compact-mode-toggle");
+    const useWeakPagesToggle = document.getElementById("use-weak-pages");
+    const autoCycleDaysToggle = document.getElementById("auto-cycle-days-toggle");
+
+    const displayModeMinimalRadio = document.getElementById("display-mode-minimal");
+    const displayModeFullRadio = document.getElementById("display-mode-full");
+
+    const todayNameSpan = document.getElementById("today-name");
+    const todayDateSpan = document.getElementById("today-date");
+    const todayNewLi = document.getElementById("today-new");
+    const todayNearLi = document.getElementById("today-near");
+    const todayFarLi = document.getElementById("today-far");
+    const todayWeakSummaryLi = document.getElementById("today-weak-summary");
+    const nearReviewP = document.getElementById("near-review-auto");
+
+    const totalPagesInfoSpan = document.getElementById("total-pages-info");
+    const cycleDaysInfoSpan = document.getElementById("cycle-days-info");
+    const dailyVolumeInfoSpan = document.getElementById("daily-volume-info");
+    const reviewRangeTextSpan = document.getElementById("review-range-text");
+    const thirdTodayMainP = document.getElementById("third-today-main");
+    const thirdTodayWeakP = document.getElementById("third-today-weak");
+    const resetReviewBtn = document.getElementById("reset-review");
+
+    const tomorrowFarP = document.getElementById("tomorrow-far");
+    const tomorrowWeakP = document.getElementById("tomorrow-weak");
+
+    const weakListInfoSpan = document.getElementById("weak-list-info");
+
+    const checklistElement = document.getElementById("daily-checklist");
+    const checkboxes = checklistElement.querySelectorAll("input[type='checkbox'][data-task-id]");
+    const resetChecklistBtn = document.getElementById("reset-checklist");
+    const storageKeyChecklist = "quranPlanChecklist-" + todayKey;
+
+    const progressBarInner = document.getElementById("progress-bar-inner");
+    const progressText = document.getElementById("progress-text");
+
+    const dailyNote = document.getElementById("daily-note");
+    const noteKey = "quranPlanNote-" + todayKey;
+
+    const settingsPanel = document.getElementById("settings-panel");
+    const toggleSettingsBtn = document.getElementById("toggle-settings");
+    const resetSettingsBtn = document.getElementById("reset-settings");
+    const printBtn = document.getElementById("print-btn");
+
+    const lessonDescShortSpan = document.getElementById("lesson-desc-short");
+    const lessonDescHeadingSpan = document.getElementById("lesson-desc-heading");
+    const lessonDescGoalSpan = document.getElementById("lesson-desc-goal");
+    const lessonDescStep1Span = document.getElementById("lesson-desc-step1");
+    const lessonDesc5thSpan = document.getElementById("lesson-desc-5th");
+    const nearBackLabelSpan = document.getElementById("near-back-label");
+
+    const toggleForecastBtn = document.getElementById("toggle-forecast");
+    const forecastPanel = document.getElementById("forecast-panel");
+    const forecastIntroP = document.getElementById("forecast-intro");
+    const forecastTbody = document.getElementById("forecast-tbody");
+    const forecastNoteP = document.getElementById("forecast-note");
+
+    // История
+    const historyPrevBtn = document.getElementById("history-prev");
+    const historyNextBtn = document.getElementById("history-next");
+    const historyDateInput = document.getElementById("history-date");
+    const historyContentDiv = document.getElementById("history-content");
+
+    // Недельный план
+    const weeklyPlanToggleBtn = document.getElementById("toggle-weekly-plan");
+    const weeklyPlanPanel = document.getElementById("weekly-plan-panel");
+    const weeklyPlanBody = document.getElementById("weekly-plan-body");
+    const weeklyPlanNote = document.getElementById("weekly-plan-note");
+
+    // Статистика
+    const statsSummaryP = document.getElementById("stats-summary");
+
+    // Резервная копия
+    const backupGenerateBtn = document.getElementById("backup-generate");
+    const backupRestoreBtn = document.getElementById("backup-restore");
+    const backupText = document.getElementById("backup-text");
+    const backupStatus = document.getElementById("backup-status");
+
+    // Верхний блок
+    const topTotalPagesSpan = document.getElementById("top-total-pages");
+    const topSegmentTitleSpan = document.getElementById("top-segment-title");
+
+    let settings = {};
+    let weakSet = new Set();
+    let reviewState = null;
+
+    function loadSettings() {
+        const isNarrow = (typeof window !== "undefined" && window.innerWidth < 700);
+        const defaults = {
+            totalPages: 19,
+            currentPage: 19,
+            linesOnCurrentPage: 0,
+            regularStartPage: 1,
+            cycleDays: 6,
+            weakPages: "8-13",
+            lessonSize: "5",
+            segmentTitle: "с начала суры «Аль‑Бакара»",
+            offDayIndex: 4, // Четверг
+            activeFortresses: { "1": true, "2": true, "3": true, "4": true, "5": true },
+            darkMode: false,
+            revisionMode: false,
+            settingsCollapsed: false,
+            useWeakPages: true,
+            compactMode: isNarrow,
+            autoCycleDays: true,
+            displayMode: "full"
+        };
+        try {
+            const raw = localStorage.getItem("quranPlanSettings");
+            if (!raw) return defaults;
+            const data = JSON.parse(raw);
+            if (!data || typeof data !== "object") return defaults;
+
+            const out = { ...defaults };
+            if (typeof data.totalPages === "number") out.totalPages = data.totalPages;
+            if (typeof data.currentPage === "number") out.currentPage = data.currentPage;
+            if (typeof data.linesOnCurrentPage === "number") out.linesOnCurrentPage = data.linesOnCurrentPage;
+            if (typeof data.regularStartPage === "number") out.regularStartPage = data.regularStartPage;
+            if (typeof data.cycleDays === "number") out.cycleDays = data.cycleDays;
+            if (typeof data.weakPages === "string") out.weakPages = data.weakPages;
+            if (typeof data.lessonSize === "string" && ["5","7","page"].includes(data.lessonSize)) {
+                out.lessonSize = data.lessonSize;
+            }
+            if (typeof data.segmentTitle === "string") out.segmentTitle = data.segmentTitle;
+            if (typeof data.offDayIndex === "number" &&
+                data.offDayIndex >= 0 && data.offDayIndex <= 6) {
+                out.offDayIndex = data.offDayIndex;
+            }
+            if (typeof data.darkMode === "boolean") out.darkMode = data.darkMode;
+            if (typeof data.revisionMode === "boolean") out.revisionMode = data.revisionMode;
+            if (typeof data.settingsCollapsed === "boolean") out.settingsCollapsed = data.settingsCollapsed;
+            if (typeof data.useWeakPages === "boolean") out.useWeakPages = data.useWeakPages;
+            if (typeof data.compactMode === "boolean") out.compactMode = data.compactMode;
+            if (typeof data.autoCycleDays === "boolean") out.autoCycleDays = data.autoCycleDays;
+            if (typeof data.displayMode === "string" &&
+                (data.displayMode === "minimal" || data.displayMode === "full")) {
+                out.displayMode = data.displayMode;
+            }
+
+            if (data.activeFortresses && typeof data.activeFortresses === "object") {
+                out.activeFortresses = { ...defaults.activeFortresses };
+                ["1","2","3","4","5"].forEach(k => {
+                    if (typeof data.activeFortresses[k] === "boolean") {
+                        out.activeFortresses[k] = data.activeFortresses[k];
+                    }
+                });
+            }
+            return out;
+        } catch {
+            return defaults;
         }
-        let growthText = "+" + pages + " стр.";
-        if (remLines > 0) growthText += " и +" + remLines + " строк";
-        growthText += " к текущему уровню.";
-        const approxTotalPages = currentPages + pages + (remLines > 0 ? 1 : 0);
-        const dateStr = (function(d){
-            const dd = String(d).padStart(2,"0");
-            const mm = String(today.getMonth()+1).padStart(2,"0");
-            const yy = today.getFullYear();
-            // это просто для подписи, точную дату можно не считать
-            return dd + "." + mm + "." + yy;
-        })(h.days);
-        const totalText =
-            "≈ " + approxTotalPages + " стр. от начала аль‑Бакара к " + formatDatePlusDays(h.days);
-        return "<tr>" +
-            "<td>" + h.label + "</td>" +
-            "<td>" + newHifzText + "</td>" +
-            "<td>" + growthText + "</td>" +
-            "<td>" + totalText + "</td>" +
-            "</tr>";
-    });
-    forecastTbody.innerHTML = rows.join("");
-    forecastNoteP.innerHTML =
-        "<small>Это приблизительный прогноз, если каждый день делать новый урок в выбранном объёме.</small>";
-}
-
-// история
-function loadHistory(dateStr) {
-    historyDateInput.value = dateStr;
-    const d = new Date(dateStr);
-    const valid = !isNaN(d.getTime());
-    const [y,m,dd] = dateStr.split("-");
-    const label = (valid ? daysRu[d.getDay()] + ", " : "") + dd + "." + m + "." + y;
-
-    let checklistObj = {};
-    try {
-        const raw = localStorage.getItem("quranPlanChecklist-" + dateStr);
-        if (raw) checklistObj = JSON.parse(raw) || {};
-    } catch {}
-    const noteText = localStorage.getItem("quranPlanNote-" + dateStr) || "";
-
-    const totalTasks = 5;
-    const completed = Object.values(checklistObj).filter(Boolean).length;
-
-    if (!Object.keys(checklistObj).length && !noteText) {
-        historyContentDiv.innerHTML =
-            "<p><strong>" + label + "</strong></p>" +
-            "<p>Нет сохранённых данных за эту дату.</p>";
-        return;
     }
 
-    const fortressNames = {
-        fortress1: "1‑я крепость (новый урок)",
-        fortress2: "2‑я крепость (ближнее повторение)",
-        fortress3: "3‑я крепость (дальнее повторение)",
-        fortress4: "4‑я крепость (намаз)",
-        fortress5: "5‑я крепость (проверка/слушание)"
-    };
-    let tasksHtml = "<ul>";
-    Object.entries(fortressNames).forEach(([id,labelName]) => {
-        const done = checklistObj[id] ? "выполнено" : "—";
-        tasksHtml += "<li>" + labelName + ": <strong>" + done + "</strong></li>";
-    });
-    tasksHtml += "</ul>";
-    const safeNote = noteText
-        ? noteText.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>")
-        : "<em>нет заметки</em>";
+    function saveSettings() {
+        localStorage.setItem("quranPlanSettings", JSON.stringify(settings));
+    }
 
-    historyContentDiv.innerHTML =
-        "<p><strong>" + label + "</strong></p>" +
-        "<p>Выполненные крепости: " + completed + " / " + totalTasks + "</p>" +
-        tasksHtml +
-        "<p><strong>Заметка:</strong><br>" + safeNote + "</p>";
-}
-function shiftHistory(delta) {
-    let current = historyDateInput.value || todayKey;
-    let d = new Date(current);
-    if (isNaN(d.getTime())) d = new Date(today);
-    d.setDate(d.getDate() + delta);
-    const key = d.toISOString().slice(0,10);
-    loadHistory(key);
-}
+    function applySettingsToInputs() {
+        totalPagesInput.value = settings.totalPages;
+        currentPageInput.value = settings.currentPage;
+        linesOnPageInput.value = settings.linesOnCurrentPage || 0;
+        startPageInput.value = settings.regularStartPage;
+        cycleDaysInput.value = settings.cycleDays;
+        weakPagesInput.value = settings.weakPages || "";
+        lessonSizeSelect.value = settings.lessonSize || "5";
+        segmentTitleInput.value = settings.segmentTitle || "";
+        offDaySelect.value = String(settings.offDayIndex);
 
-// недельный план
-function updateWeeklyPlan() {
-    const days = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
-    const offDay = "Четверг";
-    const workingDays = ["Понедельник","Вторник","Среда","Пятница","Суббота","Воскресенье"];
+        useF1.checked = !!settings.activeFortresses["1"];
+        useF2.checked = !!settings.activeFortresses["2"];
+        useF3.checked = !!settings.activeFortresses["3"];
+        useF4.checked = !!settings.activeFortresses["4"];
+        useF5.checked = !!settings.activeFortresses["5"];
 
-    const N = reviewSet.length;
-    const pagesPerWorkDay = workingDays.length ? Math.max(1, Math.ceil(N / workingDays.length)) : 0;
-    const p = getLessonPhrases();
-    const hasNew = !settings.revisionMode && settings.activeFortresses["1"];
-    const nearBack = getNearBackCount();
-    const nearLabel = nearBack === 1
-        ? "текущая + 1 предыдущая страница"
-        : "текущая + " + nearBack + " предыдущие страницы";
+        revisionToggle.checked = settings.revisionMode;
+        darkModeToggle.checked = settings.darkMode;
+        compactModeToggle.checked = settings.compactMode;
+        useWeakPagesToggle.checked = settings.useWeakPages;
+        autoCycleDaysToggle.checked = settings.autoCycleDays;
 
-    weeklyPlanBody.innerHTML = "";
-    let idx = 0;
-    days.forEach(day => {
-        let newLessonCell;
-        if (!hasNew) newLessonCell = "нет (новый урок отключён)";
-        else if (day === offDay) newLessonCell = "выходной (без нового урока)";
-        else newLessonCell = p.shortAcc + " на текущей странице";
-
-        let nearCell = nearLabel;
-        let farCell;
-
-        if (day === offDay) {
-            const totalAll = Math.max(1, parseInt(settings.totalPages,10) || 1);
-            farCell = "все выученные страницы: стр. 1–" + totalAll;
+        if (settings.displayMode === "minimal") {
+            displayModeMinimalRadio.checked = true;
         } else {
-            if (!N) farCell = "нет страниц (проверь настройки)";
-            else {
-                if (idx >= N) idx = 0;
-                const slice = reviewSet.slice(idx, Math.min(N, idx + pagesPerWorkDay));
-                farCell = "стр. " + compressRanges(slice);
-                idx = (idx + pagesPerWorkDay) % N;
-            }
+            displayModeFullRadio.checked = true;
         }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML =
-            "<td>" + day + "</td>" +
-            "<td>" + newLessonCell + "</td>" +
-            "<td>" + nearCell + "</td>" +
-            "<td>" + farCell + "</td>";
-        weeklyPlanBody.appendChild(tr);
-    });
-}
+        if (settings.revisionMode) {
+            useF1.checked = false;
+            useF1.disabled = true;
+            settings.activeFortresses["1"] = false;
+        } else {
+            useF1.disabled = false;
+        }
 
-// инициализация
-(function init() {
-    settings = loadSettings();
-    applySettingsToInputs();
-    normalizeLinesAndPage();
-    applyDarkMode();
-    applyCompactMode();
-    applyDisplayMode();
-
-    weakSet = new Set(parsePagesPattern(settings.weakPages, settings.totalPages));
-    buildReviewSet();
-    reviewState = loadReviewState();
-    initReviewForToday();
-
-    updateLessonTexts();
-    updateNearBackLabel();
-    updateNearReview();
-    updateThirdFortressUI();
-    updateTodayPlan();
-    applyFortressVisibility();
-    updateForecast();
-    updateWeeklyPlan();
-    updateProgressAndStats();
-
-    // чек-лист
-    let savedChecklist = {};
-    try {
-        const raw = localStorage.getItem(storageKeyChecklist);
-        if (raw) savedChecklist = JSON.parse(raw) || {};
-    } catch {
-        savedChecklist = {};
-    }
-    checkboxes.forEach(cb => {
-        const id = cb.getAttribute("data-task-id");
-        if (savedChecklist[id]) cb.checked = true;
-        cb.addEventListener("change", () => {
-            const wasChecked = !!savedChecklist[id];
-            savedChecklist[id] = cb.checked;
-            localStorage.setItem(storageKeyChecklist, JSON.stringify(savedChecklist));
-
-            if (id === "fortress1" && cb.checked && !wasChecked) {
-                const linesAdded = getLinesPerDay();
-                if (linesAdded > 0) {
-                    settings.linesOnCurrentPage = (settings.linesOnCurrentPage || 0) + linesAdded;
-                    normalizeLinesAndPage();
-                    updateLessonTexts();
-                    updateNearReview();
-                    updateWeeklyPlan();
-                    updateForecast();
-                    updateTodayPlan();
-                }
-            }
-            updateProgressAndStats();
-        });
-    });
-
-    resetChecklistBtn.addEventListener("click", () => {
-        checkboxes.forEach(cb => cb.checked = false);
-        savedChecklist = {};
-        localStorage.removeItem(storageKeyChecklist);
-        updateProgressAndStats();
-    });
-
-    // заметка
-    const savedNote = localStorage.getItem(noteKey);
-    if (savedNote != null) dailyNote.value = savedNote;
-    dailyNote.addEventListener("input", () => {
-        localStorage.setItem(noteKey, dailyNote.value);
-    });
-
-    // история
-    historyDateInput.value = todayKey;
-    loadHistory(todayKey);
-    historyDateInput.addEventListener("change", () => {
-        const val = historyDateInput.value || todayKey;
-        loadHistory(val);
-    });
-    historyPrevBtn.addEventListener("click", () => shiftHistory(-1));
-    historyNextBtn.addEventListener("click", () => shiftHistory(1));
-
-    // печать
-    printBtn.addEventListener("click", () => window.print());
-
-    // скрыть/показать настройки
-    toggleSettingsBtn.addEventListener("click", () => {
-        settings.settingsCollapsed = !settings.settingsCollapsed;
         if (settings.settingsCollapsed) {
             settingsPanel.classList.add("hidden");
             toggleSettingsBtn.textContent = "Показать настройки";
@@ -1531,200 +945,1219 @@ function updateWeeklyPlan() {
             settingsPanel.classList.remove("hidden");
             toggleSettingsBtn.textContent = "Скрыть настройки";
         }
+
+        updateTopSummary();
+    }
+
+    function applyDarkMode() {
+        if (settings.darkMode) document.body.classList.add("dark");
+        else document.body.classList.remove("dark");
+    }
+
+    function applyCompactMode() {
+        if (settings.compactMode) document.body.classList.add("compact");
+        else document.body.classList.remove("compact");
+    }
+
+    function applyDisplayMode() {
+        const detailed = document.querySelectorAll(".fortress-block, #weak-section");
+        const minimal = settings.displayMode === "minimal";
+        detailed.forEach(el => {
+            if (minimal) el.classList.add("hidden");
+            else el.classList.remove("hidden");
+        });
+    }
+
+    function updateTopSummary() {
+        if (topTotalPagesSpan) {
+            const pages = parseInt(settings.totalPages, 10) || 0;
+            topTotalPagesSpan.textContent = pages + " страниц";
+        }
+        if (topSegmentTitleSpan) {
+            const title = (settings.segmentTitle || "").trim();
+            topSegmentTitleSpan.textContent = title ? title : "";
+        }
+    }
+
+    function getReviewRange() {
+        const totalAll = Math.max(1, parseInt(settings.totalPages, 10) || 1);
+        let start = parseInt(settings.regularStartPage, 10);
+        if (isNaN(start) || start < 1) start = 1;
+        if (start > totalAll) start = totalAll;
+        const end = totalAll;
+        const count = end - start + 1;
+        return { totalAll, start, end, count };
+    }
+
+    function loadReviewState() {
+        try {
+            const raw = localStorage.getItem("quranPlanReviewState");
+            if (!raw) return null;
+            const data = JSON.parse(raw);
+            if (!data || typeof data !== "object") return null;
+            return data;
+        } catch {
+            return null;
+        }
+    }
+    function saveReviewState() {
+        if (!reviewState) return;
+        localStorage.setItem("quranPlanReviewState", JSON.stringify(reviewState));
+    }
+
+    function parseWeakPages(text, totalPages) {
+        const set = new Set();
+        if (!text) return set;
+        const maxPage = Math.max(1, parseInt(totalPages, 10) || 1);
+        text.split(",").forEach(part => {
+            part = part.trim();
+            if (!part) return;
+            const rangeParts = part.split("-").map(s => s.trim());
+            if (rangeParts.length === 1) {
+                const n = parseInt(rangeParts[0], 10);
+                if (!isNaN(n) && n >= 1 && n <= maxPage) set.add(n);
+            } else {
+                let start = parseInt(rangeParts[0], 10);
+                let end = parseInt(rangeParts[1], 10);
+                if (isNaN(start) || isNaN(end)) return;
+                if (start > end) [start, end] = [end, start];
+                if (end < 1) return;
+                if (start < 1) start = 1;
+                if (start > maxPage) return;
+                if (end > maxPage) end = maxPage;
+                for (let i = start; i <= end; i++) set.add(i);
+            }
+        });
+        return set;
+    }
+
+    function compressRanges(nums) {
+        if (!nums || !nums.length) return "";
+        const arr = Array.from(new Set(nums)).sort((a, b) => a - b);
+        const res = [];
+        let start = arr[0];
+        let prev = arr[0];
+        for (let i = 1; i < arr.length; i++) {
+            const n = arr[i];
+            if (n === prev + 1) {
+                prev = n;
+                continue;
+            } else {
+                if (start === prev) res.push(String(start));
+                else res.push(start + "–" + prev);
+                start = prev = n;
+            }
+        }
+        if (start === prev) res.push(String(start));
+        else res.push(start + "–" + prev);
+        return res.join(", ");
+    }
+
+    function normalizeLinesAndPage() {
+        let lines = parseInt(settings.linesOnCurrentPage, 10);
+        if (isNaN(lines) || lines < 0) lines = 0;
+        let page = parseInt(settings.currentPage, 10);
+        if (isNaN(page) || page < 1) page = 1;
+
+        while (lines >= LINES_PER_PAGE) {
+            lines -= LINES_PER_PAGE;
+            page += 1;
+        }
+        settings.linesOnCurrentPage = lines;
+        settings.currentPage = page;
+        currentPageInput.value = page;
+        linesOnPageInput.value = lines;
         saveSettings();
-    });
+    }
 
-    // сворачивание прогноза
-    toggleForecastBtn.addEventListener("click", () => {
-        const hidden = forecastPanel.classList.toggle("hidden");
-        toggleForecastBtn.textContent = hidden ? "Показать прогноз" : "Скрыть прогноз";
-    });
+    function initReviewForToday() {
+        const range = getReviewRange();
+        const days = Math.max(1, parseInt(settings.cycleDays, 10) || 1);
+        const chunkLen = Math.max(1, Math.ceil(range.count / days));
 
-    // сворачивание недельного плана
-    weeklyPlanToggleBtn.addEventListener("click", () => {
-        const hidden = weeklyPlanPanel.classList.toggle("hidden");
-        weeklyPlanToggleBtn.textContent = hidden ? "Показать план на неделю" : "Скрыть план на неделю";
-    });
+        if (!reviewState || reviewState.lastDate !== todayKey) {
+            let start = reviewState && reviewState.nextStartPage ? reviewState.nextStartPage : range.start;
+            if (start < range.start || start > range.end) start = range.start;
+            let end = Math.min(range.end, start + chunkLen - 1);
+            reviewState = {
+                lastDate: todayKey,
+                todayStart: start,
+                todayEnd: end,
+                nextStartPage: (end >= range.end ? range.start : end + 1)
+            };
+            saveReviewState();
+        } else {
+            let start = reviewState.todayStart || range.start;
+            let end = reviewState.todayEnd || Math.min(range.end, start + chunkLen - 1);
+            if (start < range.start || start > range.end) start = range.start;
+            if (end < start) end = Math.min(range.end, start + chunkLen - 1);
+            if (end > range.end) end = range.end;
+            reviewState.todayStart = start;
+            reviewState.todayEnd = end;
+            if (!reviewState.nextStartPage ||
+                reviewState.nextStartPage < range.start ||
+                reviewState.nextStartPage > range.end) {
+                reviewState.nextStartPage = (end >= range.end ? range.start : end + 1);
+            }
+            saveReviewState();
+        }
+    }
 
-    // изменения настроек
-    function onSettingsChange(e) {
-        const totalVal  = parseInt(totalPagesInput.value,10);
-        const currentVal= parseInt(currentPageInput.value,10);
-        const cycleVal  = parseInt(cycleDaysInput.value,10);
-        const weakVal   = weakPagesInput.value || "";
-        const reviewVal = reviewPagesInput.value || "";
-        const lessonVal = lessonSizeSelect.value || "5";
+    function getLessonPhrases() {
+        const size = settings.lessonSize || "5";
+        if (size === "7") {
+            return { shortNom: "7 строк", shortAcc: "7 строк" };
+        }
+        if (size === "page") {
+            return { shortNom: "целая страница", shortAcc: "целую страницу" };
+        }
+        return { shortNom: "5 строк", shortAcc: "5 строк" };
+    }
 
-        settings.totalPages = (!isNaN(totalVal)  && totalVal  > 0) ? totalVal  : 1;
-        settings.currentPage= (!isNaN(currentVal)&& currentVal> 0) ? currentVal: 1;
-        settings.cycleDays  = (!isNaN(cycleVal)  && cycleVal  > 0) ? cycleVal  : 1;
-        settings.weakPages  = weakVal;
-        settings.reviewPagesText = reviewVal;
-        settings.lessonSize = ["5","7","page"].includes(lessonVal) ? lessonVal : "5";
+    function describeNewBlock() {
+        const page = parseInt(settings.currentPage, 10) || 1;
+        const used = parseInt(settings.linesOnCurrentPage, 10) || 0;
+        const linesPerDay = getLinesPerDay();
+        if (linesPerDay <= 0) {
+            return "";
+        }
+        if (settings.lessonSize === "page" || linesPerDay >= LINES_PER_PAGE) {
+            return "страницу " + page + " целиком";
+        }
+        const startLine = used + 1;
+        const endLine = Math.min(LINES_PER_PAGE, used + linesPerDay);
+        return linesPerDay + " строк (примерно строки " + startLine + "–" + endLine + ") на странице " + page;
+    }
 
-        if (e && e.target === cycleDaysInput) {
-            settings.autoCycleDays = false;
-            autoCycleDaysToggle.checked = false;
+    function updateLessonTexts() {
+        const p = getLessonPhrases();
+        const lines = getLinesPerDay();
+
+        if (lines <= 0) {
+            if (lessonDescShortSpan) lessonDescShortSpan.textContent = "без нового урока";
+            if (lessonDescHeadingSpan) lessonDescHeadingSpan.textContent = "без нового урока";
+            if (lessonDescGoalSpan) lessonDescGoalSpan.textContent = "0 строк";
+            if (lessonDescStep1Span) lessonDescStep1Span.textContent = "0 строк";
+            if (lessonDesc5thSpan) lessonDesc5thSpan.textContent = "без нового урока";
+
+            if (todayNewLi) {
+                if (settings.revisionMode) {
+                    todayNewLi.textContent =
+                        "1‑я крепость (новый урок): сегодня без нового текста (режим только повторения).";
+                } else if (isOffDayToday()) {
+                    todayNewLi.textContent =
+                        "1‑я крепость (новый урок): сегодня выходной от нового текста. Используй время для повторения.";
+                } else {
+                    todayNewLi.textContent =
+                        "1‑я крепость (новый урок): сегодня новый текст не запланирован.";
+                }
+            }
+            return;
         }
 
-        saveSettings();
-        weakSet = new Set(parsePagesPattern(settings.weakPages, settings.totalPages));
+        if (lessonDescShortSpan) lessonDescShortSpan.textContent = p.shortNom;
+        if (lessonDescHeadingSpan) lessonDescHeadingSpan.textContent = p.shortNom;
+        if (lessonDescGoalSpan) lessonDescGoalSpan.textContent = p.shortAcc;
+        if (lessonDescStep1Span) lessonDescStep1Span.textContent = p.shortAcc;
+        if (lessonDesc5thSpan) lessonDesc5thSpan.textContent = p.shortNom;
+
+        const desc = describeNewBlock();
+        if (todayNewLi) {
+            todayNewLi.textContent =
+                "1‑я крепость (новый урок): " + desc + ".";
+        }
+    }
+
+    function getNearBackCount() {
+        const size = settings.lessonSize || "5";
+        if (size === "page") return 1;
+        return 2;
+    }
+
+    function updateNearBackLabel() {
+        if (!nearBackLabelSpan) return;
+        const count = getNearBackCount();
+        if (count === 1) {
+            nearBackLabelSpan.textContent = "1 предыдущую страницу";
+        } else {
+            nearBackLabelSpan.textContent = count + " предыдущие страницы";
+        }
+    }
+
+    function buildNearReviewInfo() {
+        const total = parseInt(settings.totalPages, 10) || 0;
+        const current = parseInt(settings.currentPage, 10) || 0;
+        if (!current || current < 1) return null;
+        const back = getNearBackCount();
+        let start = current - back;
+        if (start < 1) start = 1;
+        const text = (start === current) ? ("стр. " + current) : ("стр. " + start + "–" + current);
+        let extra = "";
+        if (total && current > total) {
+            extra = " (внимание: текущая страница больше общего числа выученных страниц).";
+        }
+        return { text, extra };
+    }
+
+    function getOffDayIndex() {
+        if (typeof settings.offDayIndex === "number" &&
+            settings.offDayIndex >= 0 && settings.offDayIndex <= 6) {
+            return settings.offDayIndex;
+        }
+        return 4; // по умолчанию четверг
+    }
+
+    function isOffDayToday() {
+        return todayIndex === getOffDayIndex();
+    }
+
+    function buildThirdMainInfo() {
+        const range = getReviewRange();
+        const days = Math.max(1, parseInt(settings.cycleDays, 10) || 1);
+        const chunkLen = Math.max(1, Math.ceil(range.count / days));
+        if (!reviewState || !reviewState.todayStart || !reviewState.todayEnd) return null;
+
+        if (isOffDayToday()) {
+            const totalAll = Math.max(1, parseInt(settings.totalPages, 10) || 1);
+            const rangeText = "стр. 1–" + totalAll;
+            return { rangeText, count: totalAll, chunkLen, start: 1, end: totalAll, isOffDay: true };
+        }
+
+        const s = reviewState.todayStart;
+        const e = reviewState.todayEnd;
+        const count = e - s + 1;
+        const rangeText = (s === e) ? ("стр. " + s) : ("стр. " + s + "–" + e);
+        return { rangeText, count, chunkLen, start: s, end: e, isOffDay: false };
+    }
+
+    function buildThirdTomorrowInfo() {
+        const range = getReviewRange();
+        const days = Math.max(1, parseInt(settings.cycleDays, 10) || 1);
+        const chunkLen = Math.max(1, Math.ceil(range.count / days));
+        if (!reviewState) return null;
+
+        let start = reviewState.nextStartPage || range.start;
+        if (start < range.start || start > range.end) start = range.start;
+        let end = Math.min(range.end, start + chunkLen - 1);
+        const count = end - start + 1;
+        const rangeText = (start === end) ? ("стр. " + start) : ("стр. " + start + "–" + end);
+        return { rangeText, count, start, end };
+    }
+
+    function buildWeakInfoForRange(start, end) {
+        if (!settings.useWeakPages) {
+            return {
+                message: "Учёт слабых страниц отключён (можно включить в настройках).",
+                short: ""
+            };
+        }
+        if (!weakSet || weakSet.size === 0) {
+            return {
+                message: "Слабые страницы не указаны. Если хочешь выделить их, заполни поле в настройках.",
+                short: ""
+            };
+        }
+        const weakToday = [];
+        for (let p = start; p <= end; p++) {
+            if (weakSet.has(p)) weakToday.push(p);
+        }
+        if (!weakToday.length) {
+            return {
+                message: "Слабые страницы в этот блок не попали. Всё равно следи за качеством чтения.",
+                short: "Слабые страницы в этот блок не попали."
+            };
+        }
+        const list = compressRanges(weakToday);
+        return {
+            message: "В этот блок попадают слабые страницы: стр. " + list + ". Сделай на них особый упор.",
+            short: "Слабые страницы в блоке: стр. " + list + "."
+        };
+    }
+
+    function buildWeakTodayInfo() {
+        if (!reviewState) {
+            return {
+                message: "Слабые страницы не указаны или блок не рассчитан.",
+                short: ""
+            };
+        }
+        if (isOffDayToday()) {
+            const totalAll = Math.max(1, parseInt(settings.totalPages, 10) || 1);
+            return buildWeakInfoForRange(1, totalAll);
+        }
+        return buildWeakInfoForRange(reviewState.todayStart, reviewState.todayEnd);
+    }
+
+    function updateNearReview() {
+        const info = buildNearReviewInfo();
+        if (!info) {
+            nearReviewP.innerHTML = "<strong>Подсказка:</strong> введи текущий номер страницы в настройках выше.";
+            return;
+        }
+        nearReviewP.innerHTML =
+            "<strong>Подсказка:</strong> сегодня для 2‑й крепости повтори по памяти: " +
+            info.text + "." + info.extra;
+    }
+
+    function updateThirdFortressUI() {
+        const range = getReviewRange();
+        const days = Math.max(1, parseInt(settings.cycleDays, 10) || 1);
+        const chunkLen = Math.max(1, Math.ceil(range.count / days));
+
+        totalPagesInfoSpan.textContent = range.count;
+        cycleDaysInfoSpan.textContent = days;
+        dailyVolumeInfoSpan.textContent = chunkLen;
+
+        if (reviewRangeTextSpan) {
+            const rText = (range.start === range.end)
+                ? "стр. " + range.start
+                : "стр. " + range.start + "–" + range.end;
+            reviewRangeTextSpan.textContent = rText;
+        }
+
+        const info = buildThirdMainInfo();
+        if (!info) {
+            thirdTodayMainP.textContent = "Сегодняшний блок 3‑й крепости ещё не рассчитан.";
+            thirdTodayWeakP.textContent = "";
+        } else {
+            if (info.isOffDay) {
+                thirdTodayMainP.textContent =
+                    "Сегодня по 3‑й крепости: общий проход по всему выученному (стр. 1–" +
+                    (parseInt(settings.totalPages, 10) || 1) + ").";
+            } else {
+                thirdTodayMainP.textContent =
+                    "Сегодня по 3‑й крепости: " + info.rangeText +
+                    " (" + info.count + " стр.).";
+            }
+            const weakInfo = buildWeakTodayInfo();
+            thirdTodayWeakP.textContent = weakInfo.message;
+        }
+
+        if (!settings.useWeakPages) {
+            weakListInfoSpan.textContent = "учёт отключён";
+        } else if (!weakSet || weakSet.size === 0) {
+            weakListInfoSpan.textContent = "не выбраны";
+        } else {
+            weakListInfoSpan.textContent = compressRanges(Array.from(weakSet));
+        }
+
+        const tomorrowInfo = buildThirdTomorrowInfo();
+        if (!tomorrowInfo) {
+            tomorrowFarP.textContent = "Завтрашний блок 3‑й крепости ещё не рассчитан.";
+            tomorrowWeakP.textContent = "";
+        } else {
+            tomorrowFarP.textContent =
+                "Предварительно завтра по 3‑й крепости: " +
+                tomorrowInfo.rangeText + " (" + tomorrowInfo.count + " стр.).";
+            const weakTomorrow = buildWeakInfoForRange(tomorrowInfo.start, tomorrowInfo.end);
+            tomorrowWeakP.textContent = weakTomorrow.message;
+        }
+    }
+
+    function updateTodayPlan() {
+        todayNameSpan.textContent = todayName;
+        const [y, m, d] = todayKey.split("-");
+        todayDateSpan.textContent = d + "." + m + "." + y;
+
+        const nearInfo = buildNearReviewInfo();
+        if (nearInfo) {
+            todayNearLi.textContent = "2‑я крепость (ближнее повторение): " + nearInfo.text + ".";
+        } else {
+            todayNearLi.textContent = "2‑я крепость (ближнее повторение): укажи текущую страницу в настройках, чтобы видеть точные номера.";
+        }
+
+        const thirdInfo = buildThirdMainInfo();
+        if (thirdInfo) {
+            if (thirdInfo.isOffDay) {
+                todayFarLi.textContent =
+                    "3‑я крепость (дальнее повторение): общий проход по всему выученному (стр. 1–" +
+                    (parseInt(settings.totalPages, 10) || 1) + ").";
+            } else {
+                todayFarLi.textContent =
+                    "3‑я крепость (дальнее повторение): " + thirdInfo.rangeText +
+                    " (" + thirdInfo.count + " стр.).";
+            }
+        } else {
+            todayFarLi.textContent = "3‑я крепость (дальнее повторение): блок ещё не рассчитан.";
+        }
+
+        const weakInfo = buildWeakTodayInfo();
+        todayWeakSummaryLi.textContent = weakInfo.short || weakInfo.message;
+
+        updateLessonTexts();
+    }
+
+    function applyFortressVisibility() {
+        const active = settings.activeFortresses || {};
+        const blocks = document.querySelectorAll(".fortress-block");
+        blocks.forEach(block => {
+            const num = block.getAttribute("data-fortress");
+            if (!num) return;
+            block.style.display = active[num] ? "" : "none";
+        });
+        const planItems = document.querySelectorAll("#today-plan [data-fortress]");
+        planItems.forEach(item => {
+            const num = item.getAttribute("data-fortress");
+            item.style.display = active[num] ? "list-item" : "none";
+        });
+        const taskLabels = checklistElement.querySelectorAll("label[data-fortress]");
+        taskLabels.forEach(label => {
+            const num = label.getAttribute("data-fortress");
+            label.style.display = active[num] ? "block" : "none";
+        });
+    }
+
+    function updateProgressAndStats() {
+        const activeList = Object.keys(settings.activeFortresses || {}).filter(
+            k => settings.activeFortresses[k]
+        );
+        let total = activeList.length;
+        let completed = 0;
+
+        checkboxes.forEach(cb => {
+            const fortNum = cb.closest("label").getAttribute("data-fortress");
+            if (!fortNum) return;
+            if (activeList.includes(fortNum) && cb.checked) {
+                completed++;
+            }
+        });
+
+        if (total > 0) {
+            const percent = Math.round((completed / total) * 100);
+            progressBarInner.style.width = percent + "%";
+            progressText.innerHTML =
+                "<small>Прогресс за сегодня: " + completed + " / " + total +
+                " крепостей (" + percent + "%).</small>";
+            if (completed === total) {
+                progressText.innerHTML += " <small>Все активные крепости на сегодня выполнены.</small>";
+            }
+        } else {
+            progressBarInner.style.width = "0%";
+            progressText.innerHTML = "<small>Не выбрано ни одной активной крепости (проверь настройки).</small>";
+        }
+
+        updateStats();
+    }
+
+    function getLinesPerDay() {
+        if (settings.revisionMode) return 0;
+        if (!settings.activeFortresses || !settings.activeFortresses["1"]) return 0;
+        if (isOffDayToday()) return 0;
+        if (settings.lessonSize === "page") return LINES_PER_PAGE;
+        if (settings.lessonSize === "7") return 7;
+        return 5;
+    }
+
+    function formatDatePlusDays(days) {
+        const d = new Date(today);
+        d.setDate(d.getDate() + days);
+        const yyyy = d.getFullYear();
+        let mm = String(d.getMonth() + 1).padStart(2, "0");
+        let dd = String(d.getDate()).padStart(2, "0");
+        return dd + "." + mm + "." + yyyy;
+    }
+
+    function updateForecast() {
+        const linesPerDay = getLinesPerDay();
+        const horizons = [
+            { label: "7 дней (неделя)", days: 7 },
+            { label: "30 дней (≈ 1 месяц)", days: 30 },
+            { label: "90 дней (≈ 3 месяца)", days: 90 }
+        ];
+
+        const p = getLessonPhrases();
+
+        if (linesPerDay <= 0) {
+            forecastIntroP.textContent =
+                "Сейчас новый урок отключён (1‑я крепость не используется, включён режим только повторения или выбран выходной), " +
+                "поэтому прогноз по новому хифзу равен 0. Включи 1‑ю крепость и выбери объём урока, чтобы увидеть прогноз.";
+            forecastTbody.innerHTML = "";
+            forecastNoteP.innerHTML =
+                "<small>Как только ты снова начнёшь новый хифз, здесь появится примерный рост за неделю, месяц и 3 месяца.</small>";
+            return;
+        }
+
+        forecastIntroP.textContent =
+            "При текущем объёме урока (" + p.shortNom +
+            ") и ежедневном новом уроке ты добавишь к своему хифзу примерно:";
+
+        const currentPages = parseInt(settings.totalPages, 10) || 0;
+        const segment = (settings.segmentTitle || "в выбранном участке").trim();
+
+        const rows = horizons.map(h => {
+            const totalLines = linesPerDay * h.days;
+            const pages = Math.floor(totalLines / LINES_PER_PAGE);
+            const remLines = totalLines % LINES_PER_PAGE;
+
+            let newHifzText = totalLines + " строк";
+            if (pages > 0) {
+                newHifzText += " ≈ " + pages + " стр.";
+                if (remLines > 0) newHifzText += " и " + remLines + " строк";
+            }
+
+            let growthText = "+" + pages + " стр.";
+            if (remLines > 0) growthText += " и +" + remLines + " строк";
+            growthText += " к текущему уровню.";
+
+            const approxTotalPages = currentPages + pages + (remLines > 0 ? 1 : 0);
+            const dateStr = formatDatePlusDays(h.days);
+            const totalText =
+                "≈ " + approxTotalPages + " стр. " + segment + " к " + dateStr;
+
+            return "<tr>" +
+                "<td>" + h.label + "</td>" +
+                "<td>" + newHifzText + "</td>" +
+                "<td>" + growthText + "</td>" +
+                "<td>" + totalText + "</td>" +
+                "</tr>";
+        });
+
+        forecastTbody.innerHTML = rows.join("");
+        forecastNoteP.innerHTML =
+            "<small>Это приблизительный прогноз, исходя из того, что каждый день ты делаешь новый урок в выбранном объёме " +
+            "и не пропускаешь дни. Реальный результат может отличаться — главное, чтобы темп был стабильным.</small>";
+    }
+
+    // История
+    function loadHistory(dateStr) {
+        historyDateInput.value = dateStr;
+        const dateObj = new Date(dateStr);
+        const validDate = !isNaN(dateObj.getTime());
+        const [y, m, d] = dateStr.split("-");
+        const dateLabel = (validDate ? daysRu[dateObj.getDay()] + ", " : "") + d + "." + m + "." + y;
+
+        let checklistObj = {};
+        try {
+            const raw = localStorage.getItem("quranPlanChecklist-" + dateStr);
+            if (raw) checklistObj = JSON.parse(raw) || {};
+        } catch {}
+
+        const noteText = localStorage.getItem("quranPlanNote-" + dateStr) || "";
+
+        const totalTasks = 5;
+        const completed = Object.values(checklistObj).filter(Boolean).length;
+
+        if (!Object.keys(checklistObj).length && !noteText) {
+            historyContentDiv.innerHTML =
+                "<p><strong>" + dateLabel + "</strong></p>" +
+                "<p>Нет сохранённых данных за эту дату.</p>";
+            return;
+        }
+
+        const fortressNames = {
+            fortress1: "1‑я крепость (новый урок)",
+            fortress2: "2‑я крепость (ближнее повторение)",
+            fortress3: "3‑я крепость (дальнее повторение)",
+            fortress4: "4‑я крепость (намаз)",
+            fortress5: "5‑я крепость (проверка/слушание)"
+        };
+
+        let tasksHtml = "<ul>";
+        Object.entries(fortressNames).forEach(([id, label]) => {
+            const done = checklistObj[id] ? "выполнено" : "—";
+            tasksHtml += "<li>" + label + ": <strong>" + done + "</strong></li>";
+        });
+        tasksHtml += "</ul>";
+
+        const safeNote = noteText
+            ? noteText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>")
+            : "<em>нет заметки</em>";
+
+        historyContentDiv.innerHTML =
+            "<p><strong>" + dateLabel + "</strong></p>" +
+            "<p>Выполненные крепости: " + completed + " / " + totalTasks + "</p>" +
+            tasksHtml +
+            "<p><strong>Заметка:</strong><br>" + safeNote + "</p>";
+    }
+
+    function shiftHistory(daysDelta) {
+        let current = historyDateInput.value || todayKey;
+        let d = new Date(current);
+        if (isNaN(d.getTime())) d = new Date(today);
+        d.setDate(d.getDate() + daysDelta);
+        const key = d.toISOString().slice(0, 10);
+        loadHistory(key);
+    }
+
+    // Статистика
+    function collectChecklistActivity() {
+        const prefix = "quranPlanChecklist-";
+        const items = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || !key.startsWith(prefix)) continue;
+            const dateStr = key.slice(prefix.length);
+            const dateObj = new Date(dateStr);
+            if (isNaN(dateObj.getTime())) continue;
+            let obj = {};
+            try {
+                obj = JSON.parse(localStorage.getItem(key) || "{}") || {};
+            } catch {
+                obj = {};
+            }
+            const active = Object.values(obj).some(Boolean);
+            items.push({ dateStr, dateObj, active });
+        }
+        items.sort((a, b) => a.dateObj - b.dateObj);
+        return items;
+    }
+
+    function calcCurrentStreak(items) {
+        const map = new Map(items.map(i => [i.dateStr, i.active]));
+        let streak = 0;
+        const d = new Date(today);
+        for (let i = 0; i < 365; i++) {
+            const key = d.toISOString().slice(0, 10);
+            const active = map.get(key);
+            if (!active) break;
+            streak++;
+            d.setDate(d.getDate() - 1);
+        }
+        return streak;
+    }
+
+    function calcMaxStreak(items) {
+        let max = 0;
+        let cur = 0;
+        let prev = null;
+        const activeItems = items.filter(i => i.active);
+        activeItems.forEach(it => {
+            if (!prev) {
+                cur = 1;
+            } else {
+                const diff = Math.round((it.dateObj - prev) / 86400000);
+                if (diff === 1) {
+                    cur += 1;
+                } else {
+                    cur = 1;
+                }
+            }
+            if (cur > max) max = cur;
+            prev = it.dateObj;
+        });
+        return max;
+    }
+
+    function countLastNDays(items, n) {
+        const map = new Map(items.map(i => [i.dateStr, i.active]));
+        let count = 0;
+        const d = new Date(today);
+        for (let i = 0; i < n; i++) {
+            const key = d.toISOString().slice(0, 10);
+            if (map.get(key)) count++;
+            d.setDate(d.getDate() - 1);
+        }
+        return count;
+    }
+
+    function updateStats() {
+        if (!statsSummaryP) return;
+        const items = collectChecklistActivity();
+        if (!items.length) {
+            statsSummaryP.innerHTML =
+                "<small>Пока нет сохранённых дней с отмеченными крепостями. Как только начнёшь отмечать выполнение, здесь появится статистика.</small>";
+            return;
+        }
+        const currentStreak = calcCurrentStreak(items);
+        const maxStreak = calcMaxStreak(items);
+        const last30 = countLastNDays(items, 30);
+        const totalActiveDays = items.filter(i => i.active).length;
+
+        statsSummaryP.innerHTML =
+            "<small>Текущая серия дней с хифзом: <strong>" + currentStreak + "</strong>." +
+            " Рекордная серия: <strong>" + maxStreak + "</strong>." +
+            " Всего дней с выполненными крепостями: <strong>" + totalActiveDays + "</strong>." +
+            " За последние 30 дней: <strong>" + last30 + "</strong> дней.</small>";
+    }
+
+    // Недельный план
+    function updateWeeklyPlan() {
+        // Порядок: понедельник–воскресенье
+        const days = [daysRu[1], daysRu[2], daysRu[3], daysRu[4], daysRu[5], daysRu[6], daysRu[0]];
+        const offIndex = getOffDayIndex();
+        const offDayName = daysRu[offIndex];
+
+        const range = getReviewRange();
+        const pagesCount = range.count;
+        const workingDays = days.filter(d => d !== offDayName);
+        const pagesPerWorkDay = Math.max(1, Math.ceil(pagesCount / workingDays.length));
+        const p = getLessonPhrases();
+        const hasNewLesson = !settings.revisionMode && settings.activeFortresses && settings.activeFortresses["1"];
+        const nearBack = getNearBackCount();
+        const nearLabel = nearBack === 1
+            ? "текущая + 1 предыдущая страница"
+            : "текущая + " + nearBack + " предыдущие страницы";
+
+        weeklyPlanBody.innerHTML = "";
+        let currentStart = range.start;
+
+        days.forEach(day => {
+            let newLessonCell;
+            if (!hasNewLesson) {
+                newLessonCell = "нет (новый урок отключён)";
+            } else if (day === offDayName) {
+                newLessonCell = "выходной (без нового урока)";
+            } else {
+                newLessonCell = p.shortAcc + " на текущей странице";
+            }
+
+            let nearCell = nearLabel;
+
+            let farCell;
+            if (day === offDayName) {
+                const totalAll = Math.max(1, parseInt(settings.totalPages, 10) || 1);
+                farCell = "все выученные страницы: стр. 1–" + totalAll;
+            } else {
+                if (currentStart > range.end) {
+                    farCell = "повтор слабых мест или по выбору";
+                } else {
+                    const s = currentStart;
+                    let e = currentStart + pagesPerWorkDay - 1;
+                    if (e > range.end) e = range.end;
+                    farCell = (s === e) ? ("стр. " + s) : ("стр. " + s + "–" + e);
+                    currentStart = e + 1;
+                }
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+                "<td>" + day + "</td>" +
+                "<td>" + newLessonCell + "</td>" +
+                "<td>" + nearCell + "</td>" +
+                "<td>" + farCell + "</td>";
+            weeklyPlanBody.appendChild(tr);
+        });
+
+        if (weeklyPlanNote) {
+            weeklyPlanNote.innerHTML =
+                "В " + offDayName +
+                " — выходной от нового урока: только общий проход по всему выученному (если объём позволяет).";
+        }
+    }
+
+    // Резервная копия
+    function generateBackup() {
+        const data = {
+            version: 1,
+            generatedAt: new Date().toISOString(),
+            settings: null,
+            reviewState: null,
+            checklist: {},
+            notes: {}
+        };
+        try {
+            data.settings = JSON.parse(localStorage.getItem("quranPlanSettings") || "null");
+        } catch {
+            data.settings = null;
+        }
+        try {
+            data.reviewState = JSON.parse(localStorage.getItem("quranPlanReviewState") || "null");
+        } catch {
+            data.reviewState = null;
+        }
+
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key) continue;
+            if (key.startsWith("quranPlanChecklist-")) {
+                const dateStr = key.slice("quranPlanChecklist-".length);
+                try {
+                    data.checklist[dateStr] = JSON.parse(localStorage.getItem(key) || "{}") || {};
+                } catch {
+                    data.checklist[dateStr] = {};
+                }
+            } else if (key.startsWith("quranPlanNote-")) {
+                const dateStr = key.slice("quranPlanNote-".length);
+                data.notes[dateStr] = localStorage.getItem(key) || "";
+            }
+        }
+
+        backupText.value = JSON.stringify(data, null, 2);
+        backupStatus.textContent = "Резервная копия создана. Скопируй текст выше и храни его в надёжном месте.";
+    }
+
+    function restoreBackup() {
+        const raw = backupText.value.trim();
+        if (!raw) {
+            backupStatus.textContent = "Нет данных для восстановления.";
+            return;
+        }
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch {
+            backupStatus.textContent = "Ошибка: не удалось разобрать JSON. Проверь, что вставлен полный текст резервной копии.";
+            return;
+        }
+        if (!confirm("Все текущие настройки, заметки и чек‑листы будут заменены данными из резервной копии. Продолжить?")) {
+            return;
+        }
+
+        // Чистим старые данные
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key) continue;
+            if (key === "quranPlanSettings" ||
+                key === "quranPlanReviewState" ||
+                key.startsWith("quranPlanChecklist-") ||
+                key.startsWith("quranPlanNote-")) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+
+        // Восстанавливаем
+        if (data.settings) {
+            localStorage.setItem("quranPlanSettings", JSON.stringify(data.settings));
+        }
+        if (data.reviewState) {
+            localStorage.setItem("quranPlanReviewState", JSON.stringify(data.reviewState));
+        }
+        if (data.checklist && typeof data.checklist === "object") {
+            Object.entries(data.checklist).forEach(([dateStr, obj]) => {
+                localStorage.setItem("quranPlanChecklist-" + dateStr, JSON.stringify(obj || {}));
+            });
+        }
+        if (data.notes && typeof data.notes === "object") {
+            Object.entries(data.notes).forEach(([dateStr, text]) => {
+                localStorage.setItem("quranPlanNote-" + dateStr, String(text || ""));
+            });
+        }
+
+        backupStatus.textContent = "Данные восстановлены. Страница будет перезагружена.";
+        setTimeout(() => location.reload(), 800);
+    }
+
+    (function init() {
+        settings = loadSettings();
+        applySettingsToInputs();
         normalizeLinesAndPage();
-        buildReviewSet();
+        applyDarkMode();
+        applyCompactMode();
+        applyDisplayMode();
+
+        weakSet = parseWeakPages(settings.weakPages, settings.totalPages);
+
         reviewState = loadReviewState();
         initReviewForToday();
 
-        updateLessonTexts();
         updateNearBackLabel();
         updateNearReview();
         updateThirdFortressUI();
         updateTodayPlan();
-        updateForecast();
-        updateWeeklyPlan();
-        updateProgressAndStats();
-    }
-
-    [totalPagesInput, currentPageInput, cycleDaysInput,
-     weakPagesInput, reviewPagesInput, lessonSizeSelect]
-        .forEach(inp => inp.addEventListener("input", onSettingsChange));
-
-    // ручной ввод строк
-    linesOnPageInput.addEventListener("input", () => {
-        let val = parseInt(linesOnPageInput.value,10);
-        if (isNaN(val) || val < 0) val = 0;
-        settings.linesOnCurrentPage = val;
-        normalizeLinesAndPage();
-        updateLessonTexts();
-        updateNearReview();
-        updateWeeklyPlan();
-        updateForecast();
-        updateTodayPlan();
-    });
-
-    // вкл/выкл крепостей
-    function handleFortressToggle(num) {
-        const chk = fortressToggles[num];
-        settings.activeFortresses[num] = !!chk.checked;
-        saveSettings();
         applyFortressVisibility();
         updateForecast();
         updateWeeklyPlan();
+        updateStats();
         updateProgressAndStats();
-        updateTodayPlan();
-    }
-    ["1","2","3","4","5"].forEach(num => {
-        fortressToggles[num].addEventListener("change", () => handleFortressToggle(num));
-    });
 
-    // режим только повторения
-    revisionToggle.addEventListener("change", () => {
-        settings.revisionMode = revisionToggle.checked;
-        if (settings.revisionMode) {
-            settings.activeFortresses["1"] = false;
-            useF1.checked = false;
-            useF1.disabled = true;
-        } else {
-            useF1.disabled = false;
-            settings.activeFortresses["1"] = true;
-            useF1.checked = true;
+        // чек-лист
+        let savedChecklist = {};
+        try {
+            const raw = localStorage.getItem(storageKeyChecklist);
+            if (raw) savedChecklist = JSON.parse(raw) || {};
+        } catch {
+            savedChecklist = {};
         }
-        saveSettings();
-        applyFortressVisibility();
-        updateNearReview();
-        updateThirdFortressUI();
-        updateTodayPlan();
-        updateForecast();
-        updateWeeklyPlan();
-        updateProgressAndStats();
-    });
 
-    // тёмная тема
-    darkModeToggle.addEventListener("change", () => {
-        settings.darkMode = darkModeToggle.checked;
-        saveSettings();
-        applyDarkMode();
-    });
+        checkboxes.forEach(cb => {
+            const id = cb.getAttribute("data-task-id");
+            if (savedChecklist[id]) cb.checked = true;
+            cb.addEventListener("change", () => {
+                const wasChecked = !!savedChecklist[id];
+                savedChecklist[id] = cb.checked;
+                localStorage.setItem(storageKeyChecklist, JSON.stringify(savedChecklist));
 
-    // компактный режим
-    compactModeToggle.addEventListener("change", () => {
-        settings.compactMode = compactModeToggle.checked;
-        saveSettings();
-        applyCompactMode();
-    });
+                if (id === "fortress1" && cb.checked && !wasChecked) {
+                    const linesAdded = getLinesPerDay();
+                    if (linesAdded > 0) {
+                        settings.linesOnCurrentPage = (settings.linesOnCurrentPage || 0) + linesAdded;
+                        normalizeLinesAndPage();
+                        updateLessonTexts();
+                        updateNearReview();
+                        updateWeeklyPlan();
+                        updateForecast();
+                        updateTodayPlan();
+                    }
+                }
 
-    // учёт слабых
-    useWeakPagesToggle.addEventListener("change", () => {
-        settings.useWeakPages = useWeakPagesToggle.checked;
-        saveSettings();
-        updateThirdFortressUI();
-        updateTodayPlan();
-    });
+                updateProgressAndStats();
+            });
+        });
 
-    // авто‑cycleDays
-    function calcRecommendedCycleDays(pagesCount, lessonSize) {
-        const pages = Math.max(1, pagesCount || 1);
-        let targetPerDay;
-        if (lessonSize === "5") targetPerDay = 3.5;
-        else if (lessonSize === "7") targetPerDay = 2.5;
-        else targetPerDay = 2;
-        let days = Math.round(pages / targetPerDay);
-        if (days < 3) days = 3;
-        if (days > 21) days = 21;
-        return days;
-    }
-    autoCycleDaysToggle.addEventListener("change", () => {
-        settings.autoCycleDays = autoCycleDaysToggle.checked;
-        saveSettings();
-        if (settings.autoCycleDays) {
-            const N = reviewSet.length;
-            const newCycle = calcRecommendedCycleDays(N, settings.lessonSize);
+        resetChecklistBtn.addEventListener("click", () => {
+            checkboxes.forEach(cb => cb.checked = false);
+            savedChecklist = {};
+            localStorage.removeItem(storageKeyChecklist);
+            updateProgressAndStats();
+        });
+
+        // заметка
+        const savedNote = localStorage.getItem(noteKey);
+        if (savedNote != null) dailyNote.value = savedNote;
+        dailyNote.addEventListener("input", () => {
+            localStorage.setItem(noteKey, dailyNote.value);
+        });
+
+        // история
+        historyDateInput.value = todayKey;
+        loadHistory(todayKey);
+        historyDateInput.addEventListener("change", () => {
+            const val = historyDateInput.value || todayKey;
+            loadHistory(val);
+        });
+        historyPrevBtn.addEventListener("click", () => shiftHistory(-1));
+        historyNextBtn.addEventListener("click", () => shiftHistory(1));
+
+        // печать
+        printBtn.addEventListener("click", () => window.print());
+
+        // сброс настроек
+        resetSettingsBtn.addEventListener("click", () => {
+            if (!confirm("Сбросить все настройки и круг повторения к значениям по умолчанию?")) return;
+            localStorage.removeItem("quranPlanSettings");
+            localStorage.removeItem("quranPlanReviewState");
+            location.reload();
+        });
+
+        // сворачивание настроек
+        toggleSettingsBtn.addEventListener("click", () => {
+            settings.settingsCollapsed = !settings.settingsCollapsed;
+            if (settings.settingsCollapsed) {
+                settingsPanel.classList.add("hidden");
+                toggleSettingsBtn.textContent = "Показать настройки";
+            } else {
+                settingsPanel.classList.remove("hidden");
+                toggleSettingsBtn.textContent = "Скрыть настройки";
+            }
+            saveSettings();
+        });
+
+        // сворачивание прогноза
+        toggleForecastBtn.addEventListener("click", () => {
+            const hidden = forecastPanel.classList.toggle("hidden");
+            toggleForecastBtn.textContent = hidden ? "Показать прогноз" : "Скрыть прогноз";
+        });
+
+        // сворачивание недельного плана
+        weeklyPlanToggleBtn.addEventListener("click", () => {
+            const hidden = weeklyPlanPanel.classList.toggle("hidden");
+            weeklyPlanToggleBtn.textContent = hidden ? "Показать план на неделю" : "Скрыть план на неделю";
+        });
+
+        function calcRecommendedCycleDays(pagesCount, lessonSize) {
+            const pages = Math.max(1, pagesCount || 1);
+            let targetPerDay;
+            if (lessonSize === "5") {
+                targetPerDay = 3.5;
+            } else if (lessonSize === "7") {
+                targetPerDay = 2.5;
+            } else {
+                targetPerDay = 2;
+            }
+            let days = Math.round(pages / targetPerDay);
+            if (days < 3) days = 3;
+            if (days > 21) days = 21;
+            return days;
+        }
+
+        function handleSettingsInputsChange(e) {
+            const totalVal = parseInt(totalPagesInput.value, 10);
+            const currentVal = parseInt(currentPageInput.value, 10);
+            const startVal = parseInt(startPageInput.value, 10);
+            const cycleVal = parseInt(cycleDaysInput.value, 10);
+            const weakVal = weakPagesInput.value || "";
+            const lessonVal = lessonSizeSelect.value || "5";
+            const segmentVal = segmentTitleInput.value || "";
+            const offDayVal = parseInt(offDaySelect.value, 10);
+
+            settings.totalPages = (!isNaN(totalVal) && totalVal > 0) ? totalVal : 1;
+            settings.currentPage = (!isNaN(currentVal) && currentVal > 0) ? currentVal : 1;
+            settings.regularStartPage = (!isNaN(startVal) && startVal > 0) ? startVal : 1;
+            settings.weakPages = weakVal;
+            settings.lessonSize = ["5","7","page"].includes(lessonVal) ? lessonVal : "5";
+            settings.segmentTitle = segmentVal;
+            if (!isNaN(offDayVal) && offDayVal >= 0 && offDayVal <= 6) {
+                settings.offDayIndex = offDayVal;
+            }
+
+            let newCycle = settings.cycleDays || 6;
+
+            if (e && e.target === cycleDaysInput) {
+                settings.autoCycleDays = false;
+                autoCycleDaysToggle.checked = false;
+                if (!isNaN(cycleVal) && cycleVal > 0) newCycle = cycleVal;
+                else if (!newCycle || newCycle < 1) newCycle = 1;
+            } else if (settings.autoCycleDays &&
+                       e && (e.target === lessonSizeSelect || e.target === totalPagesInput || e.target === startPageInput)) {
+                const range = getReviewRange();
+                newCycle = calcRecommendedCycleDays(range.count, settings.lessonSize);
+            } else {
+                if (!isNaN(cycleVal) && cycleVal > 0) newCycle = cycleVal;
+                else if (!newCycle || newCycle < 1) newCycle = 1;
+            }
+
             settings.cycleDays = newCycle;
             cycleDaysInput.value = newCycle;
+
             saveSettings();
-            reviewState = null;
+            weakSet = parseWeakPages(settings.weakPages, settings.totalPages);
+            normalizeLinesAndPage();
+
+            reviewState = loadReviewState();
             initReviewForToday();
+
+            updateTopSummary();
+            updateNearBackLabel();
+            updateNearReview();
             updateThirdFortressUI();
             updateTodayPlan();
             updateForecast();
             updateWeeklyPlan();
             updateProgressAndStats();
         }
-    });
 
-    // новый круг 3‑й крепости
-    resetReviewBtn.addEventListener("click", () => {
-        const N = reviewSet.length;
-        if (!N) return;
-        const days = Math.max(1, parseInt(settings.cycleDays,10) || 1);
-        const chunkLen = Math.max(1, Math.ceil(N / days));
-        const todayCount = Math.min(chunkLen, N);
-        reviewState = {
-            lastDate: todayKey,
-            startIndex: 0,
-            todayCount,
-            nextIndex: todayCount % N
-        };
-        saveReviewState();
-        updateThirdFortressUI();
-        updateTodayPlan();
-    });
+        [totalPagesInput, currentPageInput, startPageInput, cycleDaysInput,
+         weakPagesInput, lessonSizeSelect, segmentTitleInput, offDaySelect]
+            .forEach(input => input.addEventListener("input", handleSettingsInputsChange));
 
-    // режим отображения
-    displayModeMinimalRadio.addEventListener("change", () => {
-        if (displayModeMinimalRadio.checked) {
-            settings.displayMode = "minimal";
+        // ручной ввод строк на странице
+        linesOnPageInput.addEventListener("input", () => {
+            let val = parseInt(linesOnPageInput.value, 10);
+            if (isNaN(val) || val < 0) val = 0;
+            settings.linesOnCurrentPage = val;
+            normalizeLinesAndPage();
+            updateLessonTexts();
+            updateNearReview();
+            updateWeeklyPlan();
+            updateForecast();
+            updateTodayPlan();
+        });
+
+        // вкл/выкл крепостей
+        function handleFortressToggle(num) {
+            const chk = fortressToggles[num];
+            settings.activeFortresses[num] = !!chk.checked;
             saveSettings();
-            applyDisplayMode();
+            applyFortressVisibility();
+            updateForecast();
+            updateWeeklyPlan();
+            updateProgressAndStats();
+            updateTodayPlan();
         }
-    });
-    displayModeFullRadio.addEventListener("change", () => {
-        if (displayModeFullRadio.checked) {
-            settings.displayMode = "full";
+        ["1","2","3","4","5"].forEach(num => {
+            fortressToggles[num].addEventListener("change", () => handleFortressToggle(num));
+        });
+
+        // режим только повторения
+        revisionToggle.addEventListener("change", () => {
+            settings.revisionMode = revisionToggle.checked;
+            if (settings.revisionMode) {
+                settings.activeFortresses["1"] = false;
+                useF1.checked = false;
+                useF1.disabled = true;
+            } else {
+                useF1.disabled = false;
+                settings.activeFortresses["1"] = true;
+                useF1.checked = true;
+            }
             saveSettings();
-            applyDisplayMode();
+            applyFortressVisibility();
+            updateNearReview();
+            updateThirdFortressUI();
+            updateTodayPlan();
+            updateForecast();
+            updateWeeklyPlan();
+            updateProgressAndStats();
+        });
+
+        // тёмная тема
+        darkModeToggle.addEventListener("change", () => {
+            settings.darkMode = darkModeToggle.checked;
+            saveSettings();
+            applyDarkMode();
+        });
+
+        // компактный режим
+        compactModeToggle.addEventListener("change", () => {
+            settings.compactMode = compactModeToggle.checked;
+            saveSettings();
+            applyCompactMode();
+        });
+
+        // учёт слабых страниц
+        useWeakPagesToggle.addEventListener("change", () => {
+            settings.useWeakPages = useWeakPagesToggle.checked;
+            saveSettings();
+            updateThirdFortressUI();
+            updateTodayPlan();
+        });
+
+        // авто-настройка дней на круг
+        autoCycleDaysToggle.addEventListener("change", () => {
+            settings.autoCycleDays = autoCycleDaysToggle.checked;
+            saveSettings();
+            if (settings.autoCycleDays) {
+                const range = getReviewRange();
+                const newCycle = calcRecommendedCycleDays(range.count, settings.lessonSize);
+                settings.cycleDays = newCycle;
+                cycleDaysInput.value = newCycle;
+                saveSettings();
+                reviewState = loadReviewState();
+                initReviewForToday();
+                updateThirdFortressUI();
+                updateTodayPlan();
+                updateForecast();
+                updateWeeklyPlan();
+                updateProgressAndStats();
+            }
+        });
+
+        // новый круг повторения
+        resetReviewBtn.addEventListener("click", () => {
+            const range = getReviewRange();
+            const days = Math.max(1, parseInt(settings.cycleDays, 10) || 1);
+            const chunkLen = Math.max(1, Math.ceil(range.count / days));
+            const start = range.start;
+            const end = Math.min(range.end, start + chunkLen - 1);
+            reviewState = {
+                lastDate: todayKey,
+                todayStart: start,
+                todayEnd: end,
+                nextStartPage: (end >= range.end ? range.start : end + 1)
+            };
+            saveReviewState();
+            updateThirdFortressUI();
+            updateTodayPlan();
+            updateForecast();
+            updateWeeklyPlan();
+        });
+
+        // режим отображения
+        displayModeMinimalRadio.addEventListener("change", () => {
+            if (displayModeMinimalRadio.checked) {
+                settings.displayMode = "minimal";
+                saveSettings();
+                applyDisplayMode();
+            }
+        });
+        displayModeFullRadio.addEventListener("change", () => {
+            if (displayModeFullRadio.checked) {
+                settings.displayMode = "full";
+                saveSettings();
+                applyDisplayMode();
+            }
+        });
+
+        // Резервная копия
+        if (backupGenerateBtn) {
+            backupGenerateBtn.addEventListener("click", generateBackup);
         }
-    });
-})();
+        if (backupRestoreBtn) {
+            backupRestoreBtn.addEventListener("click", restoreBackup);
+        }
+    })();
 </script>
 </body>
 </html>
